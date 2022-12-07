@@ -5,6 +5,8 @@ const app = express();
 
 const util = require('util');
 
+console.log("ciao a tutti")
+
 const cors = require('cors')
 app.use(cors())
 
