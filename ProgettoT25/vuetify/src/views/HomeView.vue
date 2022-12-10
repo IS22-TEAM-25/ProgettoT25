@@ -37,5 +37,8 @@ import categoryGrid from '@/components/categoryGrid'
     components : { categoryGrid },
     name: 'MyHome',
 
+    created()  {
+      this.$store.commit('isResultView', false)
+    }
   }
 </script>
