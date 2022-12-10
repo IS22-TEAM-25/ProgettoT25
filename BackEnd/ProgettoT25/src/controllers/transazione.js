@@ -13,6 +13,10 @@ const saveNewTrans = (req, res) => {
 
             if(!req.body.dataTransazione){
                 req.body.dataTransazione = new Date();
+            } else {
+                if (!auxdate.validateDate(req.body.dataTransazione)){
+                    return res.status(400).json({success: false, message: "Data mal formata!"})
+                }
             }
             
             Utente.findOne({username : req.body.acquirente}, (err, data) => {
@@ -28,7 +32,8 @@ const saveNewTrans = (req, res) => {
                                     pagamentoEffettuato : req.body.pagamentoEffettuato,
                                     costo : data.prezzo,
                                     dataTransazione : req.body.dataTransazione,
-                                    metodoTransazione : req.body.metodoTransazione
+                                    metodoTransazione : req.body.metodoTransazione,
+                                    tipologiaTransazione : data.modalitaTransazione
                                 });
                                 newT.save((err, data)=>{
                                     if(err) return res.status(500).json({Error: err});

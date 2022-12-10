@@ -53,6 +53,7 @@ app.use('/', express.static('../static'));
 
 //Server UP
 // process.env.PORT || 8080
-const listener = app.listen(8081, () =>
+//8081
+const listener = app.listen(process.env.PORT || 8080, () =>
     console.log('Web server listening on port ' + listener.address().port),
 );

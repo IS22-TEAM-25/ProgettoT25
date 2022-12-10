@@ -2,6 +2,8 @@ const aux = require("../auxiliaries/checks")
 
 const User = require("../models/utente");
 
+//Creare automaticamente profilo dopo la registrazione!
+
 const saveNewUser = (req,res) => {
     User.findOne({email: req.body.email}, (err, data) => {
         if(!data){

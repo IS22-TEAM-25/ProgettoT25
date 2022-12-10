@@ -5,15 +5,21 @@ const schema = new mongoose.Schema({
     inserzionista : {type:String, required : true},
     titolo : {type:String, maxLength: 30, required: true},
     descrizione : {type:String, maxLength: 350},
-    dataPubblicazione : {type:String, required: true},
+    dataPubblicazione : {type:Date, required: true},
     modalitaTransazione : {type:String, required: true},
-    prezzo : {type:Number},
     categoria : {type:String, required: true},
     indirizzoRitiro: {type:Object},
     pagamentoOnline: {type:Boolean, default:false},
     contoPayPal: {type:String},
     visibile: {type:Boolean,default:true},
-    sponsorizzato : {type:Boolean,default:false}
+    sponsorizzato : {type:Boolean,default:false},
+    //per la vendita
+    prezzo : {type:Number},
+    //attributi per l'affitto
+    prezzoAffittoAlGiorno : {type:Number},
+    prezzoAffittoSettimanale : {type:Number},
+    prezzoAffittoAllOra : {type:Number},
+    periodoNonDisponibilita : {type:Array}
 });
 
 const Annuncio = mongoose.model('Annuncio', schema); 

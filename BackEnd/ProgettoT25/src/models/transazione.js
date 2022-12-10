@@ -10,8 +10,10 @@ const schema = new mongoose.Schema({
     pagamentoEffettuato: {type:Boolean, required:true, default:true},
     costo: {type:Number, required:true},
     dataTransazione: {type:Date, required:true},
-    metodoTransazione : {type:String, required:true}
     //online o scambio di persona
+    metodoTransazione : {type:String, required:true},
+    //a titolo definitivo o temporaneo
+    tipologiaTransazione : {type:String, required:true}
 });
 
 const Transazione = mongoose.model('Transazione', schema); 
