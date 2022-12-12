@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/server.js",
-    "run": "node ./src/server.js"
+    "start": "node server.js",
+    "nodemon": "nodemeno server.js"
   },
   "keywords": [
     "webApp",
@@ -23,5 +23,8 @@
     "multer": "^1.4.5-lts.1",
     "run": "^1.4.0",
     "swagger-ui-express": "^4.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }

@@ -28,22 +28,22 @@ mongoose.connect(
 );
 
 // Routes for Api
-const routerUtente = require('./routes/utente');
+const routerUtente = require('./src/routes/utente');
 app.use('/api/u', routerUtente);
 
-const routerAnnuncio = require('./routes/annuncio');
+const routerAnnuncio = require('./src/routes/annuncio');
 app.use('/api/a', routerAnnuncio);
 
-const routerLogin = require('./routes/authentication');
+const routerLogin = require('./src/routes/authentication');
 app.use('/api/l', routerLogin);
 
-const routerTransazione = require('./routes/transazione');
+const routerTransazione = require('./src/routes/transazione');
 app.use('/api/t', routerTransazione);
 
-const routerRecensione = require('./routes/recensione');
+const routerRecensione = require('./src/routes/recensione');
 app.use('/api/r', routerRecensione);
 
-const routerProfio = require('./routes/profilo');
+const routerProfio = require('./src/routes/profilo');
 app.use('/api/p', routerProfio);
 
 
