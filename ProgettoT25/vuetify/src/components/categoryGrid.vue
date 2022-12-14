@@ -9,9 +9,7 @@
                 :key="category.title" 
                 router :to="category.route"
                 :cols="category.flex">
-                    <v-card flat>
-                        <router-link to="/searchresults">
-
+                    <v-card flat @click="selectCat(category.title)">
                             <v-img 
                             rounded 
                             :src="require('../assets/' + category.src)" 
@@ -22,7 +20,6 @@
                             v-text="category.title">
                         </v-card-title>
                     </v-img>
-                </router-link>
                     </v-card>
                 </v-col>
             </v-row>
@@ -37,15 +34,21 @@ export default {
 
     data: () => ({
         categories: [
-            { title: 'Tecnologia', src: 'Elettronica.png', flex: 3, route: '/searchresult' },
-            { title: 'Animali', src: 'Animali.png', flex: 3, route: '/searchresult' },
-            { title: 'Fai da te', src: 'Fai da te.png', flex: 3 },
-            { title: 'Hobby', src: 'Hobby.png', flex: 3 },
-            { title: 'Sport', src: 'Sport.png', flex: 3 },
-            { title: 'Party', src: 'Party.png', flex: 3 },
-            { title: 'Per la casa', src: 'Per la casa.png', flex: 3 },
-            { title: 'Trasporti', src: 'Trasporti.png', flex: 3 }
+            { title: 'tecnologia', src: 'Elettronica.png', flex: 3, route: '/searchresult' },
+            { title: 'animali', src: 'Animali.png', flex: 3, route: '/searchresult' },
+            { title: 'fai da te', src: 'Fai da te.png', flex: 3 },
+            { title: 'hobby', src: 'Hobby.png', flex: 3 },
+            { title: 'sport', src: 'Sport.png', flex: 3 },
+            { title: 'party', src: 'Party.png', flex: 3 },
+            { title: 'per la casa', src: 'Per la casa.png', flex: 3 },
+            { title: 'trasporti', src: 'Trasporti.png', flex: 3 }
         ],
     }),
+    methods: {
+        selectCat(cat) {
+            this.$store.commit('selectCat', cat)
+            this.$router.push({path:'/searchresults'})
+        }
+    }
 }
 </script>

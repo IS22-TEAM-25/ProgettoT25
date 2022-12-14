@@ -122,7 +122,9 @@
 <script>
 export default {
   data: () => ({
-    step: 1
+    step: 1,
+    username: '',
+    password: ''
   }),
   props: {
     source: String

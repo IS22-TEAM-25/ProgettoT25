@@ -11,6 +11,10 @@ routerAnnuncio.post('/savea', upload.none(), annuncioController.saveNewAnnuncio)
 routerAnnuncio.get('/getAll',annuncioController.getAll);
 routerAnnuncio.get('/geti/:id',annuncioController.getById);
 routerAnnuncio.get('/getau/:inserzionista',annuncioController.getByUser);
+<<<<<<< HEAD
+=======
+//routerAnnuncio.get('/getaf', upload.none(), annuncioController.getByFilters);
+>>>>>>> e33680bc2bc1af1e10c6c48ceaf67d4940a49570
 routerAnnuncio.post('/getaf',upload.none(),annuncioController.filtraggioSuArray)
 routerAnnuncio.delete('/deletea/:id',annuncioController.deleteAnnuncioById);
 routerAnnuncio.get('/ordina/:p', annuncioController.ordinaAnn);
