@@ -3,12 +3,28 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {
+const getDefaultState = () => {
+  return {
     category: '',
-    search: false
-  },
+    search: false,
+    dataAuth: {success: false, message: '', token:'', user_id:''},
+    username: ''
+  }
+}
+
+const state = getDefaultState()
+const actions = {
+  resetSessionState ({ commit }) {
+    commit('resetState')
+  }
+}
+
+export default new Vuex.Store({
+  state,
   getters: {
+    user_id: state => state.dataAuth.user_id,
+    token: state => state.dataAuth.token,
+    messageAuth: state => state.dataAuth.message
   },
   mutations: {
     selectCat(state, cat) {
@@ -16,10 +32,20 @@ export default new Vuex.Store({
     },
     isResultView (state, a) {
       state.search = a;
+    },
+    autenticazione(state, { dataAuth, username}) {
+      localStorage.setItem('dataAuth', dataAuth);
+      localStorage.setItem('username', username);
+      state.dataAuth = dataAuth,
+      state.username = username
+    },
+    resetState(state) {
+      Object.assign(state, getDefaultState())
+      console.log("resettato")
     }
+
   },
-  actions: {
-  },
+  actions,
   modules: {
   }
 })

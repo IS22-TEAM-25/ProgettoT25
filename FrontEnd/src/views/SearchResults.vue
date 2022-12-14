@@ -51,7 +51,7 @@ export default {
     methods: {
         async getfa() {
             try {
-                fetch(this.ENDPOINT, {
+                fetch(this.endpoint, {
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ categoria: this.cat }),
@@ -69,8 +69,8 @@ export default {
         },
         async getAll() {
             try {
-                console.log(this.ENDPOINT)
-                fetch(this.ENDPOINT, {
+                console.log(this.endpoint)
+                fetch(this.endpoint, {
                     method: 'GET',
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) =>resp.json())
@@ -94,12 +94,12 @@ export default {
         this.cat = this.$store.state.category;
         console.log("La categoria è: ", this.cat)
         if (this.cat === '') {
-            this.ENDPOINT = this.API_URL+'getAll'
+            this.endpoint = this.API_URL+'getAll'
             this.method = 'GET'
             this.getAll();
             //if (this.annunci)
         } else {
-            this.ENDPOINT = this.API_URL+'getaf';
+            this.endpoint = this.API_URL+'getaf';
             this.method = 'POST'
             this.getfa();
         } 

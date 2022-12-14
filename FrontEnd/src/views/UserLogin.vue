@@ -16,11 +16,13 @@
 
                         <v-form>
                           <v-text-field
-                            label="Email"
-                            name="Email"
-                            prepend-icon="email"
-                            type="email"
+                            required
+                            label="Username"
+                            name="username"
+                            prepend-icon="username"
+                            type="username"
                             color="accent"
+                            v-model="username"
                           />
 
                           <v-text-field
@@ -30,12 +32,13 @@
                             prepend-icon="lock"
                             type="password"
                             color="accent"
+                            v-model="password"
                           />
                         </v-form>
                         <h3 class="text-center mt-4">Forgot your password?</h3>
                       </v-card-text>
                       <div class="text-center mt-3">
-                        <v-btn rounded color="accent accent-3" dark>SIGN IN</v-btn>
+                        <v-btn rounded color="accent accent-3" dark @click="login">SIGN IN</v-btn>
                       </div>
                     </v-col>
                     <v-col cols="12" md="4" class="accent accent-3">
@@ -120,14 +123,47 @@
 </template>
 
 <script>
+import router from '@/router';
+
 export default {
   data: () => ({
     step: 1,
+    datiAuth: {},
+    endpoint:'',
+    error: false,
     username: '',
     password: ''
   }),
   props: {
     source: String
-  }
+  },
+  methods: {
+        async login() {
+          console.log(this.username, " ", this.password)
+            try {
+                fetch("http://localhost:8080/api/l/signIn", {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: this.username, password: this.password }),
+                }).then((resp) =>resp.json())
+                .then(data => {
+                  // Here you get the data to modify as you please
+                  this.$store.commit('autenticazione',  {dataAuth: data, username: this.username});
+                  if (data.success) {
+                  router.push("/");
+                } else {
+                  this.error = true
+                }
+                console.log(data.message);
+                
+                
+                  return;
+                })
+                } catch(error) {
+                    console.error(error); // If there is any error you will catch them here
+                }
+        }
+ 
+      }
 };
 </script>
