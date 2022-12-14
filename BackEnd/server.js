@@ -12,6 +12,11 @@ app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//Documentazione
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument) );
+
 //Database UP
 const mongoose = require('mongoose');
 // const Annuncio = require('./models/annuncio');
@@ -40,7 +45,7 @@ app.use('/api/u', routerUtente);
 
 const routerAnnuncio = require('./src/routes/annuncio');
 app.use('/api/a/savea', tokenChecker);
-app.use('/api/a/deletea/:id', tokenChecker);
+// app.use('/api/a/deletea/:id', tokenChecker);
 app.use('/api/a/updatea', tokenChecker);
 app.use('/api/a', routerAnnuncio);
 
@@ -59,14 +64,14 @@ app.use('/api/r', routerRecensione);
 
 const routerProfio = require('./src/routes/profilo');
 app.use('/api/p/deletep/:id',tokenChecker);
-app.use('/api/p/updaterat',tokenChecker);
+// app.use('/api/p/updaterat',tokenChecker);
 app.use('/api/p/updatep',tokenChecker);
 app.use('/api/p/addwl',tokenChecker);
 app.use('/api/p/rimuoviwl',tokenChecker);
-app.use('/api/p/updateao',tokenChecker);
-app.use('/api/p/updatesv',tokenChecker);
-app.use('/api/p/updatesa',tokenChecker);
-app.use('/api/p/updaterec',tokenChecker);
+// app.use('/api/p/updateao',tokenChecker);
+// app.use('/api/p/updatesv',tokenChecker);
+// app.use('/api/p/updatesa',tokenChecker);
+// app.use('/api/p/updaterec',tokenChecker);
 
 app.use('/api/p', routerProfio);
 

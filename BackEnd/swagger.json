@@ -1,0 +1,997 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0", 
+        "title": "SpottyThings",
+        "description": "API documentation for SpottyThings",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "Utente",
+            "description": "API per il modello 'Utente'. Tutte le API per gestire le azioni relative agli utenti."
+        },
+        {
+            "name" : "Annuncio",
+            "description": "API per il modello 'Annuncio'. Tutte le API per gestire le azioni relative agli annunci."
+        },
+        {
+            "name" : "Autenticazione",
+            "description": "API per gestire login e logout e gestione del token"
+        },
+        {
+            "name" : "Transazione",
+            "description": "API per il modello 'Transazione'. Tutte le API per gestire le azioni relative alle transazioni."
+        },
+        {
+            "name" : "Recensione",
+            "description": "API per il modello 'Recensione'. Tutte le API per gestire le azioni relative alle recensioni."
+        },
+        {
+            "name" : "Profilo",
+            "description" : "API per il modello 'Profilo'. Tutte le API per gestire le azioni relative alle attività sul sito degli utenti, salvate nel loro profilo."
+        }
+    ],
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "paths": {
+        "/api/u/signUp" : {
+        "post" : {
+            "tags" : ["Utente"],
+            "summary" : "Usata per salvare un nuovo utente nel sistema.",
+            "responses" : {
+                "201" : {
+                    "description" : "CREATED. Utente creato correttamente."
+                },
+                "400" : {
+                    "description" : "BAD REQUEST. Errori nella formulazione della richiesta che possono riguardare data di nascita non conforme o email non valida."
+                },
+                "500" : {
+                    "description" : "SERVER ERROR. Di varia natura."
+                },
+                "409" : {
+                    "description" : "CONFLICT. Errore in seguito all'inserimento di uno username o di un indirizzo già occupato da un altro utente."
+                }
+            }
+        }
+        },
+        "/api/u/deletee/{email}" : {
+        "delete" : {
+            "tags" : ["Utente"],
+            "summary" : "Usata per eliminare un utente identificato da un preciso indirizzo mail.",
+            "responses" : {
+                "204" : {
+                    "description" : "NO CONTENT. Utente eliminato correttamente e nessun ritorno dalla API."
+                },
+                "404" : {
+                    "description" : "NOT FOUND. Nessun utente associato alla mail passata come parametro."
+                },
+                "500" : {
+                    "description" : "SERVER ERROR. Di varia natura."
+                }
+            },
+            "parameters" : [
+                {"name" : "email",
+                "in" : "path",
+                "description" : "Indirizzo email dell'utente da eliminare."
+                }
+            ]
+        }
+        },
+        "/api/u/deleteu/{username}" : {
+        "delete" : {
+            "tags" : ["Utente"],
+            "summary" : "Usata per eliminare un utente identificato da un preciso username.",
+            "responses" : {
+                "204" : {
+                    "description" : "NO CONTENT. Utente eliminato correttamente e nessun ritorno dalla API."
+                },
+                "404" : {
+                    "description" : "NOT FOUND. Nessun utente associato allo username passato come parametro."
+                },
+                "500" : {
+                    "description" : "SERVER ERROR. Di varia natura."
+                }
+            },
+            "parameters" : [
+                {"name" : "username",
+                "in" : "path",
+                "description" : "Username dell'utente da eliminare."
+                }
+            ]
+        }
+        },
+        "/api/u/getAll" : {
+            "get" : {
+                "tags" : [
+                    "Utente"
+                ],
+                "summary": "Usata per ottenere tutti gli utenti registrati al sistema.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottengono correttamente tutti gli utenti registrati."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun utente nel sistema."
+                    }
+                }
+            }
+        },
+        "/api/u/getu/{username}" : {
+            "get" : {
+                "tags" : [
+                    "Utente"
+                ],
+                "summary": "Usata per ottenere una precisa risorsa utente associata al preciso username passato.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene il preciso utente associato allo username passato come parametro."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun utente associato allo username passato come parametro."
+                    }
+                },
+                "parameters" : [
+                    {"name" : "username",
+                    "in" : "path",
+                    "description" : "Username dell'utente da ricercare."
+                    }
+                ]
+            }
+        },
+        "/api/u/gete/{email}" : {
+            "get" : {
+                "tags" : [
+                    "Utente"
+                ],
+                "summary": "Usata per ottenere una precisa risorsa utente associata al preciso indirizzo email passato.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene il preciso utente associato all'indirizzo email passato come parametro."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun utente associato all'indirizzo email passato come parametro."
+                    }
+                },
+                "parameters" : [
+                    {"name" : "email",
+                    "in" : "path",
+                    "description" : "Indirizzo email dell'utente da ricercare."
+                    }
+                ]
+            }
+        },
+        "/api/u/updateu/" : {
+            "patch" : {
+                "tags" : [
+                    "Utente"
+                ],
+                "summary": "Usata per aggiornare le informazioni di un utente, identificato da uno username che viene passato nel body.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ritorna un messaggio di conferma dell'azione di modifica effettuata."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun utente associato allo username passato nel body."
+                    }
+                }
+            }
+        },
+        "/api/u/updatee/" : {
+            "patch" : {
+                "tags" : [
+                    "Utente"
+                ],
+                "summary": "Usata per aggiornare l'indirizzo email di un utente, identificato da uno username che viene passato nel body.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ritorna un messaggio di conferma dell'azione di modifica effettuata."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun utente associato allo username passato nel body."
+                    }
+                }
+            }
+        },
+        "/api/u/updatep/" : {
+            "patch" : {
+                "tags" : [
+                    "Utente"
+                ],
+                "summary": "Usata per aggiornare la password di un utente, identificato da uno username che viene passato nel body.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ritorna un messaggio di conferma dell'azione di modifica effettuata."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun utente associato allo username passato nel body."
+                    }
+                }
+            }
+        },
+        "/api/a/savea" : {
+            "post" : {
+                "tags" : ["Annuncio"],
+                "summary" : "Usata per salvare un nuovo annuncio nel sistema.",
+                "responses" : {
+                    "201" : {
+                        "description" : "CREATED. Annuncio creato correttamente."
+                    },
+                    "400" : {
+                        "description" : "BAD REQUEST. Errori nella formulazione della richiesta che possono riguardare annuncio già presente col titolo specificato oppure conto PayPal non specificato con pagamento online abilitato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Inserzionista specificato non presente nel database."
+                    }
+                }
+            }
+        },
+        "/api/a/getAll" : {
+            "get" : {
+                "tags" : ["Annuncio"],
+                "summary" : "Usata per ottenere tutti gli annunci presenti nel sistema.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottengono correttamente tutti gli annunci nel sistema."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun annuncio nel sistema."
+                    }
+                }
+            }
+        },
+        "/api/a/geti/{id}" : {
+            "get" : {
+                "tags" : ["Annuncio"],
+                "summary" : "Usata per ottenere l'annuncio associato a un preciso titolo.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene correttamente l'annuncio che ha il titolo specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun annuncio nel sistema con il titolo specificato."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "id",
+                        "in" : "path",
+                        "description" : "Titolo dell'annuncio da ricercare."
+                    }
+                ]
+            }
+        },
+        "/api/a/getau/{inserzionista}" : {
+            "get" : {
+                "tags" : ["Annuncio"],
+                "summary" : "Usata per ottenere tutti gli annunci postati da un preciso utente.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottengono correttamente tutti gli annunci ordinati secondo l'ordinamento specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun annuncio nel sistema associato all'utente specificato."
+                    },
+                    "400" : {
+                        "description" : "BAD REQUEST. Errori nella sintassi e nella definizione del parametro 'p' per l'ordinamento."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "inserzionista",
+                        "in" : "path",
+                        "description" : "Username dell'utente di cui ricercare gli annunci."
+                    }
+                ]
+            }
+        },
+        "/api/a/getaf" : {
+            "post" : {
+                "tags" : ["Annuncio"],
+                "summary" : "Usata per ottenere tutti gli annunci in base a particolari filtri passati nel body.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottengono correttamente tutti gli annunci che soddisfano i filtri di ricerca. Nel caso di nessun annuncio che soddisfa i filtri, viene tornato un array vuoto."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun annuncio nel sistema."
+                    }
+                }
+            }
+        },
+        "/api/a/ordina/{p}" : {
+            "get" : {
+                "tags" : ["Annuncio"],
+                "summary" : "Usata per ottenere tutti gli annunci ordinati secondo un ordinamento specifico.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottengono correttamente tutti gli annunci postati dall'utente specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun annuncio nel sistema."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "p",
+                        "in" : "path",
+                        "description" : "Valore che specifica l'ordinamento desiderato. Possibili valori di 'p': \n'd1': data di pubblicazione crescente.\n'd2': data di pubblicazione decrescente.\n'm1': prezzo crescente.\n'm2': prezzo decrescente."
+                    }
+                ]
+            }
+        },
+        "/api/a/getkt/{word}" : {
+            "get" : {
+                "tags" : ["Annuncio"],
+                "summary" : "Usata per ottenere tutti gli annunci che contengono una parola chiave nel titolo (non si fanno distinzioni tra maiuscole e minuscole).",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottengono correttamente tutti gli annunci che presentano nel titolo la keyword specificata."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun annuncio nel sistema oppure nessun annuncio che soddisfa la keyowrd ricercata."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "word",
+                        "in" : "path",
+                        "description" : "Parola chiave specificata che deve essere contenuta nel titolo di un annuncio."
+                    }
+                ]
+            }
+        },
+        "/api/a/getkd/{word}" : {
+            "get" : {
+                "tags" : ["Annuncio"],
+                "summary" : "Usata per ottenere tutti gli annunci che contengono una parola chiave nella descrizione (non si fanno distinzioni tra maiuscole e minuscole).",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottengono correttamente tutti gli annunci che presentano nella descrizione la keyword specificata."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun annuncio nel sistema oppure nessun annuncio che soddisfa la keyowrd ricercata."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "word",
+                        "in" : "path",
+                        "description" : "Parola chiave specificata che deve essere contenuta nella descrizione di un annuncio."
+                    }
+                ]
+            }
+        },
+        "/api/a/updatea" : {
+            "patch" : {
+                "tags" : ["Annuncio"],
+                "summary" : "Usata per modificare i dati di un annuncio, il cui titolo identificativo viene passato nel body insieme ai dati da modificare.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati dell'annuncio."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun annuncio nel sistema con il titolo specificato."
+                    }
+                }
+            }
+        },
+        "/api/a/deletea/{id}" : {
+            "delete" : {
+                "tags" : ["Annuncio"],
+                "summary" : "Usata per cancellare un preciso annuncio, il cui titolo viene specificato come parametro.",
+                "responses" : {
+                    "204" : {
+                        "description" : "NO CONTENT. Annuncio eliminato correttamente e nessun ritorno dalla API."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun annuncio nel sistema con il titolo specificato."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "id",
+                        "in" : "path",
+                        "description" : "Titolo dell'annuncio da eliminare."
+                    }
+                ]
+            }
+        },
+        "/api/l/signIn" : {
+            "post" : {
+                "tags" : ["Autenticazione"],
+                "summary" : "Usata per verificare il corretto matchin username-password in fase di login. Si occupa anche di generare il token d'accesso della durata di 12 ore.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene un messaggio di conferma relativo al corretto login oltre che il token d'accesso associato e lo username dell'utente appena autenticato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun utente associato allo username passato."
+                    },
+                    "400" : {
+                        "description" : "BAD REQUEST. Password dell'utente non corretta."
+                    }
+                }
+            }
+        },
+        "/api/l/logout" : {
+            "get" : {
+                "tags" : ["Autenticazione"],
+                "summary" : "Usata per gestire la richiesta di logout dell'utente: si occupa di disabilitare il token d'accesso.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene un messaggio di conferma relativo al corretto logout effettuato."
+                    }
+                }
+            }
+        },
+        "/api/t/savet" : {
+            "post" : {
+                "tags" : ["Transazione"],
+                "summary" : "Usata per salvare una nuova transazione nel sistema.",
+                "responses" : {
+                    "201" : {
+                        "description" : "CREATED. Transazione creata correttamente."
+                    },
+                    "400" : {
+                        "description" : "BAD REQUEST. Errore nella formulazione della richiesta in seguito alla data mal formata."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Errore nel caso in cui l'utente acquirente non esiste oppure l'annuncio per cui si vuol fare la transazione non esiste oppure l'utente venditore specificato non è associato ad un suo annuncio."
+                    },
+                    "409" : {
+                        "description" : "CONFLICT. Errore in seguito al tentativo di salvare una transazione già salvata."
+                    }
+                }
+            }
+        },
+        "/api/t/getAll" : {
+            "get" : {
+                "tags" : ["Transazione"],
+                "summary" : "Usata per ottenere tutte le transazioni presenti nel sistema.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottengono correttamente tutte le transazioni nel sistema."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessuna transazione nel sistema."
+                    }
+                }
+            }
+        },
+        "/api/t/gettv/{venditore}" : {
+            "get" : {
+                "tags" : ["Transazione"],
+                "summary" : "Usata per ottenere le transazioni in uscita di un utente.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene l'elenco delle transazioni in uscita per l'utente specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessuna transazione in uscita per l'utente specificato."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "venditore",
+                        "in" : "path",
+                        "description" : "Username dell'utente di cui vogliamo individuare le transazioni effettuate in qualità di inserzionista."
+                    }
+                ]
+            }
+        },
+        "/api/t/getta/{acquirente}" : {
+            "get" : {
+                "tags" : ["Transazione"],
+                "summary" : "Usata per ottenere lo storico delle transazioni di un utente.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene lo storico delle transazioni per l'utente specificato, ovvero i suoi acquisti o affitti effettuati."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessuna transazione in entrata per l'utente specificato."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "acquirente",
+                        "in" : "path",
+                        "description" : "Username dell'utente di cui vogliamo individuare le transazioni effettuate."
+                    }
+                ]
+            }
+        },
+        "/api/t/gettp/{annuncio}" : {
+            "get" : {
+                "tags" : ["Transazione"],
+                "summary" : "Usata per ottenere le transazioni associate a un preciso prodotto sul sito.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene l'elenco delle transazioni associate a un preciso prodotto sul sito."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessuna transazione associata per il prodotto specificato."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "annuncio",
+                        "in" : "path",
+                        "description" : "Titolo dell'annuncio per cui si sta ricercando una transazione."
+                    }
+                ]
+            }
+        },
+        "/api/t/deletet/{id}" : {
+            "delete" : {
+                "tags" : ["Transazione"],
+                "summary" : "Usata per eliminare una risorsa transazione identificata dall'id passato come parametro.",
+                "responses" : {
+                    "204" : {
+                        "description" : "NO CONTENT. Transazione eliminata correttamente e nessun ritorno dalla API."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessuna transazione individuata con l'id specificato."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "id",
+                        "in" : "path",
+                        "description" : "Identificativo univoco della transazione da eliminare."
+                    }
+                ]
+            }
+        },
+        "/api/r/saver" : {
+            "post" : {
+                "tags" : ["Recensione"],
+                "summary" : "Usata per salvare una nuova recensione nel sistema.",
+                "responses" : {
+                    "201" : {
+                        "description" : "CREATED. Recensione creata correttamente."
+                    },
+                    "400" : {
+                        "description" : "BAD REQUEST. Errore nella formulazione della richiesta in seguito ad una descrizione o ad una valutazione fornita mal formata."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Errore nel caso in cui la transazione per cui si sta salvando una recensione non esista oppure non combacino gli utenti forniti con quell della transazione."
+                    },
+                    "409" : {
+                        "description" : "CONFLICT. Errore in seguito al tentativo di salvare una recensione già associata per una transazione."
+                    }
+                }
+            }
+        },
+        "/api/r/getAll" : {
+            "get" : {
+                "tags" : ["Recensione"],
+                "summary" : "Usata per ottenere tutte le recensioni presenti nel sistema.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottengono correttamente tutte le recensioni nel sistema."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessuna recensione nel sistema."
+                    }
+                }
+            }
+        },
+        "/api/t/getrv/{recensito}" : {
+            "get" : {
+                "tags" : ["Recensione"],
+                "summary" : "Usata per ottenere le recensioni su un preciso utente passato come parametro.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene l'elenco delle recensioni sull'utente specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessuna recensione sull'utente specificato."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "recensito",
+                        "in" : "path",
+                        "description" : "Username dell'utente del quale vogliamo cercare le recensioni in cui viene valutato."
+                    }
+                ]
+            }
+        },
+        "/api/t/getra/{recensore}" : {
+            "get" : {
+                "tags" : ["Recensione"],
+                "summary" : "Usata per ottenere le recensioni effettuate da un utente.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene l'elenco delle recensioni effettuate da un utente, dopo aver effettuato una transazione."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessuna recensione effettuata dal'utente specificato."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "recensore",
+                        "in" : "path",
+                        "description" : "Username dell'utente del quale vogliamo cercare le recensioni effettuate."
+                    }
+                ]
+            }
+        },
+        "/api/t/getrt/{transazione}" : {
+            "get" : {
+                "tags" : ["Recensione"],
+                "summary" : "Usata per ottenere la/e recensione/i associata/e ad una precisa transazione.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene l'elenco delle recensioni associate ad una precisa transazione presente sul sito."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessuna recensione associata alla transazione specificata."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "transazione",
+                        "in" : "path",
+                        "description" : "Id della transazione per cui si sta ricercando una recensione."
+                    }
+                ]
+            }
+        },
+        "/api/t/deleter/{id}" : {
+            "delete" : {
+                "tags" : ["Recensione"],
+                "summary" : "Usata per eliminare una risorsa recensioen identificata dall'id passato come parametro.",
+                "responses" : {
+                    "204" : {
+                        "description" : "NO CONTENT. Recensione eliminata correttamente e nessun ritorno dalla API."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessuna recensione individuata con l'id specificato."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "id",
+                        "in" : "path",
+                        "description" : "Identificativo univoco della recensione da eliminare."
+                    }
+                ]
+            }
+        },
+        "/api/p/savep" : {
+            "post" : {
+                "tags" : ["Profilo"],
+                "summary" : "Usata per salvare un nuovo profilo nel sistema.",
+                "responses" : {
+                    "201" : {
+                        "description" : "CREATED. Profilo creato correttamente."
+                    },
+                    "400" : {
+                        "description" : "BAD REQUEST. Errori nella formulazione della richiesta riguardante una descrizione troppo lunga."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "409" : {
+                        "description" : "CONFLICT. Errore in seguito al tentativo di creare un profilo già presente per un utente."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Utente per cui si intende creare il profilo non presente nel sistema."
+                    }
+                }
+            }
+        },
+        "/api/p/getAll" : {
+            "get" : {
+                "tags" : [
+                    "Profilo"
+                ],
+                "summary": "Usata per ottenere tutti i profili degli utenti registrati al sistema.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottengono correttamente tutti i profili degli utenti registrati."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo nel sistema."
+                    }
+                }
+            }
+        },
+        "/api/p/getp/{id}" : {
+            "get" : {
+                "tags" : [
+                    "Profilo"
+                ],
+                "summary": "Usata per ottenere una precisa risorsa profilo associata al preciso username passato.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene il preciso profilo associato allo username passato come parametro."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo associato allo username passato come parametro."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "id",
+                        "in" : "path",
+                        "description" : "Identficativo del profilo da ricercare, che corrisponde allo username dell'utente associato."
+                    }
+                ]
+            }
+        },
+        "/api/p/getbest" : {
+            "get" : {
+                "tags" : [
+                    "Profilo"
+                ],
+                "summary": "Usata per ottenere i profili con la valutazione maggiore.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene l'elenco dei profili ordinati per valutazione decrescente."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo presente nel sistema."
+                    }
+                }
+            }
+        },
+        "/api/p/deletep/{id}" : {
+            "delete" : {
+                "tags" : ["Profilo"],
+                "summary" : "Usata per cancellare una precisa risorsa profilo, il cui id viene specificato come parametro.",
+                "responses" : {
+                    "204" : {
+                        "description" : "NO CONTENT. Profilo eliminato correttamente e nessun ritorno dalla API."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato."
+                    }
+                },
+                "parameters" : [
+                    {
+                        "name" : "id",
+                        "in" : "path",
+                        "description" : "Identificativo univioco del profilo da eliminare."
+                    }
+                ]
+            }
+        },
+        "/api/p/updatep" : {
+            "patch" : {
+                "tags" : ["Profilo"],
+                "summary" : "Usata per modificare la descrizione della risorsa profilo il cui id viene specificato nel body.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "400" : {
+                        "description" : "BAD REQUEST. Errore nella formulazione della richiesta in seguito al testo della descrizione mal formato."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato."
+                    }
+                }
+            }
+        },
+        "/api/p/addwl" : {
+            "patch" : {
+                "tags" : ["Profilo"],
+                "summary" : "Usata per modificare la whish list della risorsa profilo il cui id viene specificato nel body, aggiungendo un nuovo annuncio alla lista.",
+                "responses" : {
+                    "204" : {
+                        "description" : "NO CONTENT. Annuncio aggiunto correttamente e nessun ritorno dalla API."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "409" : {
+                        "description" : "CONFLICT. Impossibile aggiungere l'annuncio alla whish list in quanto è già presente in essa."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato oppure nessun annuncio nel sistema col titolo specificato."
+                    }
+                }
+            }
+        },
+        "/api/p/rimuoviwl" : {
+            "patch" : {
+                "tags" : ["Profilo"],
+                "summary" : "Usata per modificare la whish list della risorsa profilo il cui id viene specificato nel body, rimuovendo un annuncio dalla lista.",
+                "responses" : {
+                    "204" : {
+                        "description" : "NO CONTENT. Annuncio rimosso correttamente e nessun ritorno dalla API."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "409" : {
+                        "description" : "CONFLICT. Impossibile rimuovere l'annuncio dalla whish list in quanto è già assente in essa."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato oppure nessun annuncio nel sistema col titolo specificato."
+                    }
+                }
+            }
+        },
+        "/api/p/updaterat" : {
+            "patch" : {
+                "tags" : ["Profilo"],
+                "summary" : "Usata per modificare il rating della risorsa profilo il cui id viene specificato nel body.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato."
+                    }
+                }
+            }
+        },
+        "/api/p/updateao" : {
+            "patch" : {
+                "tags" : ["Profilo"],
+                "summary" : "Usata per modificare il totale degli annunci online della risorsa profilo il cui id viene specificato nel body.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato oppure nessun annuncio postato dall'utente specificato."
+                    }
+                }
+            }
+        },
+        "/api/p/updatesv" : {
+            "patch" : {
+                "tags" : ["Profilo"],
+                "summary" : "Usata per modificare le statistiche di vendita della risorsa profilo il cui id viene specificato nel body.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato oppure nessuna transazione di vendita completata dall'utente specificato."
+                    }
+                }
+            }
+        },
+        "/api/p/updatesa" : {
+            "patch" : {
+                "tags" : ["Profilo"],
+                "summary" : "Usata per modificare le statistiche degli acquisti della risorsa profilo il cui id viene specificato nel body.",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato."
+                    }
+                }
+            }
+        }
+    }
+}
