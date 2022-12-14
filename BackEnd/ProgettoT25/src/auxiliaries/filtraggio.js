@@ -47,63 +47,77 @@ const filterArray = function(arrayFiltrato, body){
     const ed = body.endDate;
 
     if(cit != undefined){
-        arrayFiltrato = arrayFiltrato.filter(function(arrElement){
-            if(arrElement.indirizzoRitiro == undefined){
-                return false;
-            }
-            const p = JSON.parse('' + arrElement.indirizzoRitiro);
-            return p.citta == cit;
-        })
+        if(cit != null){
+            arrayFiltrato = arrayFiltrato.filter(function(arrElement){
+                if(arrElement.indirizzoRitiro == undefined){
+                    return false;
+                }
+                const p = JSON.parse('' + arrElement.indirizzoRitiro);
+                return p.citta == cit;
+            })
+        }
     }
 
     if(prov != undefined){
-        arrayFiltrato = arrayFiltrato.filter(function(arrElement){
-            if(arrElement.indirizzoRitiro == undefined){
-                return false;
-            }
-            const p = JSON.parse('' + arrElement.indirizzoRitiro);
-            return p.provincia == prov;       
-        })
+        if(prov != null){
+            arrayFiltrato = arrayFiltrato.filter(function(arrElement){
+                if(arrElement.indirizzoRitiro == undefined){
+                    return false;
+                }
+                const p = JSON.parse('' + arrElement.indirizzoRitiro);
+                return p.provincia == prov;       
+            })
+        }
     }
 
     //filtriamo su prezzo e prezzoGiornaliero!
 
     if(sp != undefined){
-        arrayFiltrato = arrayFiltrato.filter(function(arrElement) {
-            if(arrElement.modalitaTransazione == "Affitto"){
-                return arrElement.prezzoAffittoAlGiorno >= sp;
-            } else {
-                return arrElement.prezzo >= sp;
-            }
-        })
+        if (sp != null){
+            arrayFiltrato = arrayFiltrato.filter(function(arrElement) {
+                if(arrElement.modalitaTransazione == "Affitto"){
+                    return arrElement.prezzoAffittoAlGiorno >= sp;
+                } else {
+                    return arrElement.prezzo >= sp;
+                }
+            })
+        }
     }
 
     if(ep != undefined){
-        arrayFiltrato = arrayFiltrato.filter(function(arrElement) {
-            if(arrElement.modalitaTransazione == "Affitto"){
-                return arrElement.prezzoAffittoAlGiorno <= ep;
-            } else {
-                return arrElement.prezzo <= ep;
-            }       
-        })
+        if (ep != null){
+            arrayFiltrato = arrayFiltrato.filter(function(arrElement) {
+                if(arrElement.modalitaTransazione == "Affitto"){
+                    return arrElement.prezzoAffittoAlGiorno <= ep;
+                } else {
+                    return arrElement.prezzo <= ep;
+                }       
+            })
+        }
     }
 
     if(cat != undefined){
-        arrayFiltrato = arrayFiltrato.filter(function(arrElement){
-            return arrElement.categoria == cat;
-        })
+        if(cat != null){
+            arrayFiltrato = arrayFiltrato.filter(function(arrElement){
+                return arrElement.categoria == cat;
+            })
+        }
     }
 
     if(trans != undefined){
-        arrayFiltrato = arrayFiltrato.filter(function(arrElement){
-            return arrElement.modalitaTransazione == trans;
-        })
+        if( trans != null){
+            arrayFiltrato = arrayFiltrato.filter(function(arrElement){
+                return arrElement.modalitaTransazione == trans;
+            })
+        }
     }
 
     if(pon != undefined){
-        arrayFiltrato = arrayFiltrato.filter(function(arrElement){
-            return ('' + arrElement.pagamentoOnline) == pon;
-        })
+        if(pon != null){
+            arrayFiltrato = arrayFiltrato.filter(function(arrElement){
+                return ('' + arrElement.pagamentoOnline) == pon;
+            })
+        }
     }
 
     //CAMBIO DI ROTTA, DATE CORRETTAMENTE SALVATE
@@ -111,17 +125,21 @@ const filterArray = function(arrayFiltrato, body){
     //Date le supponiamo ben formattate!!!
 
     if(sd != undefined){
-        arrayFiltrato = arrayFiltrato.filter(function(arrElement){
-            const d = new Date(sd);
-            return arrElement.dataPubblicazione >= d;
-        })
+        if (sd != null){
+            arrayFiltrato = arrayFiltrato.filter(function(arrElement){
+                const d = new Date(sd);
+                return arrElement.dataPubblicazione >= d;
+            })
+        }
     }
 
     if(ed != undefined){
-        arrayFiltrato = arrayFiltrato.filter(function(arrElement){
-            const d = new Date(ed);
-            return arrElement.dataPubblicazione <= d;
-        })
+        if (ed != null){
+            arrayFiltrato = arrayFiltrato.filter(function(arrElement){
+                const d = new Date(ed);
+                return arrElement.dataPubblicazione <= d;
+            })
+        }
     }
 
     return arrayFiltrato;
@@ -204,9 +222,24 @@ const orderAnnunciByMoneyDESC = function(annunci){
     return annunciordinati;
 }
 
+const filterByTerm = function(annunci, searchTerm){
+    const regex = new RegExp(searchTerm, "i");
+    return annunci.filter(function(arrayElement) {
+        return arrayElement.titolo.match(regex);
+    })
+}
+
+const filterByTermDesc = function(annunci, searchTerm){
+    const regex = new RegExp(searchTerm, "i");
+    return annunci.filter(function(arrayElement) {
+        return arrayElement.descrizione.match(regex);
+    })
+}
+
 module.exports = {filtri, commuteFilter, filterArray, 
     orderAnnunciByDate, orderAnnunciByMoney,
-    orderAnnunciByDateDESC, orderAnnunciByMoneyDESC
+    orderAnnunciByDateDESC, orderAnnunciByMoneyDESC,
+    filterByTerm, filterByTermDesc
 };
 
 // //Ipotizzo solo annunci in affitto!!

@@ -17,9 +17,9 @@ const saveNewUser = (req,res) => {
                         return res.status(400).json({success : false, message: "Email non valida!"});
                     }
 
-                    if(!aux.validateDate(req.body.datadinascita)){
-                        return res.status(400).json({success : false, message: "DDN non valida!"});
-                    }
+                    // if(!aux.validateDate(req.body.datadinascita)){
+                    //     return res.status(400).json({success : false, message: "DDN non valida!"});
+                    // }
 
                     const newUser = new User ({
                         _id : req.body.username,

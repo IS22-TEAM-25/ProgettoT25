@@ -2,7 +2,13 @@ var allAnnunci;
 
 function ottieniAnnunci(){
 
-    fetch('http://localhost:8080/api/a/getAll')
+    var start = undefined;
+
+    fetch('http://localhost:8080/api/a/getaf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify( { categoria: start, pagamentoOnline : 'false'} ),
+    })
     .then(data => {
         // return data.json();
         return data.text();

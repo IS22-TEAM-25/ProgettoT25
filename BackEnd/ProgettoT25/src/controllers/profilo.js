@@ -178,9 +178,6 @@ const commuteBestUsers = (req, res) => {
     });
 }
 
-//VADO A LAVORARE DIRETTAMENTE SU data!
-//Funziona!
-
 const updateRating = (req, res) => {
     Profilo.findById(req.body.id, (err, data) => {
         if(data){
@@ -257,7 +254,6 @@ const updateAnnunciOnline = (req, res) => {
     })
 };
 
-
 const updateStatisticheVendita = (req, res) => {
     Profilo.findById(req.body.id, (err, data) => {
         if(data){
@@ -279,7 +275,7 @@ const updateStatisticheVendita = (req, res) => {
                         }
                     }
 
-                    Profilo.updateOne({id : req.body.id}, 
+                    Profilo.updateOne({_id : req.body.id}, 
                         {$set : {transazioniCompletate : totaleTransazioniCompletate,
                         guadagnoDagliAffitti : guadagniAff,
                         guadagnoDalleVendite : guadagniVend,
@@ -302,6 +298,65 @@ const updateStatisticheVendita = (req, res) => {
     })
 }
 
+const updateRecensioni = (req, res) => {
+    Profilo.findById(req.body.id, (err, data) => {
+        if(data){
+            if(data.length == 0){
+                return res.status(404).json({success: false, message: "Nessun profilo con id " + req.body.id})
+            }
+            var recFatte = 0, recRicevute = 0;
+            Recensione.find({utenteRecensito : req.body.id}, (err, data) => {
+                if(data){
+                    recRicevute = data.length;
+                    Recensione.find({utenteRecensore : req.body.id}, (err, data) => {
+                        if(data){
+                            recFatte = data.length;
+                            Profilo.updateOne({_id : req.body.id}, 
+                                {$set : {recensioniFatte : recFatte, recensioniRicevute : recRicevute}},
+                                (err, data) => {
+                                    if(err) return res.status(500).json({Error: err});
+                                    return res.status(200).json({success: true, message : "Statistiche sulle recensioni correttamente aggiornate"});            
+                                })
+                        } else {
+                            if (err) return res.status(500).json({Error: err});
+                        }
+                    })
+                } else {
+                    if (err) return res.status(500).json({Error: err});
+                }
+            })
+        } else {
+            if (err) return res.status(500).json({Error: err});
+            return res.status(404).json({success: false, message: "Nessun profilo con id " + req.body.id})
+        }
+    })
+}
+
+const updateStatisticheAcquisti = (req, res) => {
+    Profilo.findById(req.body.id, (err, data) => {
+        if(data){
+            if(data.length == 0){
+                return res.status(404).json({success: false, message: "Nessun profilo con id " + req.body.id})
+            }
+            var spesi = 0;
+            Transazione.find({acquirente : req.body.id}, (err, data) => {
+                if(data){
+                    for(let i = 0; i < data.length; i++){
+                        spesi+=data[i].costo;
+                    }
+                    Profilo.updateOne({_id : req.body.id}, {$set : {soldiSpesi : spesi}}, (err, data) => {
+                        if(err) return res.status(500).json({Error: err});
+                        return res.status(200).json({success: true, message : "Statistiche di acquisto correttamente aggiornate"});            
+                    })
+                }
+            })
+        } else {
+            if (err) return res.status(500).json({Error: err});
+            return res.status(404).json({success: false, message: "Nessun profilo con id " + req.body.id})
+        }
+    })
+}
+
 module.exports = {
     saveNewProfilo,
     getAll,
@@ -313,5 +368,7 @@ module.exports = {
     updateRating,
     updateAnnunciOnline,
     updateStatisticheVendita,
-    commuteBestUsers
+    commuteBestUsers,
+    updateStatisticheAcquisti,
+    updateRecensioni
 }

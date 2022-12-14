@@ -143,6 +143,7 @@ const deleteAnnuncioById = async (req, res) => {
 //     })
 // }
 
+
 const filtraggioSuArray = (req, res) => {
     Annuncio.find({}, (err, data) => {
         if(data){
@@ -181,6 +182,10 @@ const updateAnn = (req, res) => {
             var indRit;
             if(req.body.via && req.body.citta && req.body.provincia){
                 indRit = {via : req.body.via, citta: req.body.citta, provincia: req.body.provincia};
+            }
+
+            if(req.body.descrizione == "null"){
+                req.body.descrizione = undefined;
             }
 
             Annuncio.updateOne({titolo : req.body.titolo},
@@ -231,6 +236,48 @@ const ordinaAnn = (req, res) => {
 
 }
 
+// Verifica che una keyword compaia nel titolo
+const getByKwTitle = (req, res) => {
+    const word = req.params.word;
+
+    Annuncio.find({},(err,data)=>{
+        if(data){
+            if(data[0] == undefined){
+                return res.status(404).json({success: false, message : "Nessun annuncio presente"})
+            }
+            const items = auxFilters.filterByTerm(data,word);
+            if(items[0] == undefined){
+                return res.status(404).json({success: false, message: "Nessun annuncio corrispondente alla keyword ricercata. "});
+            }
+            return res.status(200).json(items);
+        } else {
+            if(err) return res.status(500).json({Error: err});
+            return res.status(404).json({success: false, message : "Nessun annuncio presente"})
+        }
+    })
+}
+
+// Verifica che una keyword compaia nella descrizione
+const getByKwDescrizione = (req, res) => {
+    const word = req.params.word;
+
+    Annuncio.find({},(err,data)=>{
+        if(data){
+            if(data[0] == undefined){
+                return res.status(404).json({success: false, message : "Nessun annuncio presente"})
+            }
+            const items = auxFilters.filterByTermDesc(data,word);
+            if(items[0] == undefined){
+                return res.status(404).json({success: false, message: "Nessun annuncio corrispondente alla keyword ricercata. "});
+            }
+            return res.status(200).json(items);
+        } else {
+            if(err) return res.status(500).json({Error: err});
+            return res.status(404).json({success: false, message : "Nessun annuncio presente"})
+        }
+    })
+}
+
 //export controller functions
 module.exports = {
     saveNewAnnuncio,
@@ -240,5 +287,7 @@ module.exports = {
     getByUser,
     filtraggioSuArray,
     updateAnn,
-    ordinaAnn
+    ordinaAnn,
+    getByKwTitle,
+    getByKwDescrizione
 }
