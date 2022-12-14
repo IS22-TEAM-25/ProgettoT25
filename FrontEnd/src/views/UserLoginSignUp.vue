@@ -17,19 +17,19 @@
                     <v-col cols="12" md="8">
                       <v-card-text class="mt-12">
                         <h1 class="text-center display-2 accent--text">Accedi a Spottythings</h1>
-
-                        <v-form ref="form">
-                          <v-text-field label="Username" name="username" prepend-icon="username" type="username"
-                            color="accent" v-model="username" />
+                          <!-- @todo capire perchè non si disattiva il sign in -->
+                        <v-form ref="form" class ="login" v-model="valid">
+                          <v-text-field label="Username" name="username" prepend-icon="person" type="username"
+                            color="accent" v-model="username" :rules="required"/>
 
                           <v-text-field id="password" label="Password" name="password" prepend-icon="lock"
-                            type="password" color="accent" v-model="password" />
-                        </v-form>
-                        <h3 class="text-center mt-4">Forgot your password?</h3>
-                      </v-card-text>
-                      <div class="text-center mt-3">
-                        <v-btn rounded color="accent accent-3" dark @click="login">SIGN IN</v-btn>
-                      </div>
+                            type="password" color="accent" v-model="password" :rules="required"/>
+                            <h3 class="text-center mt-4">Forgot your password?</h3>
+                            <div class="text-center mt-3">
+                              <v-btn class="login" rounded color="accent accent-3" dark :disable="!valid" @click="login" >SIGN IN</v-btn>
+                            </div>
+                          </v-form>
+                        </v-card-text>
 
                       <v-container>
                         <v-alert v-if="accountCreato" type="success" justify="center">
@@ -65,7 +65,7 @@
                         <h1 class="text-center display-2 accent--text text--accent-3">Crea un Account</h1>
 
 
-                        <v-form v-model="valid" class="submit" @submit="handleSubmit">
+                        <v-form v-model="valid" class="submit">
                           <v-text-field v-model="username" id="username" label="Nome utente" name="Username"
                             prepend-icon="person" type="text" color="accent accent-3" :rules="required" />
                           <v-text-field v-model="nome" id="nome" label="Nome" name="Nome" prepend-icon="person"

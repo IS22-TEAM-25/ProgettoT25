@@ -6,14 +6,14 @@
         flat
         class="primary">
         
-        <v-row>
-            <v-app-bar-nav-icon v-if="search==true" @click="drawer=!drawer" >  </v-app-bar-nav-icon>
+
+            <v-app-bar-nav-icon v-if="search==true" @click="filtri=!filtri" >  </v-app-bar-nav-icon>
             <v-spacer v-if="search==true" ></v-spacer>
         
             <v-toolbar-title mx-auto>
                 <logoLinkHome/>
             </v-toolbar-title>
-        </v-row>
+
             <v-spacer></v-spacer>
             <router-link v-if="this.$store.state.dataAuth.success === false" to="/userloginsignup">
                 <v-btn 
@@ -25,6 +25,7 @@
             </v-btn>
         </router-link>
         <router-link v-else to="/">
+            <v-spacer></v-spacer>
                 <v-btn 
                 rounded 
                 depressed 
@@ -34,11 +35,10 @@
                 <v-icon>mdi-logout</v-icon>
             </v-btn>
         </router-link>
-        
-    </v-app-bar>
-        <v-navigation-drawer v-model="drawer" app class = indigo>
-            <p>
 
+    </v-app-bar>
+        <v-navigation-drawer v-model="filtri" app class = indigo>
+            <p>
                 {{search}}
             </p>
         </v-navigation-drawer>
@@ -52,7 +52,7 @@ import { mapState } from 'vuex';
 export default {
     data() {
         return {
-            drawer: false,
+            filtri: false,
         }
     },    
     components: { logoLinkHome },  
@@ -81,7 +81,8 @@ export default {
     },
     computed:  mapState({
        search: state => state.search,
-       username: state => state.username
+       username: state => state.username,
+       utenteLoggato: state => state.dataAuth.success
     }),
     created() {
     }
