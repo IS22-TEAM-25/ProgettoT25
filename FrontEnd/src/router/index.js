@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import UserLogin from '../views/UserLogin.vue'
-import UserSignUp from '../views/UserSignUp.vue'
+import UserLoginSignUp from '../views/UserLoginSignUp.vue'
 import ProductSpecs from '../views/ProductSpecs.vue'
 import SearchResults from '../views/SearchResults.vue'
 import PubblicaAnnuncio from '../views/PubblicaAnnuncio.vue'
@@ -16,14 +15,9 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/userlogin',
-    name: 'userlogin',
-    component: UserLogin
-  },
-  {
-    path: '/usersignup',
-    name: 'usersignup',
-    component: UserSignUp
+    path: '/userloginsignup',
+    name: 'userloginsignup',
+    component: UserLoginSignUp
   },
   {
     path: '/productspecs',

@@ -1,25 +1,21 @@
 <template>
     <nav>
-        <v-app-bar 
+        <v-app-bar v-if="!this.$store.state.loginupForms"
         height="100"
         app
         flat
         class="primary">
-        <v-app-bar-nav-icon v-if="search==true" @click="drawer=!drawer" >  </v-app-bar-nav-icon>
         
-        <v-spacer></v-spacer>
-            <v-toolbar-title align="center">
-               <router-link to="/">
-                   <span>
-                        <v-img 
-                        :src="require('@/assets/spottyLogo.png')" 
-                        contain 
-                        max-width="200"></v-img>
-                    </span>
-               </router-link> 
+        <v-row>
+            <v-app-bar-nav-icon v-if="search==true" @click="drawer=!drawer" >  </v-app-bar-nav-icon>
+            <v-spacer v-if="search==true" ></v-spacer>
+        
+            <v-toolbar-title mx-auto>
+                <logoLinkHome/>
             </v-toolbar-title>
+        </v-row>
             <v-spacer></v-spacer>
-            <router-link v-if="this.$store.state.dataAuth.success === false" to="/userlogin">
+            <router-link v-if="this.$store.state.dataAuth.success === false" to="/userloginsignup">
                 <v-btn 
                 rounded 
                 depressed 
@@ -51,6 +47,7 @@
 
 
 <script>
+import logoLinkHome from '@/components/logoLinkHome'
 import { mapState } from 'vuex';
 export default {
     data() {
@@ -58,6 +55,7 @@ export default {
             drawer: false,
         }
     },    
+    components: { logoLinkHome },  
     methods: {
         async logout() {
             console.log(this.$store.state.dataAuth.token);

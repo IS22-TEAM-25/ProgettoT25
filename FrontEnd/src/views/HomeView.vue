@@ -38,7 +38,8 @@ import categoryGrid from '@/components/categoryGrid'
     name: 'MyHome',
 
     created()  {
-      this.$store.commit('isResultView', false)
+      this.$store.commit('isResultView', false);
+      this.$store.state.loginupForms = false;
     }
   }
 </script>

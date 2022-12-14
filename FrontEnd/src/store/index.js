@@ -7,8 +7,10 @@ const getDefaultState = () => {
   return {
     category: '',
     search: false,
+    loginupForms: false,
     dataAuth: {success: false, message: '', token:'', user_id:''},
-    username: ''
+    username: '',
+
   }
 }
 
