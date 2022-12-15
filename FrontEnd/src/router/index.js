@@ -5,6 +5,7 @@ import UserLoginSignUp from '../views/UserLoginSignUp.vue'
 import ProductSpecs from '../views/ProductSpecs.vue'
 import SearchResults from '../views/SearchResults.vue'
 import PubblicaAnnuncio from '../views/PubblicaAnnuncio.vue'
+import UserProfile from '../views/UserProfile.vue'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/pubblicaannuncio',
     name: 'pubblicaannuncio',
     component: PubblicaAnnuncio
+  },
+  {
+    path: 'userprofile',
+    name: 'userprofile',
+    component: UserProfile
   }
 ]
 

@@ -5,7 +5,7 @@
 
         <v-container fluid>
             <v-row dense>
-                <v-col v-for="category in categories" 
+                <v-col v-for="category in this.$categories" 
                 :key="category.title" 
                 router :to="category.route"
                 :cols="category.flex">
@@ -29,20 +29,10 @@
 
 <script>
 
-
 export default {
 
     data: () => ({
-        categories: [
-            { title: 'tecnologia', src: 'Elettronica.png', flex: 3, route: '/searchresult' },
-            { title: 'animali', src: 'Animali.png', flex: 3, route: '/searchresult' },
-            { title: 'fai da te', src: 'Fai da te.png', flex: 3 },
-            { title: 'hobby', src: 'Hobby.png', flex: 3 },
-            { title: 'sport', src: 'Sport.png', flex: 3 },
-            { title: 'party', src: 'Party.png', flex: 3 },
-            { title: 'per la casa', src: 'Per la casa.png', flex: 3 },
-            { title: 'trasporti', src: 'Trasporti.png', flex: 3 }
-        ],
+        
     }),
     methods: {
         selectCat(cat) {
