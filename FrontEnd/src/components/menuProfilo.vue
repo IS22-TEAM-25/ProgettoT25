@@ -47,7 +47,7 @@
                                     <v-icon>mdi-border-color</v-icon>
                                 </v-list-item-icon>
                                 <v-list-item-content>
-                                <v-list-item-title>Pubblica Annuncio</v-list-item-title>
+                                <v-list-item-title @click="this.$router.push({path:'/pubblicaannuncio'})">Pubblica Annuncio</v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>
                             <v-list-item>
