@@ -8,8 +8,9 @@ const getDefaultState = () => {
     category: '',
     search: false,
     loginupForms: false,
-    dataAuth: {success: false, message: '', token:'', user_id:''},
-    username: '',
+    //dataAuth: {success: true, message: 'Benvenuto man', token:'', user_id:'', nome:'Federico', cognome:'Menegoz', username:'FirstUser'},
+    dataAuth: {success: false, message: '', token:'', user_id:'', },
+    datiUtente: {}
 
   }
 }
@@ -35,11 +36,14 @@ export default new Vuex.Store({
     isResultView (state, a) {
       state.search = a;
     },
-    autenticazione(state, { dataAuth, username}) {
-      localStorage.setItem('dataAuth', dataAuth);
-      localStorage.setItem('username', username);
-      state.dataAuth = dataAuth,
-      state.username = username
+    autenticazione(state, dataAuth) {
+      //localStorage.setItem('dataAuth', dataAuth);
+      // localStorage.setItem('username', username);
+      state.dataAuth = dataAuth;
+      // state.username = username
+    },
+    prendiDatiUtente(state, datiUtente) {
+      state.datiUtente = datiUtente;
     },
     resetState(state) {
       Object.assign(state, getDefaultState())

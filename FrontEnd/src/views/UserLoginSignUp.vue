@@ -132,6 +132,7 @@ export default {
     dob: '',
     indirizzo: '',
     metodiPagamento: '',
+    url:'http://localhost:8080/',
     required: [
       v => !!v || 'Campo obbligatorio'
     ],
@@ -155,7 +156,7 @@ export default {
     },
     async handleSubmit() {
       try {
-        fetch("http://localhost:8080/api/u/signUp", {
+        fetch(this.url + "api/u/signUp", {
           method: 'POST',
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: this.username, password: this.password, nome: this.nome, cognome: this.cognome, datadinascita: this.dob, indirizzo: this.indirizzo, email: this.email })
@@ -176,28 +177,41 @@ export default {
       }
     },
     async login() {
-      console.log(this.username, " ", this.password)
+      //console.log(this.username, " ", this.password)
       try {
-        fetch("http://localhost:8080/api/l/signIn", {
+        fetch(this.url + "api/l/signIn", {
           method: 'POST',
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: this.username, password: this.password }),
         }).then((resp) => resp.json())
           .then(data => {
             // Here you get the data to modify as you please
-            this.$store.commit('autenticazione', { dataAuth: data, username: this.username });
+          this.$store.commit('autenticazione', data/*{ dataAuth: data, username: this.username }*/);
             if (data.success) {
+              console.log(data);
               router.push("/");
             } else {
               this.error = true
             }
             console.log(data.message);
-
-
-            return;
-          })
+          }).then(this.getUser())
       } catch (error) {
         console.error(error); // If there is any error you will catch them here
+      }
+    },
+    async getUser() {
+      try {
+        console.log(this.url + "api/u/getu/" + this.username);
+        fetch(this.url + "api/u/getu/" + this.username, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" }
+        }).then((resp) => resp.json())
+        .then(data => {
+          this.$store.commit('prendiDatiUtente', data);
+          console.log(data);
+        })
+      } catch(error) {
+        console.error(error); 
       }
     }
 

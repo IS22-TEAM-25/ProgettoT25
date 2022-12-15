@@ -24,22 +24,13 @@
                 <v-icon>mdi-login</v-icon>
             </v-btn>
         </router-link>
-        <router-link v-else to="/">
-            <v-spacer></v-spacer>
-                <v-btn 
-                rounded 
-                depressed 
-                class="grey lighten-5 text-lowercase" 
-                @click="logout">
-                <span>logout {{ username }}</span>
-                <v-icon>mdi-logout</v-icon>
-            </v-btn>
-        </router-link>
+
+        <MenuProfilo v-if="this.$store.state.dataAuth.success === true"/>
 
     </v-app-bar>
         <v-navigation-drawer v-model="filtri" app class = indigo>
             <p>
-                {{search}}
+                {{ search }}
             </p>
         </v-navigation-drawer>
     </nav>
@@ -48,6 +39,7 @@
 
 <script>
 import logoLinkHome from '@/components/logoLinkHome'
+import MenuProfilo from '@/components/menuProfilo';
 import { mapState } from 'vuex';
 export default {
     data() {
@@ -55,29 +47,8 @@ export default {
             filtri: false,
         }
     },    
-    components: { logoLinkHome },  
+    components: { logoLinkHome, MenuProfilo },  
     methods: {
-        async logout() {
-            console.log(this.$store.state.dataAuth.token);
-            try {
-                fetch("http://localhost:8080/api/l/logout", {
-                    method: 'GET',
-                    headers: { 
-                      "Content-Type": "application/json",
-                      "x-access-token": this.$store.getters.token
-                    }
-                }).then((resp) =>resp.json())
-                .then(data => {
-                  console.log(data);
-
-                  this.$store.commit('resetState', this.$store.state);
-                  // DEBUG
-                  //console.log(this.$store.state)
-                })
-                } catch(error) {
-                    console.error(error); // If there is any error you will catch them here
-                }
-        }
     },
     computed:  mapState({
        search: state => state.search,
