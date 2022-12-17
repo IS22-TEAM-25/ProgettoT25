@@ -170,9 +170,9 @@
         <v-col :cols="3" ma="auto">
           <v-text-field
           v-model="costoVen"
-          id="costoS"
+          id="costoVen"
           label="Prezzo di Vendita?"
-          name="costoS"
+          name="costoVen"
           type="text"
           color="accent accent-3"
           filled
@@ -182,6 +182,20 @@
         </v-col>
       </v-row>
     </v-container>
+    <!-- <v-container>
+
+      <v-row>
+        <v-col :col="1" ma="auto">
+          <v-file-input 
+          label="Image input"
+          filled
+          prepend-icon="mdi-camera"
+          >
+        </v-file-input>
+  
+        </v-col>
+      </v-row>
+    </v-container> -->
     <v-spacer></v-spacer>
     <v-container>
       
@@ -295,7 +309,6 @@ export default {
 },  
 created() {
     this.$categories.forEach(v => this.categories.push(v.title));
-    console.log(this.categories)
   },
 
 

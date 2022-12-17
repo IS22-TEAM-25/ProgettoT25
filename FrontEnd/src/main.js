@@ -19,6 +19,7 @@ Vue.prototype.$categories = [
 
 Vue.prototype.$url = "http://localhost:8080/"
 
+
 new Vue({
   router,
   vuetify,

@@ -13,13 +13,14 @@
 
       <v-spacer></v-spacer>
       <v-text-field
-
+      v-model="keyword"
       class="d-inline-flex pa-2"
       placeholder="bicicletta, drone, consolle..."
       filled
       dense
       rounded
       append-icon="mdi-magnify"
+      @keyup.enter="ricercakw"
       ></v-text-field> 
       <v-spacer></v-spacer>
     </v-row>
@@ -36,10 +37,21 @@ import categoryGrid from '@/components/categoryGrid'
   export default {
     components : { categoryGrid },
     name: 'MyHome',
-
+    data () {
+      return {
+        keyword: '',
+      }
+    },
+    methods: {
+      ricercakw() {
+        this.$store.state.keyword = this.keyword;
+        this.$store.state.category = '';
+        this.$router.push("/searchresults") 
+      }
+    },
     created()  {
       this.$store.commit('isResultView', false);
-      this.$store.state.loginupForms = false;
+      this.$store.commit('resetResult');
     }
   }
 </script>
