@@ -18,7 +18,7 @@
                       <v-card-text class="mt-12">
                         <h1 class="text-center display-2 accent--text">Accedi a Spottythings</h1>
                           <!-- @todo capire perchè non si disattiva il sign in -->
-                        <v-form ref="form" class ="login" v-model="valid">
+                        <v-form ref="form" class ="submit" v-model="valid">
                           <v-text-field label="Username" name="username" prepend-icon="person" type="username"
                             color="accent" v-model="username" :rules="required"/>
 
@@ -26,7 +26,7 @@
                             type="password" color="accent" v-model="password" :rules="required"/>
                             <h3 class="text-center mt-4">Forgot your password?</h3>
                             <div class="text-center mt-3">
-                              <v-btn class="login" rounded color="accent accent-3" dark :disable="!valid" @click="login" >SIGN IN</v-btn>
+                              <v-btn class="submit" rounded color="accent accent-3" dark :disabled="!valid" @click="login" >SIGN IN</v-btn>
                             </div>
                           </v-form>
                         </v-card-text>

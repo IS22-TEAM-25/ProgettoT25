@@ -17,7 +17,7 @@ Vue.prototype.$categories = [
   { title: 'trasporti', src: 'Trasporti.png', flex: 3 }
 ]
 
-Vue.prototype.$url = "http://localhost:8081/"
+Vue.prototype.$url = "http://localhost:8080/"
 
 new Vue({
   router,

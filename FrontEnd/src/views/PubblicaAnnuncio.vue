@@ -41,7 +41,7 @@
     auto-grow></v-textarea>
     
     <v-text-field 
-    v-model="titolo" 
+    v-model="indirizzo" 
     id="indirizzo" 
     label="Indirizzo di ritiro" 
     name="indirizzo" 
@@ -52,23 +52,32 @@
     dense 
     rounded />
 
+    
+    <v-checkbox 
+      v-model= "affitto" 
+      :disable="vendita"
+      label="affitto"
+      color="indigo"
+      hide-details
+      large
+      @click="vendita = false"
+    ></v-checkbox>
+    <v-checkbox 
+      v-model= "vendita" 
+      :disable="affitto"
+      label="vendita"
+      color="indigo"
+      value="indigo"
+      hide-details
+      large
+      @click="affitto = false"
+    ></v-checkbox>
     <v-container
       
 
-
-    v-if="!vendita"
+    v-if="!vendita && affitto"
     >
     <v-row ma = "auto">
-      <v-col :cols="3">
-        <v-checkbox 
-        v-model= "affitto" 
-        :disable="vendita"
-        label="affitto"
-        color="indigo"
-        hide-details
-        large
-        ></v-checkbox>
-      </v-col >
 
       <v-col :cols="3">
         <v-text-field
@@ -78,7 +87,7 @@
         name="costoH"
         type="text"
         color="accent accent-3"
-        :rules="required"
+        :rules= "requiredAff"
         filled
         dense
         rounded      
@@ -93,7 +102,7 @@
         name="costoG"
         type="text"
         color="accent accent-3"
-        :rules="required"
+        :rules= "requiredAff"
         filled
         dense
         rounded      
@@ -108,7 +117,7 @@
         name="costoS"
         type="text"
         color="accent accent-3"
-        :rules="required"
+        :rules= "requiredAff"     
         filled
         dense
         rounded      
@@ -116,7 +125,7 @@
       </v-col>
 
     </v-row>
-    <v-row>
+    <!-- <v-row>
       <v-col>
       <v-btn  rounded align="center" justify="center">
         Aggiungi Date Non Diponibili
@@ -130,7 +139,7 @@
         name="startDate"
         type="date"
         color="accent accent-3"
-        :rules="required"
+        
         filled
         dense
         rounded      
@@ -138,47 +147,34 @@
       </v-col>
       <v-col :col="2">
         <v-text-field
-        v-model="range.start"
+        v-model="range.end"
         id="startdate"
         label="startDate"
         name="startDate"
         type="date"
         color="accent accent-3"
-        :rules="required"
+       
         filled
         dense
         rounded      
         />
       </v-col>
-      </v-row>
+      </v-row> -->
     </v-container>
 
 
     <v-container
-    v-if="!affitto" 
+    v-if="!affitto && vendita" 
     >
-      <v-row>
-        <v-col :cols="3" ma="auto">
-          <v-checkbox 
-          v-model= "vendita" 
-          :disable="affitto"
-          label="vendita"
-          color="indigo"
-          value="indigo"
-          hide-details
-          large
-          ></v-checkbox>
-        </v-col>
-        
+      <v-row>        
         <v-col :cols="3" ma="auto">
           <v-text-field
-          v-model="costoS"
+          v-model="costoVen"
           id="costoS"
           label="Prezzo di Vendita?"
           name="costoS"
           type="text"
           color="accent accent-3"
-          :rules="required"
           filled
           dense
           rounded      
@@ -186,9 +182,21 @@
         </v-col>
       </v-row>
     </v-container>
-
-
+    <v-spacer></v-spacer>
+    <v-container>
+      
+      <v-btn class="submit" rounded color="accent accent-3" dark @click="salvaAnnuncio" :disabled="!valid">Pubblica Annuncio</v-btn>
+      
+    </v-container>
   </v-form>
+  <v-container>
+    <v-alert v-if="annuncioSalvato" type="success" justify="center">
+      Annuncio salvato correttamente!
+    </v-alert>
+    <v-alert v-if="erroreAnnuncio" type="error" justify="center">
+      {{ message }}
+    </v-alert>
+  </v-container>
   </v-container>
 </template>
   
@@ -211,6 +219,16 @@ export default {
       periodoNonDisponibile: [],
       titolo: '',
       descrizione: '',
+      indirizzo: '',
+      annuncioSalvato: false,
+      erroreAnnuncio: false,
+      message: '',
+      requiredAff: [
+        v => !!v && this.affitto || 'Campo obbligatorio'
+      ],
+      requiredVen: [
+        v => !!v && this.vendita || 'Campo obbligatorio'
+      ],
       required: [
         v => !!v || 'Campo obbligatorio'
       ],
@@ -222,31 +240,60 @@ export default {
       ]
     }),
     methods: {
-    //   async salvaAnnuncio() {
-    //   try {
-    //     fetch(this.$url + "api/a/savea", {
-    //       method: 'POST',
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify({ username: this.username, password: this.password, nome: this.nome, cognome: this.cognome, datadinascita: this.dob, indirizzo: this.indirizzo, email: this.email })
-    //     }).then((resp) => resp.json())
-    //       .then(data => {
-    //         console.log(data);
-    //         if (data.success === false) {
-    //           this.message = data.message;
-    //           this.erroreRegistrazione = true;
-    //           return;
-    //         }
-    //         this.accountCreato = true;
-    //         this.step = 1;
-    //         //this.$refs.form.reset();
-    //       })
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // },
-    
+      async salvaAnnuncio() {
+          console.log(this.$store.getters.token)
+        try {
+          fetch(this.$url + "api/a/savea", {
+            method: 'POST',
+            headers: { 
+              "Content-Type": "application/json", 
+              "x-access-token": this.$store.getters.token},
+            body: JSON.stringify({ 
+              inserzionista: this.$store.state.datiUtente.username, 
+              titolo: this.titolo, 
+              descrizione: this.descrizione,
+              dataPubblicazione: this.today(),
+              modalitaTransazione: this.vendita ? "vendita" : "affitto", 
+              categoria: this.selectCat,
+              indirizzo: this.indirizzo, 
+              pagamentoOnline: this.pagamentoOnline,
+              contoPaypall: this.contoPayPal,
+              prezzo: this.costoVen,
+              prezzoAffittoAlGiorno: this.costoG,
+              prezzoAffittoSettimanale: this.costoS,
+              prezzoAffittoAllOra: this.costoH,
+            })
+          }).then((resp) => resp.json())
+            .then(data => {
+              console.log(data);
+              if (data.success === false) {
+                this.message = data.message;
+                this.erroreAnnuncio = true;
+                return;
+              }
+              this.annuncioSalvato = true;
+              //this.$refs.form.reset();
+            })
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      today() {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        return yyyy + "/" + mm + "/" + dd; 
+      }
+        
   },
-  created() {
+  mounted() {
+    if(this.$store.state.dataAuth.success == false) {
+      this.$router.push("/userloginsignup")
+    }
+  
+},  
+created() {
     this.$categories.forEach(v => this.categories.push(v.title));
     console.log(this.categories)
   },
