@@ -17,7 +17,6 @@
                     <v-col cols="12" md="8">
                       <v-card-text class="mt-12">
                         <h1 class="text-center display-2 accent--text">Accedi a Spottythings</h1>
-                          <!-- @todo capire perchè non si disattiva il sign in -->
                         <v-form ref="form" class ="submit" v-model="valid">
                           <v-text-field label="Username" name="username" prepend-icon="person" type="username"
                             color="accent" v-model="username" :rules="required"/>
@@ -34,6 +33,9 @@
                       <v-container>
                         <v-alert v-if="accountCreato" type="success" justify="center">
                           Registrazione avvenuta con successo!
+                        </v-alert>
+                        <v-alert v-if="acquistoUtenteNonAutenticato" type="error" justify="center">
+                          Effettuare il login prima di poter procedere alla transazione!
                         </v-alert>
                         <v-alert v-if="error" type="error" justify="center">
                           {{ message }}
@@ -192,7 +194,12 @@ export default {
           this.$store.commit('autenticazione', data/*{ dataAuth: data, username: this.username }*/);
             if (data.success) {
               console.log(data);
-              router.push("/");
+              if (this.acquistoUtenteNonAutenticato) {
+                router.push("/productspecs")
+              } else {
+                router.push("/");
+              }
+              this.$store.state.noNavBar = false;
             } else {
               this.error = true
             }
@@ -220,8 +227,14 @@ export default {
     }
 
   },
+  computed: {
+    acquistoUtenteNonAutenticato() {
+      return this.$store.state.prodottoInBallo;
+    }
+  },
   mounted() {
-    this.$store.state.loginupForms = true;
+    this.$store.state.noNavBar = true;
+    this.$store.state.search = false; 
   },
 };
 </script>

@@ -6,6 +6,7 @@ import ProductSpecs from '../views/ProductSpecs.vue'
 import SearchResults from '../views/SearchResults.vue'
 import PubblicaAnnuncio from '../views/PubblicaAnnuncio.vue'
 import UserProfile from '../views/UserProfile.vue'
+import UserReview from '../views/UserReview.vue'
 
 Vue.use(VueRouter)
 
@@ -34,6 +35,11 @@ const routes = [
     path: '/pubblicaannuncio',
     name: 'pubblicaannuncio',
     component: PubblicaAnnuncio
+  },
+  {
+    path: '/userreview',
+    name:'userreview',
+    component: UserReview
   },
   {
     path: 'userprofile',

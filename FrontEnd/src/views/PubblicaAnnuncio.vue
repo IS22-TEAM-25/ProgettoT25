@@ -267,7 +267,7 @@ export default {
               titolo: this.titolo, 
               descrizione: this.descrizione,
               dataPubblicazione: this.today(),
-              modalitaTransazione: this.vendita ? "vendita" : "affitto", 
+              modalitaTransazione: this.vendita ? "Vendita" : "Affitto", 
               categoria: this.selectCat,
               indirizzo: this.indirizzo, 
               pagamentoOnline: this.pagamentoOnline,
