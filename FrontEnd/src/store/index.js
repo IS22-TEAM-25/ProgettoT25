@@ -9,10 +9,13 @@ const getDefaultState = () => {
     annunci: [],
     search: false,
     keyword: '',
-    loginupForms: false,
+    noNavBar: false,
     //dataAuth: {success: true, message: 'Benvenuto man', token:'', user_id:'', nome:'Federico', cognome:'Menegoz', username:'FirstUser'},
     dataAuth: {success: false, message: '', token:'', user_id:'', },
     datiUtente: {},
+    annuncioSelezionato: {},
+    prodottoInBallo: false,
+    transazione:{},
   }
 }
 
@@ -52,8 +55,7 @@ export default new Vuex.Store({
     },
     resetResult(state) {
       state.category='',
-      state.keyword='',
-      state.loginupForms= false
+      state.keyword=''
     }
 
   },

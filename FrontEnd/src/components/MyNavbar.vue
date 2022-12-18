@@ -1,6 +1,6 @@
 <template>
     <nav>
-        <v-app-bar v-if="!this.$store.state.loginupForms"
+        <v-app-bar v-if="!this.$store.state.noNavBar"
         height="100"
         app
         flat
@@ -50,7 +50,15 @@
               ></v-switch>
             </v-list-item-action>
             <v-list-item-title>data</v-list-item-title>
+            <v-checkbox
+            v-model="ascData"
+            on-icon="mdi-sort-numeric-descending"
+            off-icon="mdi-sort-numeric-ascending"
+            label="verso"
+            color="indigo">
+            </v-checkbox>
           </v-list-item>
+
 
           <v-list-item>
             <v-list-item-action>
@@ -61,7 +69,13 @@
               ></v-switch>
             </v-list-item-action>
             <v-list-item-title>prezzo</v-list-item-title>
-
+            <v-checkbox
+            v-model="ascPrezzo"
+            on-icon="mdi-sort-numeric-descending"
+            off-icon="mdi-sort-numeric-ascending"
+            label="verso"
+            color="indigo">
+            </v-checkbox>
           </v-list-item>
 
           <v-list-item>
@@ -131,8 +145,10 @@ export default {
             selectCat: this.$store.state.category,
             filtri: false,
             ordinaData: false,
-            ordinaRating: true,
+            ascData: false,
             ordinaPrezzo: false,
+            ascPrezzo: false,
+            ordinaRating: true,
             affitto: false,
             vendita: false,
             categoriaSelezionata: '',
@@ -150,21 +166,56 @@ export default {
     components: { logoLinkHome, MenuProfilo },  
     methods: {
         findMaxPrice() {
-            return Math.max.apply(Math, this.annunci.map(function(o) { return o.prezzo; }))
+            return Math.max.apply(Math, this.annunci.map(function(o) { 
+              if (o.prezzo === undefined) {
+                return 0;
+              }
+              return o.prezzo; 
+            }))
         },
-        applicaFiltri() {
-            this.$store.state.annunci = this.$store.state.annunci.filter(function(o) { 
-                console.log(this.filterMin)
-                var ok = true;
-                //if (!this.affitto && o.modalitaTransazione !== 'Affitto') ok = false
-                //if (!this.vendita && o.modalitaTransazione !== 'Vendita') ok = false
-                if (o.prezzo < this.filterMin) ok = false
-                if (o.prezzo > this.filterMax) ok = false
-                if (this.categoriaSelezionata !== '' && o.categoria !== this.categoriaSelezionata) ok = false
-                return ok;
-            })
-
+        filtraggio(x) {
+          var ok = true;
+          if (this.affitto && x.modalitaTransazione !== 'Affitto') ok = false
+          if (!this.affitto && x.modalitaTransazione === 'Affitto') ok = false
+          if (this.vendita && x.modalitaTransazione !== 'Vendita') ok = false
+          if (!this.vendita && x.modalitaTransazione === 'Vendita') ok = false
+          if (x.prezzo < this.filterMin) ok = false
+          if (x.prezzo > this.filterMax) ok = false
+          if (this.categoriaSelezionata !== '' && x.categoria !== this.categoriaSelezionata) ok = false
+          return ok;
+        },
+        ordinamento() {
+          if(this.ordinaPrezzo && this.ascPrezzo) return 'm1';
+          if(this.ordinaPrezzo && !this.ascPrezzo) return 'm2';
+          if(this.ordinaData && this.ascData) return 'd1';
+          if(this.ordinaData && !this.ascData) return 'd2';
+        },
+        async applicaFiltri() {
+          try {
+                console.log(this.endpoint)
+                fetch(this.$url + "api/a/ordina/" + this.ordinamento(), {
+                    method: 'GET',
+                    headers: { "Content-Type": "application/json" }
+                }).then((resp) =>resp.json())
+                .then(data => {
+                  // Here you get the data to modify as you please
+                this.$store.state.annunci = data.filter(a => a.visibile === true)
+                if (this.$store.state.annunci[0] === undefined) this.isEmpty=true; 
+                  return;
+                })
+                } catch(error) {
+                    console.error(error); // If there is any error you will catch them here
+                }
             
+            this.$store.state.annunci = this.$store.state.annunci.filter(this.filtraggio);
+            if(this.ordinaData) {
+              console.log(this.$store.state.annunci)
+              this.$store.state.annunci.sort((a,b) => a.dataPubblicazione > b.dataPubblicazione)  
+            } else if (this.ordinaPrezzo) {
+              this.$store.state.annunci.sort((a,b) => a.prezzo > b.prezzo)
+            } else {
+              this.$store.state.annunci.sort((a,b) => a.rating > b.rating)
+            }
         }
     },
     computed:  mapState({

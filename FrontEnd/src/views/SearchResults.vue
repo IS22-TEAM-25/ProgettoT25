@@ -5,39 +5,53 @@
             <v-container v-if="!isEmpty" fluid>
                 <v-row dense>
                     <v-col v-for="annuncio in annunci" :key="annuncio._id" :cols="4">
-                        <v-card flat @click="vaiAlleSpec" on>
+                        <v-card :id="annuncio.titolo" @click="vaiAlleSpec(annuncio)" on >
                             <v-img 
                             rounded 
                             :src="require('../assets/vuoto.webp')" 
                             class="white--text align-end" 
                             contain>
                             </v-img>
-                            <v-card>
-                            <v-card-title class="black--text">{{ annuncio.titolo }}</v-card-title>
-                                <v-card-text class="black--text"> 
-                                    <v-row
+                            <v-card >
+                            <v-card-title color="grey" class="indigo--text">{{ annuncio.titolo }}</v-card-title>
+                                <v-card-text class="black--text" > 
+                                    <v-card flat v-if="annuncio.modalitaTransazione ==='Vendita'"
                                     align="center"
                                     class="mx-0"
                                     >
-                                    
-                                    <h2>
-
+                                    <h4 class="grey--text">
+                                        prezzo proposto
+                                    </h4>
+                                    <h4>
                                         {{ euro.format(annuncio.prezzo) }} 
-                                    </h2>
+                                    </h4>
                                     
-                                </v-row>
-                                <v-row>
+                                </v-card>
+                                <v-card flat v-else-if="annuncio.modalitaTransazione === 'Affitto'"
+                                align="center"
+                                class="mx-0"
+                                >
+                                <h4 class="grey--text">ora     /     giorno     /    settimana</h4>
+
+                                <h4>
+                                   {{euro.format(annuncio.prezzoAffittoAllOra)}}    /   {{euro.format(annuncio.prezzoAffittoAlGiorno)}}     /   {{euro.format(annuncio.prezzoAffittoSettimanale)}} 
+                                </h4>
+                            
+                            </v-card>
+                            <!-- capire perchè le recensioni  -->
+                                <v-card >
                                     
                                     <v-rating
-                                    :value="4.5"
+                                    :value="annuncio.rating"
                                     color="amber"
                                     dense
                                     half-increments
                                     readonly
                                     size="14"
                                     ></v-rating>
-                                    <div class="grey--text"> {{annuncio.inserzionista}} (10)</div>
-                                </v-row>
+                                    <div class="grey--text"> {{annuncio.inserzionista}} ({{ annuncio.nRecensioni }})</div>
+                                    <div>Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</div>
+                                </v-card>
                                 </v-card-text>
                             </v-card>
                             <v-spacer></v-spacer>
@@ -53,11 +67,19 @@
 
 <script>
 import { mapState } from "vuex";
-
+import format from 'date-fns/format';
 
 export default {
     data () {
         return {
+            headerAffitto: [
+                "€/ora",
+                "€/giorno",
+                "€/settimana"
+            ],
+            prezziAffitto: [
+
+            ],
             localCat: '',
             endpoint: '',
             cat: '',
@@ -80,6 +102,37 @@ export default {
 
 
     methods: {
+        formattedDate(date) {
+            return format(new Date(date), 'dd/M/YYY')
+        },
+        async getRating(annuncio) {
+            try {
+                fetch(this.$url + "api/p/getp/" + annuncio.inserzionista, {
+                    method: 'GET',
+                    headers: { "Content-Type": "application/json" }
+                }).then((resp) => resp.json())
+                .then(data => {
+                    console.log(data.rating)
+                    annuncio.rating = data.rating;
+                })
+            } catch (error) {
+                console.error(error);
+            }
+        },  
+        async getNumRecensioni(annuncio) {
+            console.log(annuncio.inserzionista)
+            try {
+                fetch(this.$url + "api/p/getp/" + annuncio.inserzionista, {
+                    method: 'GET',
+                    headers: { "Content-Type": "application/json" }
+                }).then((resp) => resp.json())
+                .then(data => {
+                annuncio.nRecensioni = data.recensioniRicevute;
+                })
+            } catch (error) {
+                console.error(error);
+            }
+        },  
         async getfa() {
             try {
                 fetch(this.endpoint, {
@@ -89,8 +142,8 @@ export default {
                 }).then((resp) =>resp.json())
                 .then(data => {
                   // Here you get the data to modify as you please
-
-                this.$store.state.annunci = data
+                
+                this.$store.state.annunci = data.filter(a => a.visibile === true)
                 if (this.$store.state.annunci[0] === undefined) this.isEmpty=true; 
                   return;
                 })
@@ -107,7 +160,7 @@ export default {
                 }).then((resp) =>resp.json())
                 .then(data => {
                   // Here you get the data to modify as you please
-                this.$store.state.annunci = data
+                this.$store.state.annunci = data.filter(a => a.visibile === true)
                 if (this.$store.state.annunci[0] === undefined) this.isEmpty=true; 
                   return;
                 })
@@ -115,8 +168,9 @@ export default {
                     console.error(error); // If there is any error you will catch them here
                 }
         },
-        vaiAlleSpec() {
-            this.$router.push("/productspecs")
+        vaiAlleSpec(annuncio) {
+            this.$store.state.annuncioSelezionato = annuncio;
+            this.$router.push("/productspecs");
         },  
         onInput() {
             this.cat = this.$refs.input.value
@@ -130,16 +184,24 @@ export default {
             this.getAll();
         }
         else if (this.cat === '') {
-            this.endpoint = this.API_URL+'getAll'
-            this.method = 'GET'
+            this.endpoint = this.API_URL+'getAll';
+            this.method = 'GET';
             this.getAll();
             //if (this.annunci)
         } else {
             this.endpoint = this.API_URL+'getaf';
-            this.method = 'POST'
+            this.method = 'POST';
             this.getfa();
         } 
-        this.$store.commit('isResultView', true)           
-    }    
+        // datirecensione un array con due elementi il primo è la valutazione e la seconda è il numero di recensioni
+        this.$store.commit('isResultView', true);
+        console.log(this.$store.state.annunci)
+        this.$store.state.annunci.forEach(annuncio => this.getRating(annuncio));
+        this.$store.state.annunci.forEach(annuncio => this.getNumRecensioni(annuncio));
+        console.log(this.$store.state.annunci)
+    },
+    updated() {
+        if(this.$store.state.annunci[0] === undefined) this.isEmpty = true;
+    } 
 }
 </script>
