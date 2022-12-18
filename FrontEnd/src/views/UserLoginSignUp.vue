@@ -35,6 +35,9 @@
                         <v-alert v-if="accountCreato" type="success" justify="center">
                           Registrazione avvenuta con successo!
                         </v-alert>
+                        <v-alert v-if="error" type="error" justify="center">
+                          {{ message }}
+                        </v-alert>
                       </v-container>
                     </v-col>
                     <v-col cols="12" md="4" class="accent accent-3">
@@ -193,6 +196,7 @@ export default {
             } else {
               this.error = true
             }
+            this.message = data.message;
             console.log(data.message);
           }).then(this.getUser())
       } catch (error) {

@@ -6,12 +6,13 @@ Vue.use(Vuex)
 const getDefaultState = () => {
   return {
     category: '',
+    annunci: [],
     search: false,
+    keyword: '',
     loginupForms: false,
     //dataAuth: {success: true, message: 'Benvenuto man', token:'', user_id:'', nome:'Federico', cognome:'Menegoz', username:'FirstUser'},
     dataAuth: {success: false, message: '', token:'', user_id:'', },
-    datiUtente: {}
-
+    datiUtente: {},
   }
 }
 
@@ -48,6 +49,11 @@ export default new Vuex.Store({
     resetState(state) {
       Object.assign(state, getDefaultState())
       console.log("resettato")
+    },
+    resetResult(state) {
+      state.category='',
+      state.keyword='',
+      state.loginupForms= false
     }
 
   },

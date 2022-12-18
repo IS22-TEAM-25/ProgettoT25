@@ -1,21 +1,45 @@
 <template>
     <div class="searchresults">
-        <v-container>
-
-            <h1>Risultati ricerca {{ cate }}</h1>
-            <input type="text" ref="input">
-            <v-btn @click="onInput"> ok </v-btn>
-            <h2>{{ $store.state.category }}</h2>
-        </v-container>
+       
         <v-card class="mx-auto justify-center" max-width="1000">
             <v-container v-if="!isEmpty" fluid>
                 <v-row dense>
                     <v-col v-for="annuncio in annunci" :key="annuncio._id" :cols="4">
-                        <v-card flat @click="selectCat(category.title)">
-                            <v-img rounded :src="require('../assets/vuoto.webp')" class="white--text align-end" contain>
+                        <v-card flat @click="vaiAlleSpec" on>
+                            <v-img 
+                            rounded 
+                            :src="require('../assets/vuoto.webp')" 
+                            class="white--text align-end" 
+                            contain>
                             </v-img>
-                            <span class="secondary right">{{ annuncio.titolo }}</span>
-                            <span clas="secondary"> {{ annuncio.prezzo }}</span>
+                            <v-card>
+                            <v-card-title class="black--text">{{ annuncio.titolo }}</v-card-title>
+                                <v-card-text class="black--text"> 
+                                    <v-row
+                                    align="center"
+                                    class="mx-0"
+                                    >
+                                    
+                                    <h2>
+
+                                        {{ euro.format(annuncio.prezzo) }} 
+                                    </h2>
+                                    
+                                </v-row>
+                                <v-row>
+                                    
+                                    <v-rating
+                                    :value="4.5"
+                                    color="amber"
+                                    dense
+                                    half-increments
+                                    readonly
+                                    size="14"
+                                    ></v-rating>
+                                    <div class="grey--text"> {{annuncio.inserzionista}} (10)</div>
+                                </v-row>
+                                </v-card-text>
+                            </v-card>
                             <v-spacer></v-spacer>
                         </v-card>
                     </v-col>
@@ -34,17 +58,24 @@ import { mapState } from "vuex";
 export default {
     data () {
         return {
-            annunci: [],
             localCat: '',
             endpoint: '',
             cat: '',
             method: '',
+            keyword: '',
             isEmpty: false,
-            API_URL: 'http://localhost:8080/api/a/'
+            API_URL: this.$url + 'api/a/',
+            euro:  
+            new Intl.NumberFormat('en-DE', {
+                style: 'currency',
+                currency: 'EUR',
+            })
+
         }
     },
     computed:  mapState({
-       cate: state => state.category
+       cate: state => state.category,
+       annunci: state => state.annunci
     }),
 
 
@@ -59,8 +90,8 @@ export default {
                 .then(data => {
                   // Here you get the data to modify as you please
 
-                this.annunci = data
-                if (this.annunci[0] === undefined) this.isEmpty=true; 
+                this.$store.state.annunci = data
+                if (this.$store.state.annunci[0] === undefined) this.isEmpty=true; 
                   return;
                 })
                 } catch(error) {
@@ -76,15 +107,17 @@ export default {
                 }).then((resp) =>resp.json())
                 .then(data => {
                   // Here you get the data to modify as you please
-                this.annunci = data
-                if (this.annunci[0] === undefined) this.isEmpty=true; 
+                this.$store.state.annunci = data
+                if (this.$store.state.annunci[0] === undefined) this.isEmpty=true; 
                   return;
                 })
                 } catch(error) {
                     console.error(error); // If there is any error you will catch them here
                 }
         },
-    
+        vaiAlleSpec() {
+            this.$router.push("/productspecs")
+        },  
         onInput() {
             this.cat = this.$refs.input.value
             this.$store.commit('selectCat', this.localCat)
@@ -92,8 +125,11 @@ export default {
     },
     created() {
         this.cat = this.$store.state.category;
-        console.log("La categoria è: ", this.cat)
-        if (this.cat === '') {
+        if(this.$store.state.keyword !== '') {
+            this.endpoint = this.API_URL + "getkt/" + this.$store.state.keyword;
+            this.getAll();
+        }
+        else if (this.cat === '') {
             this.endpoint = this.API_URL+'getAll'
             this.method = 'GET'
             this.getAll();
