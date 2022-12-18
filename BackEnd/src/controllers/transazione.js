@@ -6,15 +6,11 @@ const auxdate = require("../auxiliaries/dateFunction");
 const auxId = require("../auxiliaries/createId");
 
 const saveNewTrans = (req, res) => {
-    const id = auxId.createId(req.body.dataTransazione,req.body.prodotto,req.body.acquirente, req.body.venditore);
+    const objd = new Date();
+    const id = auxId.createId(objd,req.body.prodotto,req.body.acquirente, req.body.venditore);
 
     Transazione.findById(id, (err, data) => {
         if(!data){
-
-            if(!req.body.dataTransazione || !auxdate.validateDate2(req.body.dataTransazione)){
-                const today = new Date();
-                req.body.dataTransazione = today;
-            }
             
             Utente.findOne({username : req.body.acquirente}, (err, data) => {
                 if(data){
@@ -28,7 +24,7 @@ const saveNewTrans = (req, res) => {
                                     prodotto : req.body.prodotto,
                                     pagamentoEffettuato : req.body.pagamentoEffettuato,
                                     costo : data.prezzo,
-                                    dataTransazione : req.body.dataTransazione,
+                                    dataTransazione : objd,
                                     metodoTransazione : req.body.metodoTransazione,
                                     tipologiaTransazione : data.modalitaTransazione
                                 });

@@ -1,6 +1,5 @@
 function createId(data, prodotto, acquirente, venditore){
-    const dataobj = new Date(data);
-    const tempo = dataobj.getTime();
+    const tempo = data.getTime();
     return prodotto.charAt(0) + "-" + acquirente.charAt(0) + "-" + venditore.charAt(0) + "-" + tempo;
 }
 
