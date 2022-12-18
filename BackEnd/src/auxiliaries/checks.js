@@ -29,4 +29,11 @@ const validateDate = (data) => {
     );
 }
 
+// const today = new Date();
+// const todayRightFormat = new Date(today.getFullYear() + "-" + (today.getMonth() +1) + "-" + today.getDate());
+
+// console.log(today);
+// console.log(todayRightFormat);
+
+
 module.exports = {checkPw, validateEmail, validateDate};

@@ -7,8 +7,8 @@ const routerUtente = express.Router();
 const utenteController = require('../controllers/utente');
 
 routerUtente.post('/signUp', upload.none(), utenteController.saveNewUser);
-routerUtente.delete('/deletee/:email', utenteController.deleteUserbyEmail);
 routerUtente.delete('/deleteu/:username', utenteController.deleteUserbyUsername);
+routerUtente.delete('/deletee/:email', utenteController.deleteUserbyEmail);
 routerUtente.get('/getAll', utenteController.getAll);
 routerUtente.get('/getu/:username', utenteController.getByUsername);
 routerUtente.get('/gete/:email', utenteController.getByEmail);

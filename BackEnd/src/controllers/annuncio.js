@@ -8,7 +8,7 @@ const saveNewAnnuncio = (req,res) => {
         if(!data){
             User.findOne({username: req.body.inserzionista}, (err, data) => {
                 if(!data){
-                    if (err) return res.status(500).json('Errore! ${err}');
+                    if (err) return res.status(500).json({Error: err});
                     return res.status(404).json({success: false, message: "Inserzionista non presente!"});
                 } else {
 
@@ -20,16 +20,10 @@ const saveNewAnnuncio = (req,res) => {
                         }
                     }
 
-                    //DATA DEVE ESSERE BEN FORMATTATA!
+                    //DATA inserita dal programma!
                     //yyyy-mm-dd 
-                    var objd;
-                    if(!req.body.dataPubblicazione){
-                        objd = new Date();
-                        objd = new Date(objd.getDate() + "-" + (objd.getMonth()+1) + "-" + objd.getFullYear());
-                    } else {
-                        objd = new Date(req.body.dataPubblicazione);
-                    }
-
+                    var today = new Date();
+                    var objd = new Date(today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate());
 
                     const indirizzoRitiro = {via : req.body.via, citta: req.body.citta, provincia: req.body.provincia};
 
@@ -67,8 +61,8 @@ const saveNewAnnuncio = (req,res) => {
                 }
             }) 
         } else {
-            if (err) return res.status(500).json ('Errore! ${err}');
-            return res.status(400).json({success: false, message:"Annuncio già presente con questo titolo!"});
+            if (err) return res.status(500).json ({Error : err});
+            return res.status(409).json({success: false, message:"Annuncio già presente con questo titolo!"});
         }
     })
 }
@@ -121,29 +115,6 @@ const deleteAnnuncioById = async (req, res) => {
     return res.status(204).send();
 }
 
-// const getByFilters = (req,res) => {
-//     auxFilters.commuteFilter(req.body);
-//     const vf = auxFilters.filtri;
-//     // for(let i = 0; i<5; i++){
-//     //     console.log(vf[i]);
-//     // }
-//     Annuncio.find(
-//         {categoria: vf[0], modalitaTransazione: vf[1], pagamentoOnline: vf[2],
-//         prezzo: vf[3], indirizzoRitiro: vf[4]}, 
-//         (err, data) => {
-//         if(data){
-//             if(data[0] == undefined){
-//                 return res.status(404).json({success: false, message: "Nessun annuncio corrispondente ai filtri scelti"});
-//             }
-//             return res.status(200).json(data);
-//         } else {
-//             if(err) return res.status(500).json({Error: err});
-//             return res.status(404).json({success: false, message: "Nessun annuncio corrispondente ai filtri scelti"});
-//         }
-//     })
-// }
-
-
 const filtraggioSuArray = (req, res) => {
     Annuncio.find({}, (err, data) => {
         if(data){
@@ -152,7 +123,7 @@ const filtraggioSuArray = (req, res) => {
             } else {
                 var listaAnnunci = auxFilters.filterArray(data,req.body);
                 if(listaAnnunci[0] == undefined){
-                    return res.status(200).json({success: false, message: "Nessun annuncio corrispondente ai filtri di ricerca"});
+                    return res.status(404).json({success: false, message: "Nessun annuncio corrispondente ai filtri di ricerca"});
                 } else {
                     return res.status(200).json(listaAnnunci);
                 }
@@ -184,10 +155,6 @@ const updateAnn = (req, res) => {
                 indRit = {via : req.body.via, citta: req.body.citta, provincia: req.body.provincia};
             }
 
-            if(req.body.descrizione == "null"){
-                req.body.descrizione = undefined;
-            }
-
             Annuncio.updateOne({titolo : req.body.titolo},
                 { $set : {
                     descrizione : req.body.descrizione,
@@ -204,39 +171,67 @@ const updateAnn = (req, res) => {
                     sponsorizzato : req.body.sponsorizzato
                 }}, (err, data) => {
                     if(err) return res.status(500).json({Error: err});
-                    return res.status(200).json({success: true, message : "Dati correttamente aggiornati"});    
+                    return res.status(204).send();    
                 })
         }
     });
 }
 
-const ordinaAnn = (req, res) => {
-    const p = req.params.p;
-    Annuncio.find({},(err,data)=>{
-        if(data){
-            if(data[0] == undefined){
-                return res.status(404).json({success: false, message : "Nessun annuncio presente"})
-            }
-            if(p == "d1"){
-                return res.status(200).json(auxFilters.orderAnnunciByDate(data));
-            } else if(p == "d2"){
-                return res.status(200).json(auxFilters.orderAnnunciByDateDESC(data));
-            } else if(p == "m1"){
-                return res.status(200).json(auxFilters.orderAnnunciByMoney(data));
-            } else if(p == "m2"){
-                return res.status(200).json(auxFilters.orderAnnunciByMoneyDESC(data));
-            } else {
-                return res.status(400).json({success: false, message : "Specificare ordinamento"})
-            }
-        } else {
-            if(err) return res.status(500).json({Error: err});
-            return res.status(404).json({success: false, message : "Nessun annuncio presente"})
-        }
-    })
+// const ordinaAnn = (req, res) => {
+//     const p = req.params.p;
+//     Annuncio.find({},(err,data)=>{
+//         if(data){
+//             if(data[0] == undefined){
+//                 return res.status(404).json({success: false, message : "Nessun annuncio presente"})
+//             }
+//             if(p == "d1"){
+//                 return res.status(200).json(auxFilters.orderAnnunciByDate(data));
+//             } else if(p == "d2"){
+//                 return res.status(200).json(auxFilters.orderAnnunciByDateDESC(data));
+//             } else if(p == "m1"){
+//                 return res.status(200).json(auxFilters.orderAnnunciByMoney(data));
+//             } else if(p == "m2"){
+//                 return res.status(200).json(auxFilters.orderAnnunciByMoneyDESC(data));
+//             } else {
+//                 return res.status(400).json({success: false, message : "Specificare ordinamento"})
+//             }
+//         } else {
+//             if(err) return res.status(500).json({Error: err});
+//             return res.status(404).json({success: false, message : "Nessun annuncio presente"})
+//         }
+//     })
 
-}
+// }
+
+//DOCUMENTAZIONE di ordinaAnn
+// "/api/a/ordina/{p}" : {
+//     "get" : {
+//         "tags" : ["Annuncio"],
+//         "summary" : "Usata per ottenere tutti gli annunci ordinati secondo un ordinamento specifico.",
+//         "responses" : {
+//             "200" : {
+//                 "description" : "OK. Si ottengono correttamente tutti gli annunci postati dall'utente specificato."
+//             },
+//             "500" : {
+//                 "description" : "SERVER ERROR. Di varia natura."
+//             },
+//             "404" : {
+//                 "description" : "NOT FOUND. Nessun annuncio nel sistema."
+//             }
+//         },
+//         "parameters" : [
+//             {
+//                 "name" : "p",
+//                 "in" : "path",
+//                 "description" : "Valore che specifica l'ordinamento desiderato. Possibili valori di 'p': \n'd1': data di pubblicazione crescente.\n'd2': data di pubblicazione decrescente.\n'm1': prezzo crescente.\n'm2': prezzo decrescente."
+//             }
+//         ]
+//     }
+// },
 
 // Verifica che una keyword compaia nel titolo
+
+
 const getByKwTitle = (req, res) => {
     const word = req.params.word;
 
@@ -287,7 +282,6 @@ module.exports = {
     getByUser,
     filtraggioSuArray,
     updateAnn,
-    ordinaAnn,
     getByKwTitle,
     getByKwDescrizione
 }

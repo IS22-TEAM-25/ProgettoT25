@@ -5,8 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "run": "node ./src/server.js"
+    "start": "node server.js"
   },
   "keywords": [
     "webApp",
@@ -22,6 +21,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.5",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.8.0",
     "run": "^1.4.0",
     "swagger-ui-express": "^4.6.0"
   }

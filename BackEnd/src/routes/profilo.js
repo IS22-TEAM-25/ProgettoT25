@@ -21,5 +21,4 @@ routerProfilo.patch('/rimuoviwl', upload.none(), profiloController.rimuoviWl);
 routerProfilo.patch('/updateao', upload.none(), profiloController.updateAnnunciOnline);
 routerProfilo.patch('/updatesv', upload.none(), profiloController.updateStatisticheVendita);
 routerProfilo.patch('/updatesa',upload.none(),profiloController.updateStatisticheAcquisti);
-routerProfilo.patch('/updaterec',upload.none(),profiloController.updateRecensioni);
 module.exports = routerProfilo;

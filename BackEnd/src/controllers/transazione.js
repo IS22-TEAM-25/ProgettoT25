@@ -11,12 +11,9 @@ const saveNewTrans = (req, res) => {
     Transazione.findById(id, (err, data) => {
         if(!data){
 
-            if(!req.body.dataTransazione){
-                req.body.dataTransazione = new Date();
-            } else {
-                if (!auxdate.validateDate(req.body.dataTransazione)){
-                    return res.status(400).json({success: false, message: "Data mal formata!"})
-                }
+            if(!req.body.dataTransazione || !auxdate.validateDate2(req.body.dataTransazione)){
+                const today = new Date();
+                req.body.dataTransazione = today;
             }
             
             Utente.findOne({username : req.body.acquirente}, (err, data) => {

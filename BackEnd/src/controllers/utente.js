@@ -9,17 +9,6 @@ const saveNewUser = (req,res) => {
         if(!data){
             User.findOne({username: req.body.username}, (err, data) => {
                 if(!data){
-                    if(!aux.checkPw(req.body.password)){
-                        return res.status(400).json({success : false, message: "Password non rispetta i requisiti!"});
-                    }
-                    
-                    if(!aux.validateEmail(req.body.email)){
-                        return res.status(400).json({success : false, message: "Email non valida!"});
-                    }
-
-                    // if(!aux.validateDate(req.body.datadinascita)){
-                    //     return res.status(400).json({success : false, message: "DDN non valida!"});
-                    // }
 
                     const newUser = new User ({
                         _id : req.body.username,
@@ -39,15 +28,30 @@ const saveNewUser = (req,res) => {
                     })
 
                 } else {
-                    if (err) return res.json('Errore! ${err}');
+                    if (err) return res.json({Error: err});
                     return res.status(409).json({success : false, message: "Username già preso!"})
                 }
             }) 
         } else {
-            if (err) return res.status(500).json ('Errore! ${err}');
+            if (err) return res.status(500).json ({Error: err});
             return res.status(409).json({success : false, message:"Utente già presente con questa mail!"});
         }
     })
+}
+
+//api di servizio utilizzata per gestire la pulizia del database
+
+const deleteUserbyEmail = async (req, res) => {
+
+    let data = await User.findOne({email : req.params.email}).exec();
+
+    if(!data){
+        return res.status(404).json({success: false, message: "Utente non presente!"})
+    } else {
+        await User.deleteOne({email: req.params.email});
+        return res.status(204).send();
+    }
+
 }
 
 const deleteUserbyUsername = async (req, res) => {
@@ -63,22 +67,12 @@ const deleteUserbyUsername = async (req, res) => {
 
 }
 
-const deleteUserbyEmail = async (req, res) => {
-
-    let data = await User.findOne({email : req.params.email}).exec();
-
-    if(!data){
-        return res.status(404).json({success: false, message: "Utente non presente!"})
-    } else {
-        await User.deleteOne({email: req.params.email});
-        return res.status(204).send();
-    }
-
-}
-
 const getAll = (req,res) => {
     User.find({}, (err,data)=>{
         if(data){
+            if(data[0] == undefined){
+                return res.status(404).json({success: false, message: "Nessun utente presente!"})
+            }
             return res.status(200).json(data);
         } else {
             if (err) return res.status(500).json({Error: err});
@@ -117,12 +111,6 @@ const updateUser = (req, res) => {
             return res.status(404).json({success: false, message : "Utente non trovato"})
         } else {
 
-            if(req.body.datadinascita){
-                if(!aux.validateDate(req.body.datadinascita)){
-                    return res.status(400).json({success : false, message: "DDN non valida!"});
-                }
-            }
-
             User.updateOne({username : req.body.username},
                 { $set: {
                     nome: req.body.nome,
@@ -132,7 +120,7 @@ const updateUser = (req, res) => {
                     metodiPagamento : req.body.metodiPagamento
                 }}, (err, data) => {
                 if(err) return res.status(500).json({Error: err});
-                return res.status(200).json({success: true, message : "Dati correttamente aggiornati"});
+                return res.status(204).send();
             })
         }
     })
@@ -146,8 +134,6 @@ const updateEmail = (req, res) => {
             return res.status(404).json({success: false, message : "Utente non trovato"});
         } else if(data.email == req.body.email){
             return res.status(200).json({success: true, message : "Niente da modificare"});
-        } else if(!aux.validateEmail(req.body.email)){
-            return res.status(404).json({success: false, message : "Email non valida"});
         } else {
             User.findOne({email : req.body.email}, (err, data) => {
                 if(data){
@@ -159,7 +145,7 @@ const updateEmail = (req, res) => {
                             email: req.body.email,
                         }}, (err, data) => {
                         if(err) return res.status(500).json({Error: err});
-                        return res.status(200).json({success: true, message : "Email correttamente aggiornata"});
+                        return res.status(204).send();
                     })
                 }
             })
@@ -174,22 +160,18 @@ const updatePw = (req, res) => {
             return res.status(404).json({success: false, message : "Utente non trovato"});
         } else {
             if(err) return res.status(500).json({Error: err});
-            if(!aux.checkPw(req.body.password)){
-                return res.status(400).json({success: false, message: "Password non valida"});
-            }
 
             User.updateOne({username : req.body.username},
                 { $set: {
                     password: req.body.password,
                 }}, (err, data) => {
                 if(err) return res.status(500).json({Error: err});
-                return res.status(200).json({success: true, message : "Password correttamente aggiornata"});
+                return res.status(204).send();
             })
 
         }
     })
 }
-
 
 //export controller functions
 module.exports = {

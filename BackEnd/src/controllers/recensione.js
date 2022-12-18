@@ -13,10 +13,14 @@ const saveNewRecensione = (req, res) => {
                 if(data){           
         
                     if(data.venditore == req.body.utenteRecensito && data.acquirente == req.body.utenteRecensore){
-                        if(!auxdate.validateDate2(req.body.dataRecensione)){
-                            return res.status(400).json({success: false, message: "Formato data non valido"});
+                        
+                        //in questo modo si evita l'aggiunta del tempo delle ore, minuti e sec
+                        if(!req.body.dataRecensione || !auxdate.validateDate2(req.body.dataRecensione)){
+                            const today = new Date();
+                            const todayRightFormat = new Date(today.getFullYear() + "-" + (today.getMonth() +1) + "-" + today.getDate());
+                            req.body.dataRecensione = todayRightFormat;
                         }
-        
+
                         if(!(req.body.stelle>= 0 && req.body.stelle <=5 && req.body.descrizione.length <= 200)){
                             return res.status(400).json({success: false, message: "Recensione mal formulata"});
                         }

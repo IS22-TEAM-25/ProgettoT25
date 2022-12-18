@@ -17,12 +17,12 @@
             "description": "API per il modello 'Utente'. Tutte le API per gestire le azioni relative agli utenti."
         },
         {
-            "name" : "Annuncio",
-            "description": "API per il modello 'Annuncio'. Tutte le API per gestire le azioni relative agli annunci."
-        },
-        {
             "name" : "Autenticazione",
             "description": "API per gestire login e logout e gestione del token"
+        },
+        {
+            "name" : "Annuncio",
+            "description": "API per il modello 'Annuncio'. Tutte le API per gestire le azioni relative agli annunci."
         },
         {
             "name" : "Transazione",
@@ -35,6 +35,10 @@
         {
             "name" : "Profilo",
             "description" : "API per il modello 'Profilo'. Tutte le API per gestire le azioni relative alle attività sul sito degli utenti, salvate nel loro profilo."
+        },
+        {
+            "name" : "Gestore mail",
+            "description" : "API per gestire l'invio di email a un indirizzo specificato."
         }
     ],
     "schemes": ["http"],
@@ -49,39 +53,57 @@
                 "201" : {
                     "description" : "CREATED. Utente creato correttamente."
                 },
-                "400" : {
-                    "description" : "BAD REQUEST. Errori nella formulazione della richiesta che possono riguardare data di nascita non conforme o email non valida."
-                },
-                "500" : {
-                    "description" : "SERVER ERROR. Di varia natura."
-                },
                 "409" : {
-                    "description" : "CONFLICT. Errore in seguito all'inserimento di uno username o di un indirizzo già occupato da un altro utente."
-                }
-            }
-        }
-        },
-        "/api/u/deletee/{email}" : {
-        "delete" : {
-            "tags" : ["Utente"],
-            "summary" : "Usata per eliminare un utente identificato da un preciso indirizzo mail.",
-            "responses" : {
-                "204" : {
-                    "description" : "NO CONTENT. Utente eliminato correttamente e nessun ritorno dalla API."
-                },
-                "404" : {
-                    "description" : "NOT FOUND. Nessun utente associato alla mail passata come parametro."
+                    "description" : "CONFLICT. Errore in seguito all'inserimento di uno username o di un indirizzo email già occupato da un altro utente."
                 },
                 "500" : {
                     "description" : "SERVER ERROR. Di varia natura."
                 }
             },
-            "parameters" : [
-                {"name" : "email",
-                "in" : "path",
-                "description" : "Indirizzo email dell'utente da eliminare."
+            "parameters" : [{
+                "in" : "body",
+                "name" : "Dati utente",
+                "description" : "Le informazioni sul nuovo utente da creare",
+                "schema" : {
+                    "type" : "object",
+                    "required" : ["nome", "cognome", "username", "datadinascita", "indirizzo", "email", "password"],
+                    "properties" : {
+                        "nome" : {
+                            "type" : "string",
+                            "example" : "Mario"
+                        },
+                        "cognome" : {
+                            "type" : "string",
+                            "example" : "Rossi"
+                        },
+                        "datadinascita" : {
+                            "type" : "string",
+                            "example" : "1969-03-17"
+                        },
+                        "indirizzo" : {
+                            "type" : "string",
+                            "example" : "via Sommarive 20, Povo, Trento"
+                        },
+                        "email" : {
+                            "type" : "string",
+                            "example" : "marioRossiEmailProva123!@example.com"
+                        },
+                        "username" : {
+                            "type" : "string",
+                            "example" : "marioRossi17"
+                        },
+                        "password" : {
+                            "type" : "string",
+                            "example" : "Password123?"
+                        },
+                        "metodiPagamento" : {
+                            "type" : "string",
+                            "summary" : "L'eventuale indirizzo mail del conto PayPal a cui associare il proprio account per i pagamenti online",
+                            "example" : "contomario@gmail.com"
+                        }
+                    }
                 }
-            ]
+            }]
         }
         },
         "/api/u/deleteu/{username}" : {
@@ -92,6 +114,12 @@
                 "204" : {
                     "description" : "NO CONTENT. Utente eliminato correttamente e nessun ritorno dalla API."
                 },
+                "401" : {
+                    "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                },
+                "403" : {
+                    "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
+                },
                 "404" : {
                     "description" : "NOT FOUND. Nessun utente associato allo username passato come parametro."
                 },
@@ -100,9 +128,15 @@
                 }
             },
             "parameters" : [
-                {"name" : "username",
-                "in" : "path",
-                "description" : "Username dell'utente da eliminare."
+                {
+                    "name" : "username",
+                    "in" : "path",
+                    "description" : "Username dell'utente da eliminare."
+                },
+                {
+                    "name" : "x-access-token",
+                    "in" : "header",
+                    "description" : "token d'accesso"
                 }
             ]
         }
@@ -117,11 +151,11 @@
                     "200" : {
                         "description" : "OK. Si ottengono correttamente tutti gli utenti registrati."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessun utente nel sistema."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 }
             }
@@ -136,42 +170,17 @@
                     "200" : {
                         "description" : "OK. Si ottiene il preciso utente associato allo username passato come parametro."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessun utente associato allo username passato come parametro."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
                     {"name" : "username",
                     "in" : "path",
                     "description" : "Username dell'utente da ricercare."
-                    }
-                ]
-            }
-        },
-        "/api/u/gete/{email}" : {
-            "get" : {
-                "tags" : [
-                    "Utente"
-                ],
-                "summary": "Usata per ottenere una precisa risorsa utente associata al preciso indirizzo email passato.",
-                "responses" : {
-                    "200" : {
-                        "description" : "OK. Si ottiene il preciso utente associato all'indirizzo email passato come parametro."
-                    },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
-                    "404" : {
-                        "description" : "NOT FOUND. Nessun utente associato all'indirizzo email passato come parametro."
-                    }
-                },
-                "parameters" : [
-                    {"name" : "email",
-                    "in" : "path",
-                    "description" : "Indirizzo email dell'utente da ricercare."
                     }
                 ]
             }
@@ -183,16 +192,64 @@
                 ],
                 "summary": "Usata per aggiornare le informazioni di un utente, identificato da uno username che viene passato nel body.",
                 "responses" : {
-                    "200" : {
-                        "description" : "OK. Si ritorna un messaggio di conferma dell'azione di modifica effettuata."
+                    "204" : {
+                        "description" : "NO CONTENT. Utente aggiornato correttamente e nessun ritorno dalla API."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessun utente associato allo username passato nel body."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [                
+                    {
+                    "name" : "x-access-token",
+                    "in" : "header",
+                    "description" : "token d'accesso"
+                    },
+                    {
+                    "in" : "body",
+                    "name" : "Dati utente",
+                    "description" : "Le informazioni da aggiornare su un utente.",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["username"],
+                        "properties" : {
+                            "nome" : {
+                                "type" : "string",
+                                "example" : "Paolo"
+                            },
+                            "cognome" : {
+                                "type" : "string",
+                                "example" : "Verdi"
+                            },
+                            "datadinascita" : {
+                                "type" : "string",
+                                "example" : "1974-01-04"
+                            },
+                            "indirizzo" : {
+                                "type" : "string",
+                                "example" : "via Rosimini 25, Trento, Trento"
+                            },
+                            "metodiPagamento" : {
+                                "type" : "string",
+                                "summary" : "L'indirizzo mail del conto PayPal a cui associare il proprio account per i pagamenti online",
+                                "example" : "contopaolo@gmail.com"
+                            },
+                            "username" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/u/updatee/" : {
@@ -203,15 +260,52 @@
                 "summary": "Usata per aggiornare l'indirizzo email di un utente, identificato da uno username che viene passato nel body.",
                 "responses" : {
                     "200" : {
-                        "description" : "OK. Si ritorna un messaggio di conferma dell'azione di modifica effettuata."
+                        "description" : "OK. Si ritorna un messaggio di nessuna modifica effettuata se si inserisce lo stesso indirizzo email già salvato."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "204" : {
+                        "description" : "NO CONTENT. Indirizzo mail aggiornato correttamente e nessun ritorno dalla API."
+                    },
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessun utente associato allo username passato nel body."
+                    },
+                    "409" : {
+                        "description" : "CONFLICT. Errore in seguito all'inserimento di un indirizzo email già associato a un utente."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
+                    {
+                    "in" : "body",
+                    "name" : "Email da modificare",
+                    "description" : "Le informazioni da aggiornare su un utente.",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["username"],
+                        "properties" : {
+                            "username" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            },
+                            "email" : {
+                                "type" : "string",
+                                "example" : "marioRossiEmailProva124!@example.com"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/u/updatep/" : {
@@ -221,16 +315,47 @@
                 ],
                 "summary": "Usata per aggiornare la password di un utente, identificato da uno username che viene passato nel body.",
                 "responses" : {
-                    "200" : {
-                        "description" : "OK. Si ritorna un messaggio di conferma dell'azione di modifica effettuata."
+                    "204" : {
+                        "description" : "NO CONTENT. Password aggiornata correttamente e nessun ritorno dalla API."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessun utente associato allo username passato nel body."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
+                    {
+                    "in" : "body",
+                    "name" : "Password da modificare",
+                    "description" : "Le informazioni da aggiornare su un utente.",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["username"],
+                        "properties" : {
+                            "username" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            },
+                            "password" : {
+                                "type" : "string",
+                                "example" : "Password123!"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/a/savea" : {
@@ -242,15 +367,108 @@
                         "description" : "CREATED. Annuncio creato correttamente."
                     },
                     "400" : {
-                        "description" : "BAD REQUEST. Errori nella formulazione della richiesta che possono riguardare annuncio già presente col titolo specificato oppure conto PayPal non specificato con pagamento online abilitato."
+                        "description" : "BAD REQUEST. Errore nella formulazione della richiesta in seguito a incongruenze tra i dati (ad esempio pagamento online abilitato ma conto no)."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Inserzionista specificato non presente nel database."
+                    },
+                    "409" : {
+                        "description" : "CONFLICT. Errore in seguito al tentativo di creare un annuncio con un titolo già presente."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [{
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
+                    {
+                    "in" : "body",
+                    "name" : "Dati annuncio",
+                    "description" : "Le informazioni sul nuovo annuncio da creare",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["inserzionista", "titolo", "modalitaTransizione", "categoria"],
+                        "properties" : {
+                            "titolo" : {
+                                "type" : "string",
+                                "example" : "Libro 'Promessi Sposi' edizione integrale"
+                            },
+                            "inserzionista" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            },
+                            "descrizione" : {
+                                "type" : "string",
+                                "example" : "Libro in ottime condizioni de i 'Promessi Sposi'. Qualche piega in alcune pagine, ma niente di compromettente. Disponibilità della spedizione."
+                            },
+                            "via" : {
+                                "type" : "string",
+                                "example" : "via Rosmini 15"
+                            },
+                            "citta" : {
+                                "type" : "string",
+                                "example" : "Rovereto"
+                            },
+                            "provincia" : {
+                                "type" : "string",
+                                "example" : "Trento"
+                            },
+                            "modalitaTransazione" : {
+                                "type" : "string",
+                                "summary" : "'Affitto' o 'Vendita'",
+                                "example" : "Vendita"
+                            },
+                            "categoria" : {
+                                "type" : "string",
+                                "example" : "hobby"
+                            },
+                            "pagamentoOnline" : {
+                                "type" : "boolean",
+                                "example" : "true",
+                                "summary" : "Assume valore 'true' o 'false' a seconda se si abilita o meno il pagamento online"
+                            },
+                            "contoPayPal" : {
+                                "type" : "string",
+                                "example" : "contomario@gmail.com",
+                                "summary" : "Da specificare se si intende permettere il pagamento online"
+                            },
+                            "sponsorizzato" : {
+                                "type" : "boolean",
+                                "example" : "false",
+                                "summary" : "Possibilità di avere il proprio annuncio tra i primi risultati di ricerca"
+                            },
+                            "prezzo" : {
+                                "type" : "number",
+                                "example" : 25.50,
+                                "summary" : "Campo che viene omesso se 'modalitaTransazione' è impostata su 'Affitto'"
+                            },
+                            "prezzoAffittoAlGiorno" : {
+                                "type" : "number",
+                                "example" : 5.50,
+                                "summary" : "Campo che viene omesso se 'modalitaTransazione' è impostata su 'Vendita'"
+                            },
+                            "prezzoAffittoAllOra" : {
+                                "type" : "number",
+                                "example" : 7.50,
+                                "summary" : "Campo che viene omesso se 'modalitaTransazione' è impostata su 'Vendita'"
+                            },
+                            "prezzoAffittoSettimanale" : {
+                                "type" : "number",
+                                "example" : 11.50,
+                                "summary" : "Campo che viene omesso se 'modalitaTransazione' è impostata su 'Vendita'"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/a/getAll" : {
@@ -261,11 +479,11 @@
                     "200" : {
                         "description" : "OK. Si ottengono correttamente tutti gli annunci nel sistema."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessun annuncio nel sistema."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 }
             }
@@ -278,11 +496,11 @@
                     "200" : {
                         "description" : "OK. Si ottiene correttamente l'annuncio che ha il titolo specificato."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessun annuncio nel sistema con il titolo specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
@@ -300,16 +518,13 @@
                 "summary" : "Usata per ottenere tutti gli annunci postati da un preciso utente.",
                 "responses" : {
                     "200" : {
-                        "description" : "OK. Si ottengono correttamente tutti gli annunci ordinati secondo l'ordinamento specificato."
-                    },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                        "description" : "OK. Si ottengono correttamente tutti gli annunci ordinati dell'utente specificato."
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessun annuncio nel sistema associato all'utente specificato."
                     },
-                    "400" : {
-                        "description" : "BAD REQUEST. Errori nella sintassi e nella definizione del parametro 'p' per l'ordinamento."
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
@@ -324,42 +539,64 @@
         "/api/a/getaf" : {
             "post" : {
                 "tags" : ["Annuncio"],
-                "summary" : "Usata per ottenere tutti gli annunci in base a particolari filtri passati nel body.",
+                "summary" : "Usata per ottenere tutti gli annunci in base a particolari filtri passati nel body. Se non si vuole specificare un filtro, omettere il corrispondente campo nel body!",
                 "responses" : {
                     "200" : {
-                        "description" : "OK. Si ottengono correttamente tutti gli annunci che soddisfano i filtri di ricerca. Nel caso di nessun annuncio che soddisfa i filtri, viene tornato un array vuoto."
+                        "description" : "OK. Si ottengono correttamente tutti gli annunci che soddisfano i filtri di ricerca."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun annuncio nel sistema oppure nessun annuncio che soddisfa i filtri impostati."
                     },
                     "500" : {
                         "description" : "SERVER ERROR. Di varia natura."
-                    },
-                    "404" : {
-                        "description" : "NOT FOUND. Nessun annuncio nel sistema."
-                    }
-                }
-            }
-        },
-        "/api/a/ordina/{p}" : {
-            "get" : {
-                "tags" : ["Annuncio"],
-                "summary" : "Usata per ottenere tutti gli annunci ordinati secondo un ordinamento specifico.",
-                "responses" : {
-                    "200" : {
-                        "description" : "OK. Si ottengono correttamente tutti gli annunci postati dall'utente specificato."
-                    },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
-                    "404" : {
-                        "description" : "NOT FOUND. Nessun annuncio nel sistema."
                     }
                 },
-                "parameters" : [
-                    {
-                        "name" : "p",
-                        "in" : "path",
-                        "description" : "Valore che specifica l'ordinamento desiderato. Possibili valori di 'p': \n'd1': data di pubblicazione crescente.\n'd2': data di pubblicazione decrescente.\n'm1': prezzo crescente.\n'm2': prezzo decrescente."
+                "parameters" : [{
+                    "in" : "body",
+                    "name" : "Filtri applicati",
+                    "description" : "Filtri di ricerca per gli annunci.\nIMPORTANTE:  se non si vuole specificare un filtro, omettere il corrispondente campo nel body!",
+                    "schema" : {
+                        "type" : "object",
+                        "properties" : {
+                            "categoria" : {
+                                "type" : "string",
+                                "example" : "sport"
+                            },
+                            "transazione" : {
+                                "type" : "string",
+                                "example" : "Vendita"
+                            },
+                            "pagamentoOnline" : {
+                                "type" : "boolean",
+                                "example" : "true"
+                            },
+                            "provincia" : {
+                                "type" : "string",
+                                "example" : "Trento"
+                            },
+                            "citta" : {
+                                "type" : "string",
+                                "example" : "Trento"
+                            },
+                            "startPrice" : {
+                                "type" : "number",
+                                "example" : 5
+                            },
+                            "endPrice" : {
+                                "type" : "number",
+                                "example" : 100
+                            },
+                            "startDate" : {
+                                "type" : "string",
+                                "example" : "2022-06-20"
+                            },
+                            "endDate" : {
+                                "type" : "string",
+                                "example" : "2022-12-10"
+                            }
+                        }
                     }
-                ]
+                }]
             }
         },
         "/api/a/getkt/{word}" : {
@@ -370,11 +607,11 @@
                     "200" : {
                         "description" : "OK. Si ottengono correttamente tutti gli annunci che presentano nel titolo la keyword specificata."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessun annuncio nel sistema oppure nessun annuncio che soddisfa la keyowrd ricercata."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
@@ -394,11 +631,11 @@
                     "200" : {
                         "description" : "OK. Si ottengono correttamente tutti gli annunci che presentano nella descrizione la keyword specificata."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessun annuncio nel sistema oppure nessun annuncio che soddisfa la keyowrd ricercata."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
@@ -410,21 +647,114 @@
                 ]
             }
         },
-        "/api/a/updatea" : {
+        "/api/a/updatea" : { 
             "patch" : {
                 "tags" : ["Annuncio"],
                 "summary" : "Usata per modificare i dati di un annuncio, il cui titolo identificativo viene passato nel body insieme ai dati da modificare.",
                 "responses" : {
-                    "200" : {
-                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati dell'annuncio."
+                    "204" : {
+                        "description" : "NO CONTENT. Annuncio modificato correttamente e nessun ritorno dalla API."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "400" : {
+                        "description" : "BAD REQUEST. Errore nella formulazione della richiesta in seguito a incongruenze tra i dati (ad esempio pagamento online abilitato ma conto no)."
+                    },
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessun annuncio nel sistema con il titolo specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "description" : "token d'accesso",
+                        "in" : "header"
+                    },{
+                    "in" : "body",
+                    "name" : "Dati annuncio",
+                    "description" : "Le informazioni sul nuovo annuncio da creare.\nIMPORTANTE: omettere dalla richiesta i campi che non si vogliono modificare.",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["titolo"],
+                        "properties" : {
+                            "titolo" : {
+                                "type" : "string",
+                                "example" : "Libro 'Promessi Sposi' edizione integrale"
+                            },
+                            "descrizione" : {
+                                "type" : "string",
+                                "example" : "Libro in ottime condizioni de i 'Promessi Sposi'. Qualche piega in alcune pagine, ma niente di compromettente."
+                            },
+                            "via" : {
+                                "type" : "string",
+                                "example" : "via Rosmini 15"
+                            },
+                            "citta" : {
+                                "type" : "string",
+                                "example" : "Trento"
+                            },
+                            "provincia" : {
+                                "type" : "string",
+                                "example" : "Trento"
+                            },
+                            "modalitaTransazione" : {
+                                "type" : "string",
+                                "example" : "Affitto",
+                                "summary" : "'Affitto' o 'Vendita'"
+                            },
+                            "categoria" : {
+                                "type" : "string",
+                                "example" : "hobby"
+                            },
+                            "pagamentoOnline" : {
+                                "type" : "boolean",
+                                "example" : false,
+                                "summary" : "Assume valore 'true' o 'false' a seconda se si abilita o meno il pagamento online"
+                            },
+                            "contoPayPal" : {
+                                "type" : "string",
+                                "summary" : "Da specificare se si intende permettere il pagamento online"
+                            },
+                            "sponsorizzato" : {
+                                "type" : "boolean",
+                                "example" : true,
+                                "summary" : "Possibilità di avere il proprio annuncio tra i primi risultati di ricerca"
+                            },
+                            "visibile" : {
+                                "type" : "boolean",
+                                "example" : true,
+                                "summary" : "Per rendere l'annuncio privato o pubblico"
+                            },
+                            "prezzo" : {
+                                "type" : "number",
+                                "example": 10.50,
+                                "summary" : "Campo che viene omesso se 'modalitaTransazione' è impostata su 'Affitto'"
+                            },
+                            "prezzoAffittoAlGiorno" : {
+                                "type" : "number",
+                                "example" : 5.15,
+                                "summary" : "Campo che viene omesso se 'modalitaTransazione' è impostata su 'Vendita'"
+                            },
+                            "prezzoAffittoAllOra" : {
+                                "type" : "number",
+                                "example" : 10.15,
+                                "summary" : "Campo che viene omesso se 'modalitaTransazione' è impostata su 'Vendita'"
+                            },
+                            "prezzoAffittoSettimanale" : {
+                                "type" : "number",
+                                "example" : 15.15,
+                                "summary" : "Campo che viene omesso se 'modalitaTransazione' è impostata su 'Vendita'"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/a/deletea/{id}" : {
@@ -435,11 +765,11 @@
                     "204" : {
                         "description" : "NO CONTENT. Annuncio eliminato correttamente e nessun ritorno dalla API."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessun annuncio nel sistema con il titolo specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
@@ -459,16 +789,31 @@
                     "200" : {
                         "description" : "OK. Si ottiene un messaggio di conferma relativo al corretto login oltre che il token d'accesso associato e lo username dell'utente appena autenticato."
                     },
+                    "400" : {
+                        "description" : "BAD REQUEST. Username o password dell'utente non corrette."
+                    },
                     "500" : {
                         "description" : "SERVER ERROR. Di varia natura."
-                    },
-                    "404" : {
-                        "description" : "NOT FOUND. Nessun utente associato allo username passato."
-                    },
-                    "400" : {
-                        "description" : "BAD REQUEST. Password dell'utente non corretta."
                     }
-                }
+                },
+                "parameters" : [{
+                    "in" : "body",
+                    "name" : "Dati per il login",
+                    "description" : "Lo username e la password da verificare.",
+                    "schema" : {
+                        "type" : "object",
+                        "properties" : {
+                            "username" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            },
+                            "password" : {
+                                "type" : "string",
+                                "example" : "Password123?"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/l/logout" : {
@@ -478,8 +823,60 @@
                 "responses" : {
                     "200" : {
                         "description" : "OK. Si ottiene un messaggio di conferma relativo al corretto logout effettuato."
+                    },
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun utente associato allo username passato nel body."
                     }
-                }
+                },
+                "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    }
+                ]
+            }
+        },
+        "/api/l/ripristino" : {
+            "get" : {
+                "tags" : ["Autenticazione"],
+                "summary" : "Usata dal sistema pre ripristinare la password dell'utente in caso di dimenticanza. Questa API modifica con una stringa di 10 caratteri casuali la password dell'utente, poi con un'altra API si invierà una mail con il contenuto della nuova password.",
+                "responses" : {
+                    "204" : {
+                        "description" : "NO CONTENT. Password modificata correttamente e nessun ritorno dalla API."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun utente associato allo username/email passato nel body."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    }
+                },
+                "parameters" : [
+                    {
+                    "in" : "body",
+                    "name" : "Dati utente",
+                    "description" : "Lo username o la email dell'utente di cui ripristinare la password",
+                    "schema" : {
+                        "type" : "object",
+                        "properties" : {
+                            "username" : {
+                                "type" : "string",
+                                "example" :"marioRossi17"
+                            },
+                            "email" : {
+                                "type" : "string",
+                                "example" :"marioRossiEmailProva123!@example.com"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/t/savet" : {
@@ -490,19 +887,66 @@
                     "201" : {
                         "description" : "CREATED. Transazione creata correttamente."
                     },
-                    "400" : {
-                        "description" : "BAD REQUEST. Errore nella formulazione della richiesta in seguito alla data mal formata."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Errore nel caso in cui l'utente acquirente non esiste oppure l'annuncio per cui si vuol fare la transazione non esiste oppure l'utente venditore specificato non è associato ad un suo annuncio."
                     },
                     "409" : {
                         "description" : "CONFLICT. Errore in seguito al tentativo di salvare una transazione già salvata."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
+                    {
+                    "in" : "body",
+                    "name" : "Dati transazione",
+                    "description" : "Le informazioni sulla nuova transazione da creare",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["venditore", "acquirente", "prodotto", "metodoTransazione"],
+                        "properties" : {
+                            "venditore" : {
+                                "type" : "string",
+                                "example" :"marioRossi17"
+                            },
+                            "acquirente" : {
+                                "type" : "string",
+                                "example" :"paoloVerdi19"
+                            },
+                            "prodotto" : {
+                                "type" : "string",
+                                "summary" : "Il titolo dell'annuncio.",
+                                "example" : "Libro 'Promessi Sposi' edizione integrale"
+                            },
+                            "pagamentoEffettuato" : {
+                                "type" : "boolean",
+                                "default" : "true"
+                            },
+                            "dataTransazione" : {
+                                "type" : "string",
+                                "summary" : "Formato: yyyy-mm-dd! Si mette default la data del giorno di creazione della recensione",
+                                "default" : "Data corrente"
+                            },
+                            "metodoTransazione" : {
+                                "type" : "string",
+                                "summary" : "'Online' oppure 'Di persona'",
+                                "example" : "Online"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/t/getAll" : {
@@ -513,11 +957,11 @@
                     "200" : {
                         "description" : "OK. Si ottengono correttamente tutte le transazioni nel sistema."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessuna transazione nel sistema."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 }
             }
@@ -530,14 +974,25 @@
                     "200" : {
                         "description" : "OK. Si ottiene l'elenco delle transazioni in uscita per l'utente specificato."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessuna transazione in uscita per l'utente specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
                     {
                         "name" : "venditore",
                         "in" : "path",
@@ -554,14 +1009,25 @@
                     "200" : {
                         "description" : "OK. Si ottiene lo storico delle transazioni per l'utente specificato, ovvero i suoi acquisti o affitti effettuati."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessuna transazione in entrata per l'utente specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
                     {
                         "name" : "acquirente",
                         "in" : "path",
@@ -629,16 +1095,64 @@
                     "400" : {
                         "description" : "BAD REQUEST. Errore nella formulazione della richiesta in seguito ad una descrizione o ad una valutazione fornita mal formata."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Errore nel caso in cui la transazione per cui si sta salvando una recensione non esista oppure non combacino gli utenti forniti con quell della transazione."
                     },
                     "409" : {
                         "description" : "CONFLICT. Errore in seguito al tentativo di salvare una recensione già associata per una transazione."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
+                    {
+                    "in" : "body",
+                    "name" : "Dati recensione",
+                    "description" : "Le informazioni sulla nuova recensione da creare",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["utenteRecensito", "utenteRecensore", "transazioneRecensita", "stelle", "descrizione"],
+                        "properties" : {
+                            "utenteRecensito" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            },
+                            "utenteRecensore" : {
+                                "type" : "string",
+                                "example" : "paoloVerdi19"
+                            },
+                            "transazioneRecensita" : {
+                                "type" : "string",
+                                "summary" : "L'id di una transazione"
+                            },
+                            "stelle" : {
+                                "type" : "number",
+                                "example" : 4.5
+                            },
+                            "descrizione" : {
+                                "type" : "string",
+                                "example" : "Venditore molto disponbile e prodotto di qualità."
+                            },
+                            "dataRecensione" : {
+                                "type" : "string",
+                                "summary" : "Formato: yyyy-mm-dd! Si mette default la data del giorno di creazione della recensione",
+                                "default" : "Data corrente"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/r/getAll" : {
@@ -649,16 +1163,16 @@
                     "200" : {
                         "description" : "OK. Si ottengono correttamente tutte le recensioni nel sistema."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessuna recensione nel sistema."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 }
             }
         },
-        "/api/t/getrv/{recensito}" : {
+        "/api/r/getrv/{recensito}" : {
             "get" : {
                 "tags" : ["Recensione"],
                 "summary" : "Usata per ottenere le recensioni su un preciso utente passato come parametro.",
@@ -666,11 +1180,11 @@
                     "200" : {
                         "description" : "OK. Si ottiene l'elenco delle recensioni sull'utente specificato."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessuna recensione sull'utente specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
@@ -682,7 +1196,7 @@
                 ]
             }
         },
-        "/api/t/getra/{recensore}" : {
+        "/api/r/getra/{recensore}" : {
             "get" : {
                 "tags" : ["Recensione"],
                 "summary" : "Usata per ottenere le recensioni effettuate da un utente.",
@@ -690,14 +1204,25 @@
                     "200" : {
                         "description" : "OK. Si ottiene l'elenco delle recensioni effettuate da un utente, dopo aver effettuato una transazione."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessuna recensione effettuata dal'utente specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
                     {
                         "name" : "recensore",
                         "in" : "path",
@@ -706,7 +1231,7 @@
                 ]
             }
         },
-        "/api/t/getrt/{transazione}" : {
+        "/api/r/getrt/{transazione}" : {
             "get" : {
                 "tags" : ["Recensione"],
                 "summary" : "Usata per ottenere la/e recensione/i associata/e ad una precisa transazione.",
@@ -714,11 +1239,11 @@
                     "200" : {
                         "description" : "OK. Si ottiene l'elenco delle recensioni associate ad una precisa transazione presente sul sito."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessuna recensione associata alla transazione specificata."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
@@ -730,7 +1255,7 @@
                 ]
             }
         },
-        "/api/t/deleter/{id}" : {
+        "/api/r/deleter/{id}" : {
             "delete" : {
                 "tags" : ["Recensione"],
                 "summary" : "Usata per eliminare una risorsa recensioen identificata dall'id passato come parametro.",
@@ -738,14 +1263,25 @@
                     "204" : {
                         "description" : "NO CONTENT. Recensione eliminata correttamente e nessun ritorno dalla API."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessuna recensione individuata con l'id specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
                     {
                         "name" : "id",
                         "in" : "path",
@@ -765,16 +1301,47 @@
                     "400" : {
                         "description" : "BAD REQUEST. Errori nella formulazione della richiesta riguardante una descrizione troppo lunga."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Utente per cui si intende creare il profilo non presente nel sistema."
                     },
                     "409" : {
                         "description" : "CONFLICT. Errore in seguito al tentativo di creare un profilo già presente per un utente."
                     },
-                    "404" : {
-                        "description" : "NOT FOUND. Utente per cui si intende creare il profilo non presente nel sistema."
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
+                    {
+                    "in" : "body",
+                    "name" : "Dati profilo",
+                    "description" : "Le informazioni del nuovo profilo da creare",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["idUtente", "descrizioneProfilo"],
+                        "properties" : {
+                            "descrizioneProfilo" : {
+                                "type" : "string",
+                                "example" : "Ciao a tutti e benvenuti sul mio profilo!"
+                            },
+                            "idUtente" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/p/getAll" : {
@@ -787,11 +1354,11 @@
                     "200" : {
                         "description" : "OK. Si ottengono correttamente tutti i profili degli utenti registrati."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessun profilo nel sistema."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 }
             }
@@ -806,11 +1373,11 @@
                     "200" : {
                         "description" : "OK. Si ottiene il preciso profilo associato allo username passato come parametro."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessun profilo associato allo username passato come parametro."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
@@ -832,11 +1399,11 @@
                     "200" : {
                         "description" : "OK. Si ottiene l'elenco dei profili ordinati per valutazione decrescente."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
-                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessun profilo presente nel sistema."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 }
             }
@@ -849,14 +1416,25 @@
                     "204" : {
                         "description" : "NO CONTENT. Profilo eliminato correttamente e nessun ritorno dalla API."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
                 },
                 "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
                     {
                         "name" : "id",
                         "in" : "path",
@@ -870,19 +1448,50 @@
                 "tags" : ["Profilo"],
                 "summary" : "Usata per modificare la descrizione della risorsa profilo il cui id viene specificato nel body.",
                 "responses" : {
-                    "200" : {
-                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati."
-                    },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "204" : {
+                        "description" : "NO CONTENT. Dati del profilo correttamente modificati e nessun ritorno dalla API."
                     },
                     "400" : {
                         "description" : "BAD REQUEST. Errore nella formulazione della richiesta in seguito al testo della descrizione mal formato."
                     },
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
+                    },
                     "404" : {
                         "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
+                    {
+                    "in" : "body",
+                    "name" : "Descrizione da sovrascrivere",
+                    "description" : "Le informazioni del profilo e della nuova descrizione da modificare",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["id", "descrizioneProfilo"],
+                        "properties" : {
+                            "descrizioneProfilo" : {
+                                "type" : "string",
+                                "example" : "Ciao a tutti e benvenuti sul mio profilo! Se scorrete tra i miei annunci troverete molte cose interessanti!"
+                            },
+                            "id" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/p/addwl" : {
@@ -893,16 +1502,47 @@
                     "204" : {
                         "description" : "NO CONTENT. Annuncio aggiunto correttamente e nessun ritorno dalla API."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato oppure nessun annuncio nel sistema col titolo specificato."
                     },
                     "409" : {
                         "description" : "CONFLICT. Impossibile aggiungere l'annuncio alla whish list in quanto è già presente in essa."
                     },
-                    "404" : {
-                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato oppure nessun annuncio nel sistema col titolo specificato."
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
+                    {
+                    "in" : "body",
+                    "name" : "Annuncio da aggiungere alla whish list",
+                    "description" : "Le informazioni del profilo e dell'annuncio da aggiungere alla whish list",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["id", "annuncio"],
+                        "properties" : {
+                            "annuncio" : {
+                                "type" : "string",
+                                "example" : "Libro 'Promessi Sposi' edizione integrale"
+                            },
+                            "id" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/p/rimuoviwl" : {
@@ -913,33 +1553,79 @@
                     "204" : {
                         "description" : "NO CONTENT. Annuncio rimosso correttamente e nessun ritorno dalla API."
                     },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "401" : {
+                        "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
+                    },
+                    "403" : {
+                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato oppure nessun annuncio nel sistema col titolo specificato."
                     },
                     "409" : {
                         "description" : "CONFLICT. Impossibile rimuovere l'annuncio dalla whish list in quanto è già assente in essa."
                     },
-                    "404" : {
-                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato oppure nessun annuncio nel sistema col titolo specificato."
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [
+                    {
+                        "name" : "x-access-token",
+                        "in" : "header",
+                        "description" : "token d'accesso"
+                    },
+                    {
+                    "in" : "body",
+                    "name" : "Annuncio da rimuovere dalla whish list",
+                    "description" : "Le informazioni del profilo e dell'annuncio da rimuovere dalla whish list",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["id", "annuncio"],
+                        "properties" : {
+                            "annuncio" : {
+                                "type" : "string",
+                                "example" : "Libro 'Promessi Sposi' edizione integrale"
+                            },
+                            "id" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/p/updaterat" : {
             "patch" : {
                 "tags" : ["Profilo"],
-                "summary" : "Usata per modificare il rating della risorsa profilo il cui id viene specificato nel body.",
+                "summary" : "Usata per modificare i dati relativi alle recensioni della risorsa profilo il cui id viene specificato nel body.",
                 "responses" : {
-                    "200" : {
-                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati."
-                    },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "204" : {
+                        "description" : "NO CONTENT. Dati del profilo correttamente modificati e nessun ritorno dalla API."
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [{
+                    "in" : "body",
+                    "name" : "Aggiornamento dati sul rating",
+                    "description" : "Username dell'utente da aggiornare",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["id"],
+                        "properties" : {
+                            "id" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/p/updateao" : {
@@ -947,16 +1633,31 @@
                 "tags" : ["Profilo"],
                 "summary" : "Usata per modificare il totale degli annunci online della risorsa profilo il cui id viene specificato nel body.",
                 "responses" : {
-                    "200" : {
-                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati."
-                    },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "204" : {
+                        "description" : "NO CONTENT. Dati del profilo correttamente modificati e nessun ritorno dalla API."
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato oppure nessun annuncio postato dall'utente specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [{
+                    "in" : "body",
+                    "name" : "Aggiornamento dati sugli annunci online",
+                    "description" : "Username dell'utente da aggiornare",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["id"],
+                        "properties" : {
+                            "id" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/p/updatesv" : {
@@ -964,16 +1665,31 @@
                 "tags" : ["Profilo"],
                 "summary" : "Usata per modificare le statistiche di vendita della risorsa profilo il cui id viene specificato nel body.",
                 "responses" : {
-                    "200" : {
-                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati."
-                    },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "204" : {
+                        "description" : "NO CONTENT. Dati del profilo correttamente modificati e nessun ritorno dalla API."
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato oppure nessuna transazione di vendita completata dall'utente specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [{
+                    "in" : "body",
+                    "name" : "Aggiornamento dati sulle statistiche di vendita",
+                    "description" : "Username dell'utente da aggiornare",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["id"],
+                        "properties" : {
+                            "id" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            }
+                        }
+                    }
+                }]
             }
         },
         "/api/p/updatesa" : {
@@ -981,16 +1697,68 @@
                 "tags" : ["Profilo"],
                 "summary" : "Usata per modificare le statistiche degli acquisti della risorsa profilo il cui id viene specificato nel body.",
                 "responses" : {
-                    "200" : {
-                        "description" : "OK. Si ottiene un messaggio di conferma relativo alla corretta modifica dei dati."
-                    },
-                    "500" : {
-                        "description" : "SERVER ERROR. Di varia natura."
+                    "204" : {
+                        "description" : "NO CONTENT. Dati del profilo correttamente modificati e nessun ritorno dalla API."
                     },
                     "404" : {
                         "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
                     }
-                }
+                },
+                "parameters" : [{
+                    "in" : "body",
+                    "name" : "Aggiornamento dati sulle statistiche di acquisto",
+                    "description" : "Username dell'utente da aggiornare",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["id"],
+                        "properties" : {
+                            "id" : {
+                                "type" : "string",
+                                "example" : "marioRossi17"
+                            }
+                        }
+                    }
+                }]
+            }
+        },
+        "/api/m/sendEmail" : {
+            "post" : {
+                "tags" : ["Gestore mail"],
+                "summary" : "Usata per modificare le statistiche degli acquisti della risorsa profilo il cui id viene specificato nel body.",
+                "responses" : {
+                    "204" : {
+                        "description" : "NO CONTENT. Email correttamente inviata all'indirizzo specificato e nessun ritorno dalla API."
+                    },
+                    "500" : {
+                        "description" : "SERVER ERROR. Di varia natura."
+                    }
+                },
+                "parameters" : [{
+                    "in" : "body",
+                    "name" : "Dati della mail da mandare",
+                    "description" : "Specificare indirizzo mail, oggetto e contenuto della mail",
+                    "schema" : {
+                        "type" : "object",
+                        "required" : ["toAddress"],
+                        "properties" : {
+                            "toAddress" : {
+                                "type" : "string",
+                                "example" : "marioRossiEmailProva123!@example.com"
+                            },
+                            "subj" : {
+                                "type" : "string",
+                                "example" : "Richiesta ripristino password"
+                            },
+                            "message" : {
+                                "type" : "string",
+                                "example" : "Hai effettuato la richiesta di ripristino password. Ecco una password temporanea per accedere al tuo account:\n***\nTi consigliamo di cambiarla dalle impostazioni del profilo.\n team di SpottyThings."
+                            }
+                        }
+                    }
+                }]
             }
         }
     }

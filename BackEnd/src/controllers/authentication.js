@@ -1,21 +1,22 @@
 const User = require("../models/utente");
 const jwt = require('jsonwebtoken');
+const createRandomString = require("../auxiliaries/randomString");
 
 const login = async function(req, res){
     let user = await User.findOne({ username : req.body.username}).exec()
 
     if(!user){
-        return res.json({success: false, message : 'Nessun utente con questo username!'})
+        return res.status(400).json({success: false, message : 'Utente o password non corretti!'})
     }
 
     if(user.password != req.body.password){
-        return res.json({success: false, message : 'Password errata'})
+        return res.status(400).json({success: false, message : 'Utente o password non corretti!'})
     }
 
     var payload = {username: user.username, id: user._id};
     var options = {expiresIn: 23200};
     var tkn = jwt.sign(payload, process.env.SUPER_SECRET, options);
-    return res.json({success: true, message : 'Welcome on your account, ' + user.username + '!', token: tkn, id:user._id})
+    return res.status(200).json({success: true, message : 'Welcome on your account, ' + user.username + '!', token: tkn, id:user._id})
 }
 
 const logout = function(req, res) {
@@ -23,15 +24,58 @@ const logout = function(req, res) {
     if (tkn){
         var payload = {};
         var options = {expiresIn: 5};
-        var tkn = jwt.sign(payload, process.env.SUPER_SECRET, options);    
-        return res.json({success: true, message: "You logged out!", token: tkn});
+        var tkn = jwt.sign(payload, process.env.SUPER_SECRET, options);
+        //dai al loggedUser il nuovo token!
+        return res.status(200).json({success: true, message: "You logged out!"});
     } else {
-        return res.json({success: true, message: "You alreayd logged out!", token: tkn});
+        return res.status(200).json({success: true, message: "You alreayd logged out!"});
     }
+}
+
+const ripristinoPass = function(req, res) {
+    let username = req.body.username;
+    let mail = req.body.email;
+
+    let newPass = createRandomString(10);
+    newPass += 'A!1';
+    
+    if(username){
+        User.findById(username, (err, data) => {
+            if(data){
+                User.updateOne({username : username},
+                    { $set: {
+                        password: newPass,
+                    }}, (err, data) => {
+                    if(err) return res.status(500).json({Error: err});
+                    return res.status(204).send();
+                })
+            } else {
+                if(err) return res.status(500).json({Error: err});
+                return res.status(404).json({success: false, message: "ANessun utente trovato"})
+            }
+        })
+    } else {
+        User.findOne({email: mail}, (err, data) => {
+            if(data){
+                User.updateOne({email : mail},
+                    { $set: {
+                        password: newPass,
+                    }}, (err, data) => {
+                    if(err) return res.status(500).json({Error: err});
+                    return res.status(204).send();
+                })
+            } else {
+                if(err) return res.status(500).json({Error: err});
+                return res.status(404).json({success: false, message: "MNessun utente trovato"})
+            }
+        })
+    }
+
 }
 
 //export controller functions
 module.exports = {
     login,
-    logout
+    logout,
+    ripristinoPass
 }

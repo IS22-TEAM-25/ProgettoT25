@@ -3,10 +3,8 @@ const jwt = require('jsonwebtoken');
 const tokenChecker = function(req, res, next) {
 	
     //il token DEVE essere passato:
-    //- nel body alla voce 'token'
     //- nella header nella voce 'x-access-token'
-	//- MEGLIO NELL'HEADER!
-	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	var token = req.headers['x-access-token'];
 
 
 	// if there is no token
@@ -26,7 +24,7 @@ const tokenChecker = function(req, res, next) {
 			});		
 		} else {
 			req.loggedUser = decoded;
-			console.log(decoded);
+			//console.log(decoded);
 			// loggedUser ha altre variabili oltre al toke  tra cui 
 			// l'ID dell'utente autenticato
 			next();
