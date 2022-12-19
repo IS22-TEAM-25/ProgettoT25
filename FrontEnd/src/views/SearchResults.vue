@@ -59,7 +59,7 @@
                     </v-col>
                 </v-row>
             </v-container>
-            <h1 v-else>Non sono presenti risultati.</h1>
+            <h1 v-else>{{ message }}</h1>
         </v-card>
     </div>
 
@@ -80,6 +80,7 @@ export default {
             prezziAffitto: [
 
             ],
+            message:'',
             localCat: '',
             endpoint: '',
             cat: '',
@@ -112,7 +113,7 @@ export default {
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) => resp.json())
                 .then(data => {
-                    console.log(data.rating)
+                    //console.log(data.rating)
                     annuncio.rating = data.rating;
                 })
             } catch (error) {
@@ -120,7 +121,6 @@ export default {
             }
         },  
         async getNumRecensioni(annuncio) {
-            console.log(annuncio.inserzionista)
             try {
                 fetch(this.$url + "api/p/getp/" + annuncio.inserzionista, {
                     method: 'GET',
@@ -141,11 +141,18 @@ export default {
                     body: JSON.stringify({ categoria: this.cat }),
                 }).then((resp) =>resp.json())
                 .then(data => {
-                  // Here you get the data to modify as you please
-                
-                this.$store.state.annunci = data.filter(a => a.visibile === true)
-                if (this.$store.state.annunci[0] === undefined) this.isEmpty=true; 
-                  return;
+                // Here you get the data to modify as you please
+                    if(data[0] === undefined) {
+                        this.isEmpty=true; 
+                        this.message = "Non è presente alcun articolo disponibile per questa categoria.";
+                        return;
+                    }
+                    this.$store.state.annunci=data.filter(a => a.visibile === true);
+                    if (this.$store.state.annunci[0] === undefined) {
+                        this.isEmpty=true; 
+                        this.message = "Non è presente alcun articolo disponibile per questa categoria.";
+                        return;
+                    }
                 })
                 } catch(error) {
                     console.error(error); // If there is any error you will catch them here
@@ -159,11 +166,14 @@ export default {
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) =>resp.json())
                 .then(data => {
-                  // Here you get the data to modify as you please
-                this.$store.state.annunci = data.filter(a => a.visibile === true)
-                if (this.$store.state.annunci[0] === undefined) this.isEmpty=true; 
-                  return;
-                })
+                    this.$store.state.annunci = data;
+                    if (this.$store.state.annunci[0] === undefined) {
+                        this.isEmpty=true; 
+                        this.message = this.$store.state.annunci.message;
+                        return;
+                    }
+                    this.$store.state.annunci = this.$store.state.annunci.filter(a => a.visibile === true)
+                    })
                 } catch(error) {
                     console.error(error); // If there is any error you will catch them here
                 }
@@ -177,28 +187,23 @@ export default {
             this.$store.commit('selectCat', this.localCat)
         }
     },
-    created() {
+    async created() {
         this.cat = this.$store.state.category;
         if(this.$store.state.keyword !== '') {
             this.endpoint = this.API_URL + "getkt/" + this.$store.state.keyword;
-            this.getAll();
+            await this.getAll();
         }
         else if (this.cat === '') {
             this.endpoint = this.API_URL+'getAll';
-            this.method = 'GET';
-            this.getAll();
-            //if (this.annunci)
+            await this.getAll();
         } else {
             this.endpoint = this.API_URL+'getaf';
-            this.method = 'POST';
-            this.getfa();
+            await this.getfa();
         } 
         // datirecensione un array con due elementi il primo è la valutazione e la seconda è il numero di recensioni
         this.$store.commit('isResultView', true);
-        console.log(this.$store.state.annunci)
         this.$store.state.annunci.forEach(annuncio => this.getRating(annuncio));
         this.$store.state.annunci.forEach(annuncio => this.getNumRecensioni(annuncio));
-        console.log(this.$store.state.annunci)
     },
     updated() {
         if(this.$store.state.annunci[0] === undefined) this.isEmpty = true;

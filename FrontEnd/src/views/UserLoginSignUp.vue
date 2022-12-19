@@ -1,7 +1,7 @@
 <template>
   <v-main id="inspire">
 
-    <v-content>
+
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="8">
@@ -79,17 +79,36 @@
                             prepend-icon="person" type="text" color="accent accent-3" :rules="required" />
                           <v-text-field v-model="dob" id="dob" label="Data di nascita" name="DOB"
                             prepend-icon="mdi-calendar-blank" type="date" color="accent accent-3" :rules="required" />
-                          <v-text-field v-model="indirizzo" id="indirizzo" label="Indirizzo" name="Indirizzo"
+                          <v-text-field v-model="indirizzo" id="indirizzo" label="Indirizzo" placeholder="via Sommarive 9, Povo, Trento" name="Indirizzo"
                             prepend-icon="map" type="text" color="accent accent-3" :rules="required" />
                           <v-text-field v-model="email" id="email" label="Email" name="Email" prepend-icon="email"
                             type="email" color="accent accent-3" required :rules="emailRules" />
                           <v-text-field v-model="password" id="password"
-                            label="Password (almeno 8 lettere, 1 numero e un carattere speciale)" name="Password"
+                            label='Password (Almeno 8 caratteri, un numero ed un carattere speciale " £ \ $ % & ? € = ^)'
+                            name="Password"
                             prepend-icon="lock" type="password" color="accent accent-3"
                             :rules="required.concat(passwordCrit)" />
                           <v-text-field v-model="password1" id="confirmPassword" label="Confirm Password"
                             name="cPassword" prepend-icon="lock" type="password" color="accent accent-3"
                             :rules="required.concat(passwordMatching)" />
+                          <v-checkbox
+                            color="indigo"
+                            label="Aggiungi Metodo di Pagamento?"
+                            v-model="metodiPagamento"
+                            hide-details
+                            class="shrink mr-2 mt-0"
+                          ></v-checkbox>
+                          <v-text-field
+                            :disabled="!metodiPagamento"
+                            v-model="mailPayPal"
+                            id="paypal"
+                            name="paypal"
+                            prepend-icon="mdi-account-credit-card"
+                            label="Metodo di Pagamento"
+                            placeholder="PayPal"
+                            color="accent accent-3"
+                            :rules="emailRules"
+                          ></v-text-field>
                           <v-spacer></v-spacer>
                           <v-btn class="submit" rounded color="accent accent-3" dark :disabled="!valid"
                             @click="handleSubmit">Crea un Account</v-btn>
@@ -100,7 +119,7 @@
                       <v-spacer></v-spacer>
                       <v-container>
                         <v-alert v-if="erroreRegistrazione" type="error" justify="center">
-                          {{ message }}
+                          {{ messaggioErrore }}
                         </v-alert>
                       </v-container>
                     </v-col>
@@ -111,7 +130,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-content>
+
   </v-main>
 </template>
 
@@ -123,6 +142,7 @@ export default {
   components: { logoLinkHome },
   data: () => ({
     step: 1,
+    metodiPagamento: false,
     valid: false,
     erroreRegistrazione: false,
     accountCreato: false,
@@ -136,7 +156,8 @@ export default {
     cognome: '',
     dob: '',
     indirizzo: '',
-    metodiPagamento: '',
+    mailPayPal:'',
+    message:'',
     url:'http://localhost:8080/',
     required: [
       v => !!v || 'Campo obbligatorio'
@@ -145,8 +166,8 @@ export default {
       v => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail non valida.',
     ],
     passwordCrit: [
-      v => v.length >= 8 && v.match(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/) || 'Password non valida!'
-    ]
+      v => (v.match(/^(?=.*[0-9])(?=.*[!"£$%&?€=^])[a-zA-Z0-9!@#$%^&*]{8,15}/))!== null || 'Password non valida!'
+    ] 
   }),
   props: {
     source: String
@@ -164,7 +185,16 @@ export default {
         fetch(this.url + "api/u/signUp", {
           method: 'POST',
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: this.username, password: this.password, nome: this.nome, cognome: this.cognome, datadinascita: this.dob, indirizzo: this.indirizzo, email: this.email })
+          body: JSON.stringify({ 
+            username: this.username, 
+            password: this.password, 
+            nome: this.nome, 
+            cognome: this.cognome, 
+            datadinascita: this.dob, 
+            indirizzo: this.indirizzo, 
+            email: this.email,
+            metodiPagamento: this.mailPayPal
+          })
         }).then((resp) => resp.json())
           .then(data => {
             console.log(data);
@@ -173,10 +203,32 @@ export default {
               this.erroreRegistrazione = true;
               return;
             }
+            this.salvaProfilo();
             this.accountCreato = true;
             this.step = 1;
-            //this.$refs.form.reset();
+            this.$refs.form.reset();
+            this.erroreRegistrazione = false;
           })
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async salvaProfilo() {
+      try {
+        fetch (this.$url + "api/p/savep", {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "x-token-access": this.$store.getters.token,
+          },
+          body: JSON.stringify({
+            "descrizioneProfilo" : "Benvenuti sul mio profilo!",
+            "idUtente" : this.username,
+          })
+        }).then((resp) => resp.json())
+        .then(data => {
+          console.log(data);
+        })
       } catch (error) {
         console.error(error);
       }
@@ -230,6 +282,9 @@ export default {
   computed: {
     acquistoUtenteNonAutenticato() {
       return this.$store.state.prodottoInBallo;
+    },
+    messaggioErrore() {
+      return this.message;
     }
   },
   mounted() {
