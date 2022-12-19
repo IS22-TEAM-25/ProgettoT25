@@ -6,14 +6,12 @@ const upload = multer();
 const routerUtente = express.Router();
 const utenteController = require('../controllers/utente');
 
-routerUtente.post('/signUp', upload.none(), utenteController.saveNewUser);
-routerUtente.delete('/deleteu/:username', utenteController.deleteUserbyUsername);
-routerUtente.delete('/deletee/:email', utenteController.deleteUserbyEmail);
-routerUtente.get('/getAll', utenteController.getAll);
-routerUtente.get('/getu/:username', utenteController.getByUsername);
-routerUtente.get('/gete/:email', utenteController.getByEmail);
-routerUtente.patch('/updateu',upload.none(), utenteController.updateUser);
-routerUtente.patch('/updatee', upload.none(), utenteController.updateEmail);
-routerUtente.patch('/updatep', upload.none(), utenteController.updatePw);
+routerUtente.post('/signUp', upload.none(), utenteController.signUp);
+routerUtente.delete('/deleteu/:username', utenteController.eliminaAccount);
+routerUtente.get('/getAll', utenteController.findAllUsers);
+routerUtente.get('/getu/:username', utenteController.getUserData);
+routerUtente.patch('/updateu',upload.none(), utenteController.aggiornaDati);
+routerUtente.patch('/updatee', upload.none(), utenteController.aggiornaEmail);
+routerUtente.patch('/updatep', upload.none(), utenteController.aggiornaPassword);
 
 module.exports = routerUtente;

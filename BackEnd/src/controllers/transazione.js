@@ -5,10 +5,11 @@ const Utente = require("../models/utente");
 const auxdate = require("../auxiliaries/dateFunction");
 const auxId = require("../auxiliaries/createId");
 
-const saveNewTrans = (req, res) => {
+const salvaTransazione = (req, res) => {
     const objd = new Date();
     const id = auxId.createId(objd,req.body.prodotto,req.body.acquirente, req.body.venditore);
 
+    
     Transazione.findById(id, (err, data) => {
         if(!data){
             
@@ -16,6 +17,12 @@ const saveNewTrans = (req, res) => {
                 if(data){
                     Annuncio.findOne({titolo : req.body.prodotto}, (err, data) => {
                         if(data){
+                            var price = req.body.prezzo;
+                            // if(data.modalitaTransazione == 'Vendita'){
+                            //     price = data.prezzo;
+                            // } else {
+                            //     price = data.prezzoAffittoAlGiorno;
+                            // }
                             if(data.inserzionista == req.body.venditore){
                                 const newT = new Transazione({
                                     _id : id,
@@ -23,7 +30,7 @@ const saveNewTrans = (req, res) => {
                                     acquirente : req.body.acquirente,
                                     prodotto : req.body.prodotto,
                                     pagamentoEffettuato : req.body.pagamentoEffettuato,
-                                    costo : data.prezzo,
+                                    costo : price,
                                     dataTransazione : objd,
                                     metodoTransazione : req.body.metodoTransazione,
                                     tipologiaTransazione : data.modalitaTransazione
@@ -53,7 +60,7 @@ const saveNewTrans = (req, res) => {
     })
 }
 
-const getAll = (req, res) => {
+const findAllTransazioni = (req, res) => {
     Transazione.find({}, (err, data) => {
         if(data){
             if(data[0] == undefined){
@@ -69,7 +76,7 @@ const getAll = (req, res) => {
     })
 }
 
-const getVenditore = (req, res) => {
+const findTransazioniVenditore = (req, res) => {
     const seller = req.params.venditore;
     Transazione.find({venditore : seller}, (err, data) => {
         if(data){
@@ -86,7 +93,7 @@ const getVenditore = (req, res) => {
     })
 }
 
-const getAcquirente = (req, res) => {
+const findTransazioniAcquirente = (req, res) => {
     const buyer = req.params.acquirente;
     Transazione.find({acquirente : buyer}, (err, data) => {
         if(data){
@@ -103,7 +110,7 @@ const getAcquirente = (req, res) => {
     })
 }
 
-const deleteTransazioneById = async (req, res) => {
+const eliminaTransazione = async (req, res) => {
     let transazione = await Transazione.findById(req.params.id).exec();
     if(!transazione){
         return res.status(404).json({success: false, message : "Nessuna tranzione con id '" + req.params.id + "'!"})
@@ -112,7 +119,7 @@ const deleteTransazioneById = async (req, res) => {
     return res.status(204).send();
 }
 
-const getAnnuncio = (req, res) => {
+const findTransazioniProdotto = (req, res) => {
     const product = req.params.annuncio;
     Transazione.find({prodotto : product}, (err, data) => {
         if(data){
@@ -130,10 +137,10 @@ const getAnnuncio = (req, res) => {
 }
 
 module.exports = {
-    saveNewTrans,
-    getAll,
-    getVenditore,
-    getAcquirente,
-    deleteTransazioneById,
-    getAnnuncio
+    salvaTransazione,
+    findAllTransazioni,
+    findTransazioniVenditore,
+    findTransazioniAcquirente,
+    eliminaTransazione,
+    findTransazioniProdotto
 }

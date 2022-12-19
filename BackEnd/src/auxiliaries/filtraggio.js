@@ -213,7 +213,8 @@ const filterByTermDesc = function(annunci, searchTerm){
     })
 }
 
-module.exports = {filterArray, 
+module.exports = {
+    filterArray, 
     orderAnnunciByDate, orderAnnunciByMoney,
     orderAnnunciByDateDESC, orderAnnunciByMoneyDESC,
     filterByTerm, filterByTermDesc

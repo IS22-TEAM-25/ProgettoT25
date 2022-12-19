@@ -3,7 +3,7 @@ const auxFilters = require("../auxiliaries/filtraggio");
 
 const Annuncio = require("../models/annuncio");
 const User = require("../models/utente");
-const saveNewAnnuncio = (req,res) => {
+const salvaAnnuncio = (req,res) => {
     Annuncio.findOne({titolo: req.body.titolo}, (err, data) => {
         if(!data){
             User.findOne({username: req.body.inserzionista}, (err, data) => {
@@ -67,7 +67,7 @@ const saveNewAnnuncio = (req,res) => {
     })
 }
 
-const getAll = (req,res) => {
+const findAllArticles = (req,res) => {
     Annuncio.find({},(err,data)=>{
         if(data){
             if(data[0] == undefined){
@@ -81,7 +81,7 @@ const getAll = (req,res) => {
     })
 }
 
-const getById = (req,res) => {
+const findById = (req,res) => {
     Annuncio.findById(req.params.id, (err, data) => {
         if(data){
             return res.status(200).json(data);
@@ -92,7 +92,7 @@ const getById = (req,res) => {
     })
 }
 
-const getByUser = (req, res) => {
+const findByInserzionista = (req, res) => {
     Annuncio.find({inserzionista : req.params.inserzionista}, (err, data)=>{
         if(data){
             if(data[0] == undefined){
@@ -106,7 +106,7 @@ const getByUser = (req, res) => {
     })
 }
 
-const deleteAnnuncioById = async (req, res) => {
+const eliminaAnnuncio = async (req, res) => {
     let annuncio = await Annuncio.findById(req.params.id).exec();
     if(!annuncio){
         return res.status(404).json({success: false, message : "Nessuno annunco dal titolo '" + req.params.id + "'!"})
@@ -115,7 +115,7 @@ const deleteAnnuncioById = async (req, res) => {
     return res.status(204).send();
 }
 
-const filtraggioSuArray = (req, res) => {
+const findByFilters = (req, res) => {
     Annuncio.find({}, (err, data) => {
         if(data){
             if(data[0] == undefined){
@@ -135,7 +135,7 @@ const filtraggioSuArray = (req, res) => {
     });
 }
 
-const updateAnn = (req, res) => {
+const modificaAnnuncio = (req, res) => {
     Annuncio.findOne({titolo : req.body.titolo}, (err, data) => {
         if(!data){
             if(err) return res.status(500).json({Error: err});
@@ -177,62 +177,26 @@ const updateAnn = (req, res) => {
     });
 }
 
-// const ordinaAnn = (req, res) => {
-//     const p = req.params.p;
-//     Annuncio.find({},(err,data)=>{
-//         if(data){
-//             if(data[0] == undefined){
-//                 return res.status(404).json({success: false, message : "Nessun annuncio presente"})
-//             }
-//             if(p == "d1"){
-//                 return res.status(200).json(auxFilters.orderAnnunciByDate(data));
-//             } else if(p == "d2"){
-//                 return res.status(200).json(auxFilters.orderAnnunciByDateDESC(data));
-//             } else if(p == "m1"){
-//                 return res.status(200).json(auxFilters.orderAnnunciByMoney(data));
-//             } else if(p == "m2"){
-//                 return res.status(200).json(auxFilters.orderAnnunciByMoneyDESC(data));
-//             } else {
-//                 return res.status(400).json({success: false, message : "Specificare ordinamento"})
-//             }
-//         } else {
-//             if(err) return res.status(500).json({Error: err});
-//             return res.status(404).json({success: false, message : "Nessun annuncio presente"})
-//         }
-//     })
-
-// }
-
-//DOCUMENTAZIONE di ordinaAnn
-// "/api/a/ordina/{p}" : {
-//     "get" : {
-//         "tags" : ["Annuncio"],
-//         "summary" : "Usata per ottenere tutti gli annunci ordinati secondo un ordinamento specifico.",
-//         "responses" : {
-//             "200" : {
-//                 "description" : "OK. Si ottengono correttamente tutti gli annunci postati dall'utente specificato."
-//             },
-//             "500" : {
-//                 "description" : "SERVER ERROR. Di varia natura."
-//             },
-//             "404" : {
-//                 "description" : "NOT FOUND. Nessun annuncio nel sistema."
-//             }
-//         },
-//         "parameters" : [
-//             {
-//                 "name" : "p",
-//                 "in" : "path",
-//                 "description" : "Valore che specifica l'ordinamento desiderato. Possibili valori di 'p': \n'd1': data di pubblicazione crescente.\n'd2': data di pubblicazione decrescente.\n'm1': prezzo crescente.\n'm2': prezzo decrescente."
-//             }
-//         ]
-//     }
-// },
+const ordinaAnnunci = (req, res) => {
+    const p = req.params.p;
+    const data = req.body.arrayAnnunci;
+    if(p == "d1"){
+        return res.status(200).json(auxFilters.orderAnnunciByDate(data));
+    } else if(p == "d2"){
+        return res.status(200).json(auxFilters.orderAnnunciByDateDESC(data));
+    } else if(p == "m1"){
+        return res.status(200).json(auxFilters.orderAnnunciByMoney(data));
+    } else if(p == "m2"){
+        return res.status(200).json(auxFilters.orderAnnunciByMoneyDESC(data));
+    } else {
+        return res.status(400).json({success: false, message : "Specificare ordinamento"})
+    }
+}
 
 // Verifica che una keyword compaia nel titolo
 
 
-const getByKwTitle = (req, res) => {
+const findByKeyword = (req, res) => {
     const word = req.params.word;
 
     Annuncio.find({},(err,data)=>{
@@ -252,36 +216,15 @@ const getByKwTitle = (req, res) => {
     })
 }
 
-// Verifica che una keyword compaia nella descrizione
-const getByKwDescrizione = (req, res) => {
-    const word = req.params.word;
-
-    Annuncio.find({},(err,data)=>{
-        if(data){
-            if(data[0] == undefined){
-                return res.status(404).json({success: false, message : "Nessun annuncio presente"})
-            }
-            const items = auxFilters.filterByTermDesc(data,word);
-            if(items[0] == undefined){
-                return res.status(404).json({success: false, message: "Nessun annuncio corrispondente alla keyword ricercata. "});
-            }
-            return res.status(200).json(items);
-        } else {
-            if(err) return res.status(500).json({Error: err});
-            return res.status(404).json({success: false, message : "Nessun annuncio presente"})
-        }
-    })
-}
-
 //export controller functions
 module.exports = {
-    saveNewAnnuncio,
-    deleteAnnuncioById,
-    getAll,
-    getById,
-    getByUser,
-    filtraggioSuArray,
-    updateAnn,
-    getByKwTitle,
-    getByKwDescrizione
+    salvaAnnuncio,
+    eliminaAnnuncio,
+    findAllArticles,
+    findById,
+    findByInserzionista,
+    findByFilters,
+    modificaAnnuncio,
+    findByKeyword,
+    ordinaAnnunci
 }

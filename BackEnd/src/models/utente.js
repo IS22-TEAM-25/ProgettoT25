@@ -4,7 +4,7 @@ const schema = new mongoose.Schema({
     _id : {type:String},
     nome: {type:String, required:true},
     cognome: {type:String, required:true},
-    datadinascita: {type:String, required:true},
+    datadinascita: {type:Date, required:true},
     indirizzo: {type:String, required:true},
     email: {type:String, required:true, unique:true},
     username: {type:String, required:true, unique:true},

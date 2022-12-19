@@ -18,8 +18,7 @@ const schema = new mongoose.Schema({
     //attributi per l'affitto
     prezzoAffittoAlGiorno : {type:Number},
     prezzoAffittoSettimanale : {type:Number},
-    prezzoAffittoAllOra : {type:Number},
-    periodoNonDisponibilita : {type:Array}
+    prezzoAffittoAllOra : {type:Number}
 });
 
 const Annuncio = mongoose.model('Annuncio', schema); 

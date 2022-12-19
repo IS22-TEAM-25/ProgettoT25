@@ -7,6 +7,6 @@ const routerAuth = express.Router();
 const authController = require('../controllers/authentication');
 
 routerAuth.post('/signIn', upload.none(), authController.login);
-routerAuth.post('/ripristino',upload.none(),authController.ripristinoPass);
+routerAuth.post('/ripristino',upload.none(),authController.ripristinoPassword);
 routerAuth.get('/logout',authController.logout);
 module.exports = routerAuth;

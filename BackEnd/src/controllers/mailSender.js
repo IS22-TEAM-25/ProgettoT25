@@ -36,7 +36,7 @@ const inviaMail = function(req, res){
 module.exports = {inviaMail};
 
 //PER RIPRISTINO PW
-// Hai effettuato la richiesta di ripristino password. Ecco una password temporanea per accedere al tuo account:
+// Hai effettuato la richiesta di ripristino password. Ecco una password per accedere al tuo account:
 // ***
 // Ti consigliamo di cambiarla dalle impostazioni del profilo.
 // Il team di SpottyThings.

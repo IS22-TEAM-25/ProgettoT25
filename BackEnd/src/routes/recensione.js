@@ -6,12 +6,12 @@ const upload = multer();
 const routerRecensione = express.Router();
 const recensioneController = require('../controllers/recensione');
 
-routerRecensione.post('/saver', upload.none(),recensioneController.saveNewRecensione);
-routerRecensione.get('/getAll',recensioneController.getAll);
-routerRecensione.get('/getrv/:recensito', recensioneController.getRecensito);
-routerRecensione.get('/getra/:recensore', recensioneController.getRecensore);
-routerRecensione.get('/getrt/:transazione', recensioneController.getTransazione);
-routerRecensione.delete('/deleter/:id', recensioneController.deleteRecensioneById);
+routerRecensione.post('/saver', upload.none(),recensioneController.salvaRecensione);
+routerRecensione.get('/getAll',recensioneController.findAllRecensioni);
+routerRecensione.get('/getrv/:recensito', recensioneController.findRecensioniSuUnUtente);
+routerRecensione.get('/getra/:recensore', recensioneController.findRecensioniDiUnUtente);
+routerRecensione.get('/getrt/:transazione', recensioneController.findRecensioneTransazione);
+routerRecensione.delete('/deleter/:id', recensioneController.eliminaRecensione);
 
 module.exports = routerRecensione;
 

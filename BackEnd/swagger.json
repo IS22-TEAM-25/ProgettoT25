@@ -623,30 +623,44 @@
                 ]
             }
         },
-        "/api/a/getkd/{word}" : {
-            "get" : {
+        "/api/a/ordina/{p}" : {
+            "post" : {
                 "tags" : ["Annuncio"],
-                "summary" : "Usata per ottenere tutti gli annunci che contengono una parola chiave nella descrizione (non si fanno distinzioni tra maiuscole e minuscole).",
+                "summary" : "Usata per ordinare un array di annunci passato nel body secondo un ordinamento specifico.",
                 "responses" : {
                     "200" : {
-                        "description" : "OK. Si ottengono correttamente tutti gli annunci che presentano nella descrizione la keyword specificata."
-                    },
-                    "404" : {
-                        "description" : "NOT FOUND. Nessun annuncio nel sistema oppure nessun annuncio che soddisfa la keyowrd ricercata."
+                        "description" : "OK. Si ottengono correttamente tutti gli annunci ordinati come richiesto."
                     },
                     "500" : {
                         "description" : "SERVER ERROR. Di varia natura."
+                    },
+                    "404" : {
+                        "description" : "NOT FOUND. Nessun annuncio nel sistema."
                     }
                 },
                 "parameters" : [
                     {
-                        "name" : "word",
+                        "name" : "p",
                         "in" : "path",
-                        "description" : "Parola chiave specificata che deve essere contenuta nella descrizione di un annuncio."
+                        "description" : "Valore che specifica l'ordinamento desiderato. Possibili valori di 'p': \n'd1': data di pubblicazione crescente.\n'd2': data di pubblicazione decrescente.\n'm1': prezzo crescente.\n'm2': prezzo decrescente."
+                    },
+                    {
+                        "in" : "body",
+                        "name" : "Elenco di annunci",
+                        "description" : "Array di annunci che saranno poi ordinati",
+                        "schema" : {
+                            "type" : "object",
+                            "properties" : {
+                                "arrayAnnunci" : {
+                                    "type" : "array",
+                                    "example" : "[{\"_id\":\"Scarpe da basket\",\"inserzionista\":\"marioRossi17\",\"titolo\":\"Scarpe da basket\",\"descrizione\":\"Scarpe sportive taglia 43\",\"dataPubblicazione\":\"2022-11-06T00:00:00.000Z\",\"modalitaTransazione\":\"Vendita\",\"categoria\":\"sport\",\"indirizzoRitiro\":\"{\\\"via\\\":\\\"via Rosimini 64\\\",\\\"citta\\\":\\\"Trento\\\",\\\"provincia\\\":\\\"Trento\\\"}\",\"pagamentoOnline\":false,\"contoPayPal\":\"example@hotmail.it\",\"visibile\":true,\"sponsorizzato\":false,\"prezzo\":54.2,\"__v\":0}, {\"_id\":\"Cacciavite\",\"inserzionista\":\"fede\",\"titolo\":\"Cacciavite\",\"descrizione\":\"Cacciavite a stella nuovo.\",\"dataPubblicazione\":\"2022-12-19T00:00:00.000Z\",\"modalitaTransazione\":\"Affitto\",\"categoria\":\"fai da te\",\"indirizzoRitiro\":\"{\\\"via\\\":\\\"via cacciatora 23\\\",\\\"citta\\\":\\\"povo\\\",\\\"provincia\\\":\\\"trento\\\"}\",\"pagamentoOnline\":false,\"visibile\":true,\"sponsorizzato\":false,\"prezzoAffittoAlGiorno\":45,\"prezzoAffittoSettimanale\":45,\"prezzoAffittoAllOra\":45,\"__v\":0}]"
+                                }
+                            }
+                        }
                     }
                 ]
             }
-        },
+          },
         "/api/a/updatea" : { 
             "patch" : {
                 "tags" : ["Annuncio"],
@@ -844,9 +858,9 @@
             }
         },
         "/api/l/ripristino" : {
-            "get" : {
+            "post" : {
                 "tags" : ["Autenticazione"],
-                "summary" : "Usata dal sistema pre ripristinare la password dell'utente in caso di dimenticanza. Questa API modifica con una stringa di 10 caratteri casuali la password dell'utente, poi con un'altra API si invierà una mail con il contenuto della nuova password.",
+                "summary" : "Usata dal sistema per ripristinare la password dell'utente in caso di dimenticanza. Questa API modifica con una stringa di 10 caratteri casuali la password dell'utente, poi con un'altra API si invierà una mail con il contenuto della nuova password.",
                 "responses" : {
                     "204" : {
                         "description" : "NO CONTENT. Password modificata correttamente e nessun ritorno dalla API."
@@ -862,17 +876,13 @@
                     {
                     "in" : "body",
                     "name" : "Dati utente",
-                    "description" : "Lo username o la email dell'utente di cui ripristinare la password",
+                    "description" : "Lo username dell'utente di cui ripristinare la password",
                     "schema" : {
                         "type" : "object",
                         "properties" : {
                             "username" : {
                                 "type" : "string",
                                 "example" :"marioRossi17"
-                            },
-                            "email" : {
-                                "type" : "string",
-                                "example" :"marioRossiEmailProva123!@example.com"
                             }
                         }
                     }
@@ -915,7 +925,7 @@
                     "description" : "Le informazioni sulla nuova transazione da creare",
                     "schema" : {
                         "type" : "object",
-                        "required" : ["venditore", "acquirente", "prodotto", "metodoTransazione"],
+                        "required" : ["venditore", "acquirente", "prodotto", "metodoTransazione", "prezzo"],
                         "properties" : {
                             "venditore" : {
                                 "type" : "string",
@@ -943,6 +953,11 @@
                                 "type" : "string",
                                 "summary" : "'Online' oppure 'Di persona'",
                                 "example" : "Online"
+                            },
+                            "prezzo" : {
+                                "type" : "number",
+                                "summary" : "Importo della transazione",
+                                "example" : "150"
                             }
                         }
                     }
@@ -1304,12 +1319,6 @@
                     "401" : {
                         "description" : "UNAUTHORIZED. Token non fornito, impossibile autorizzare la richiesta."
                     },
-                    "403" : {
-                        "description" : "FORBIDDEN. Token fornito non valido, impossibile autorizzare la richiesta. Si prega di rieffettuare il login"
-                    },
-                    "404" : {
-                        "description" : "NOT FOUND. Utente per cui si intende creare il profilo non presente nel sistema."
-                    },
                     "409" : {
                         "description" : "CONFLICT. Errore in seguito al tentativo di creare un profilo già presente per un utente."
                     },
@@ -1318,11 +1327,6 @@
                     }
                 },
                 "parameters" : [
-                    {
-                        "name" : "x-access-token",
-                        "in" : "header",
-                        "description" : "token d'accesso"
-                    },
                     {
                     "in" : "body",
                     "name" : "Dati profilo",

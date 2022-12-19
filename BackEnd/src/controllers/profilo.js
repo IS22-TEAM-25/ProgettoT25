@@ -6,7 +6,7 @@ const Annuncio = require("../models/annuncio");
 const Transazione = require("../models/transazione");
 const Recensione = require("../models/recensione");
 
-const saveNewProfilo = (req, res) => {
+const salvaProfilo = (req, res) => {
     Profilo.findById(req.body.idUtente, (err, data) => {
         if(!data){
             User.findOne({username : req.body.idUtente}, (err, data) => {
@@ -19,7 +19,10 @@ const saveNewProfilo = (req, res) => {
                     const newP = new Profilo({
                         _id : req.body.idUtente,
                         dataCreazioneProfilo : new Date(),
-                        descrizioneProfilo : req.body.descrizioneProfilo
+                        descrizioneProfilo : req.body.descrizioneProfilo,
+                        rating : 0,
+                        recensioniFatte : 0,
+                        recensioniRicevute : 0
                     });
                     newP.save((err, data) => {
                         if(err) return res.status(500).json({Error: err});
@@ -37,7 +40,7 @@ const saveNewProfilo = (req, res) => {
     })
 }
 
-const getAll = (req, res) => {
+const findAllProfiles = (req, res) => {
     Profilo.find({}, (err, data) => {
 
         if(data){
@@ -52,7 +55,7 @@ const getAll = (req, res) => {
     });
 }
 
-const getProfiloById = (req, res) => {
+const findById = (req, res) => {
     Profilo.findById(req.params.id, (err, data) => {
         if(!data){
             return res.status(404).json({success: false, message: "Nessun profilo con id " + req.params.id});
@@ -64,20 +67,21 @@ const getProfiloById = (req, res) => {
     })
 }
 
-const deleteProfilo = async (req, res) => {
+const eliminaProfilo = async (req, res) => {
 
     let data = await Profilo.findById(req.params.id).exec();
 
     if(!data){
         return res.status(404).json({success: false, message: "Profilo non presente!"})
     } else {
+        await Annuncio.deleteMany({inserzionista: req.params.id});
         await Profilo.deleteOne({_id: req.params.id});
         return res.status(204).send();
     }
 
 }
 
-const modificaDescrizione = (req, res) => {
+const aggiornaDescrizione = (req, res) => {
     Profilo.findById(req.body.id, (err, data) => {
         if(data){
             if(req.body.descrizioneProfilo.length > 250){
@@ -96,7 +100,7 @@ const modificaDescrizione = (req, res) => {
     })
 }
 
-const aggiungiWl = (req, res) => {
+const aggiungiWishList = (req, res) => {
     const annuncio = req.body.annuncio;
     Annuncio.findById(annuncio, (err, data) => {
         if(data){
@@ -127,7 +131,7 @@ const aggiungiWl = (req, res) => {
     })    
 }
 
-const rimuoviWl = (req, res) => {
+const rimuoviWishList = (req, res) => {
     const annuncio = req.body.annuncio;
     Annuncio.findById(annuncio, (err, data) => {
         if(data){
@@ -161,7 +165,7 @@ const rimuoviWl = (req, res) => {
     })  
 }
 
-const commuteBestUsers = (req, res) => {
+const findBestProfiles = (req, res) => {
     Profilo.find({}, (err, data) => {
         if(data){
             if(data[0] == undefined){
@@ -178,7 +182,7 @@ const commuteBestUsers = (req, res) => {
     });
 }
 
-const updateRating = (req, res) => {
+const aggiornaRating = (req, res) => {
     Profilo.findById(req.body.id, (err, data) => {
         if(data){
             var recFatte = 0, recRicevute = 0;
@@ -217,7 +221,7 @@ const updateRating = (req, res) => {
     })
 }
 
-const updateAnnunciOnline = (req, res) => {
+const aggiornaAnnunciOnline = (req, res) => {
     Profilo.findById(req.body.id, (err, data) => {
         if(data){
 
@@ -259,7 +263,7 @@ const updateAnnunciOnline = (req, res) => {
     })
 };
 
-const updateStatisticheVendita = (req, res) => {
+const aggiornaStatisticheVendita = (req, res) => {
     Profilo.findById(req.body.id, (err, data) => {
         if(data){
             Transazione.find({venditore: req.body.id}, (err, data) => {
@@ -303,7 +307,7 @@ const updateStatisticheVendita = (req, res) => {
     })
 }
 
-const updateStatisticheAcquisti = (req, res) => {
+const aggiornaStatisticheAcquisti = (req, res) => {
     Profilo.findById(req.body.id, (err, data) => {
         if(data){
             if(data.length == 0){
@@ -329,16 +333,16 @@ const updateStatisticheAcquisti = (req, res) => {
 }
 
 module.exports = {
-    saveNewProfilo,
-    getAll,
-    getProfiloById,
-    deleteProfilo,
-    modificaDescrizione,
-    aggiungiWl,
-    rimuoviWl,
-    updateRating,
-    updateAnnunciOnline,
-    updateStatisticheVendita,
-    commuteBestUsers,
-    updateStatisticheAcquisti
+    salvaProfilo,
+    findAllProfiles,
+    findById,
+    eliminaProfilo,
+    aggiornaDescrizione,
+    aggiungiWishList,
+    rimuoviWishList,
+    aggiornaRating,
+    aggiornaAnnunciOnline,
+    aggiornaStatisticheVendita,
+    findBestProfiles,
+    aggiornaStatisticheAcquisti
 }

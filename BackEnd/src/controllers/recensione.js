@@ -5,7 +5,7 @@ const Recensione = require("../models/recensione");
 
 const auxdate = require("../auxiliaries/dateFunction");
 
-const saveNewRecensione = (req, res) => {
+const salvaRecensione = (req, res) => {
 
     Recensione.findById(req.body.transazioneRecensita, (err, data) => {
         if(!data){
@@ -58,7 +58,7 @@ const saveNewRecensione = (req, res) => {
 
 }
 
-const getAll = (req, res) => {
+const findAllRecensioni = (req, res) => {
     Recensione.find({}, (err, data) => {
         if(data){
             if(data[0] == undefined){
@@ -74,7 +74,7 @@ const getAll = (req, res) => {
     })
 }
 
-const getRecensito = (req, res) => {
+const findRecensioniSuUnUtente = (req, res) => {
     const seller = req.params.recensito;
     Recensione.find({utenteRecensito : seller}, (err, data) => {
         if(data){
@@ -91,7 +91,7 @@ const getRecensito = (req, res) => {
     })
 }
 
-const getRecensore = (req, res) => {
+const findRecensioniDiUnUtente = (req, res) => {
     const buyer = req.params.recensore;
     Recensione.find({utenteRecensore : buyer}, (err, data) => {
         if(data){
@@ -108,7 +108,7 @@ const getRecensore = (req, res) => {
     })
 }
 
-const deleteRecensioneById = async (req, res) => {
+const eliminaRecensione = async (req, res) => {
     let recensione = await Recensione.findById(req.params.id).exec();
     if(!recensione){
         return res.status(404).json({success: false, message : "Nessuna recensione con id '" + req.params.id + "'!"})
@@ -117,7 +117,7 @@ const deleteRecensioneById = async (req, res) => {
     return res.status(204).send();
 }
 
-const getTransazione = (req, res) => {
+const findRecensioneTransazione = (req, res) => {
     const transz = req.params.transazione;
     Recensione.find({transazioneRecensita : transz}, (err, data) => {
         if(data){
@@ -135,10 +135,10 @@ const getTransazione = (req, res) => {
 }
 
 module.exports = {
-    saveNewRecensione,
-    getAll,
-    getRecensito,
-    getRecensore,
-    getTransazione,
-    deleteRecensioneById
+    salvaRecensione,
+    findAllRecensioni,
+    findRecensioniSuUnUtente,
+    findRecensioniDiUnUtente,
+    findRecensioneTransazione,
+    eliminaRecensione
 }

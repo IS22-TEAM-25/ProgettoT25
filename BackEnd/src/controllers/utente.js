@@ -4,17 +4,19 @@ const User = require("../models/utente");
 
 //Creare automaticamente profilo dopo la registrazione!
 
-const saveNewUser = (req,res) => {
+const signUp = (req,res) => {
     User.findOne({email: req.body.email}, (err, data) => {
         if(!data){
             User.findOne({username: req.body.username}, (err, data) => {
                 if(!data){
 
+                    const objd = new Date(req.body.datadinascita);
+
                     const newUser = new User ({
                         _id : req.body.username,
                         nome : req.body.nome,
                         cognome : req.body.cognome,
-                        datadinascita : req.body.datadinascita,
+                        datadinascita : objd,
                         indirizzo : req.body.indirizzo,
                         email : req.body.email,
                         username : req.body.username,
@@ -54,7 +56,7 @@ const deleteUserbyEmail = async (req, res) => {
 
 }
 
-const deleteUserbyUsername = async (req, res) => {
+const eliminaAccount = async (req, res) => {
 
     let data = await User.findOne({username : req.params.username}).exec();
 
@@ -67,7 +69,7 @@ const deleteUserbyUsername = async (req, res) => {
 
 }
 
-const getAll = (req,res) => {
+const findAllUsers = (req,res) => {
     User.find({}, (err,data)=>{
         if(data){
             if(data[0] == undefined){
@@ -81,7 +83,7 @@ const getAll = (req,res) => {
     })
 }
 
-const getByUsername = (req,res) => {
+const getUserData = (req,res) => {
     User.findOne({username : req.params.username}, (err,data) => {
         if(data){
             return res.status(200).json(data);
@@ -92,18 +94,7 @@ const getByUsername = (req,res) => {
     })
 }
 
-const getByEmail = (req,res) => {
-    User.findOne({email : req.params.email}, (err,data) => {
-        if(data){
-            return res.status(200).json(data);
-        } else {
-            if(err) return res.status(500).json({Error: err});
-            return res.status(404).json({success: false, message: "Utente non trovato!"})
-        }
-    })
-}
-
-const updateUser = (req, res) => {
+const aggiornaDati = (req, res) => {
 
     User.findOne({username : req.body.username}, (err, data) => {
         if(!data){
@@ -126,7 +117,7 @@ const updateUser = (req, res) => {
     })
 }
 
-const updateEmail = (req, res) => {
+const aggiornaEmail = (req, res) => {
 
     User.findOne({username : req.body.username}, (err, data) => {
         if(!data){
@@ -154,7 +145,7 @@ const updateEmail = (req, res) => {
 
 }
 
-const updatePw = (req, res) => {
+const aggiornaPassword = (req, res) => {
     User.findOne({username : req.body.username}, (err, data) => {
         if(!data){
             return res.status(404).json({success: false, message : "Utente non trovato"});
@@ -175,13 +166,12 @@ const updatePw = (req, res) => {
 
 //export controller functions
 module.exports = {
-    saveNewUser,
-    deleteUserbyUsername,
+    signUp,
+    eliminaAccount,
     deleteUserbyEmail,
-    getAll,
-    getByUsername,
-    getByEmail,
-    updateUser,
-    updateEmail,
-    updatePw
+    findAllUsers,
+    getUserData,
+    aggiornaDati,
+    aggiornaEmail,
+    aggiornaPassword
 }

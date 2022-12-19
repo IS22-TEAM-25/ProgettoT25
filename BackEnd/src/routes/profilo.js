@@ -6,19 +6,19 @@ const upload = multer();
 const routerProfilo = express.Router();
 const profiloController = require('../controllers/profilo');
 
-routerProfilo.post('/savep', upload.none(), profiloController.saveNewProfilo);
+routerProfilo.post('/savep', upload.none(), profiloController.salvaProfilo);
 
-routerProfilo.get('/getAll', profiloController.getAll);
-routerProfilo.get('/getp/:id', profiloController.getProfiloById);
-routerProfilo.get('/getbest/', profiloController.commuteBestUsers);
+routerProfilo.get('/getAll', profiloController.findAllProfiles);
+routerProfilo.get('/getp/:id', profiloController.findById);
+routerProfilo.get('/getbest/', profiloController.findBestProfiles);
 
-routerProfilo.delete('/deletep/:id', profiloController.deleteProfilo);
+routerProfilo.delete('/deletep/:id', profiloController.eliminaProfilo);
 
-routerProfilo.patch('/updaterat',upload.none(),profiloController.updateRating);
-routerProfilo.patch('/updatep', upload.none(), profiloController.modificaDescrizione);
-routerProfilo.patch('/addwl', upload.none(), profiloController.aggiungiWl);
-routerProfilo.patch('/rimuoviwl', upload.none(), profiloController.rimuoviWl);
-routerProfilo.patch('/updateao', upload.none(), profiloController.updateAnnunciOnline);
-routerProfilo.patch('/updatesv', upload.none(), profiloController.updateStatisticheVendita);
-routerProfilo.patch('/updatesa',upload.none(),profiloController.updateStatisticheAcquisti);
+routerProfilo.patch('/updaterat',upload.none(),profiloController.aggiornaRating);
+routerProfilo.patch('/updatep', upload.none(), profiloController.aggiornaDescrizione);
+routerProfilo.patch('/addwl', upload.none(), profiloController.aggiungiWishList);
+routerProfilo.patch('/rimuoviwl', upload.none(), profiloController.rimuoviWishList);
+routerProfilo.patch('/updateao', upload.none(), profiloController.aggiornaAnnunciOnline);
+routerProfilo.patch('/updatesv', upload.none(), profiloController.aggiornaStatisticheVendita);
+routerProfilo.patch('/updatesa',upload.none(),profiloController.aggiornaStatisticheAcquisti);
 module.exports = routerProfilo;

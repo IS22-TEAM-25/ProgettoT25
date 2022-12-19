@@ -32,44 +32,27 @@ const logout = function(req, res) {
     }
 }
 
-const ripristinoPass = function(req, res) {
+const ripristinoPassword = function(req, res) {
     let username = req.body.username;
-    let mail = req.body.email;
 
     let newPass = createRandomString(10);
     newPass += 'A!1';
     
-    if(username){
-        User.findById(username, (err, data) => {
-            if(data){
-                User.updateOne({username : username},
-                    { $set: {
-                        password: newPass,
-                    }}, (err, data) => {
-                    if(err) return res.status(500).json({Error: err});
-                    return res.status(204).send();
-                })
-            } else {
+    User.findById(username, (err, data) => {
+        if(data){
+            User.updateOne({username : username},
+                { $set: {
+                    password: newPass,
+                }}, (err, data) => {
                 if(err) return res.status(500).json({Error: err});
-                return res.status(404).json({success: false, message: "ANessun utente trovato"})
-            }
-        })
-    } else {
-        User.findOne({email: mail}, (err, data) => {
-            if(data){
-                User.updateOne({email : mail},
-                    { $set: {
-                        password: newPass,
-                    }}, (err, data) => {
-                    if(err) return res.status(500).json({Error: err});
-                    return res.status(204).send();
-                })
-            } else {
-                if(err) return res.status(500).json({Error: err});
-                return res.status(404).json({success: false, message: "MNessun utente trovato"})
-            }
-        })
-    }
+                return res.status(200).json({message: "Hai effettuato la richiesta di ripristino password. Ecco una password per accedere al tuo account:\n" + newPass + "\nTi consigliamo di cambiarla dalle impostazioni del profilo.\nIl team di SpottyThings."
+            });
+            })
+        } else {
+            if(err) return res.status(500).json({Error: err});
+            return res.status(404).json({success: false, message: "Nessun utente trovato"})
+        }
+    })
 
 }
 
@@ -77,5 +60,5 @@ const ripristinoPass = function(req, res) {
 module.exports = {
     login,
     logout,
-    ripristinoPass
+    ripristinoPassword
 }
