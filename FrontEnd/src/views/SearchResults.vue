@@ -5,7 +5,7 @@
             <v-container v-if="!isEmpty" fluid>
                 <v-row dense>
                     <v-col v-for="annuncio in annunci" :key="annuncio._id" :cols="4">
-                        <v-card :id="annuncio.titolo" @click="vaiAlleSpec(annuncio)" on >
+                        <v-card  :id="annuncio.titolo" @click="vaiAlleSpec(annuncio)" on >
                             <v-img 
                             rounded 
                             :src="require('../assets/vuoto.webp')" 
@@ -96,10 +96,16 @@ export default {
 
         }
     },
-    computed:  mapState({
-       cate: state => state.category,
-       annunci: state => state.annunci
-    }),
+    computed:  {
+
+        ...mapState({
+            cate: 'category',
+            //annunci: state => state.annunci
+        }),
+        annunci() {
+            return this.$store.state.annunci.filter(this.filtraggio)
+        }
+    },
 
 
     methods: {
@@ -185,7 +191,22 @@ export default {
         onInput() {
             this.cat = this.$refs.input.value
             this.$store.commit('selectCat', this.localCat)
-        }
+        },
+        filtraggio(x) {
+          var ok = true;
+          if (!this.$store.state.filtri.affitto && x.modalitaTransazione === 'Affitto') ok = false
+          if (!this.$store.state.filtri.vendita && x.modalitaTransazione === 'Vendita') ok = false
+          if (x.modalitaTransazione === "Vendita") {
+            if (x.prezzo < this.$store.state.filtri.prezzoVenditaMin) ok = false;
+            if (x.prezzo > this.$store.state.filtri.prezzoVenditaMax) ok = false;
+          }
+          if (x.modalitaTransazione === "Affitto") {
+            if (x.prezzoAffittoAlGiorno < this.$store.state.filtri.prezzoAffittoMin) ok = false;
+            if (x.prezzoAffittoAlGiorno > this.$store.state.filtri.prezzoAffittoMax) ok = false;
+          }
+          if (this.$store.state.category !== '' && x.categoria !== this.$store.state.category) ok = false
+          return ok;
+        },
     },
     async created() {
         this.cat = this.$store.state.category;

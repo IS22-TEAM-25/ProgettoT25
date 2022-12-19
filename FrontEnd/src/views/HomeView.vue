@@ -35,7 +35,6 @@
 <script>
 import categoryGrid from '@/components/categoryGrid'
 
-
   export default {
     components : { categoryGrid },
     name: 'MyHome',
@@ -54,6 +53,8 @@ import categoryGrid from '@/components/categoryGrid'
     mounted()  {
       this.$store.commit('isResultView', false);
       this.$store.commit('resetResult');
+      this.$store.commit('resettaFiltri');
+
     }
   }
 </script>
