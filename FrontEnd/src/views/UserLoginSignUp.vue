@@ -23,7 +23,12 @@
 
                           <v-text-field id="password" label="Password" name="password" prepend-icon="lock"
                             type="password" color="accent" v-model="password" :rules="required"/>
-                            <h3 class="text-center mt-4">Forgot your password?</h3>
+                            <!-- FORGOT PASSWORD -->
+                            <!-- <h3 
+                            class="text-center mt-4"
+                            @click="forgotPassword"
+                            >Forgot your password?</h3> -->
+                            <forgotPassword/>
                             <div class="text-center mt-3">
                               <v-btn class="submit" rounded color="accent accent-3" dark :disabled="!valid" @click="login" >SIGN IN</v-btn>
                             </div>
@@ -137,9 +142,10 @@
 <script>
 import router from '@/router';
 import logoLinkHome from '@/components/logoLinkHome';
+import forgotPassword from '@/components/forgotPassword';
 
 export default {
-  components: { logoLinkHome },
+  components: { logoLinkHome, forgotPassword },
   data: () => ({
     step: 1,
     metodiPagamento: false,
