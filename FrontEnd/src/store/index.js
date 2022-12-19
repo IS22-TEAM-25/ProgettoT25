@@ -16,6 +16,15 @@ const getDefaultState = () => {
     annuncioSelezionato: {},
     prodottoInBallo: false,
     transazione:{},
+    filtri: {
+      affitto:'true',
+      vendita:'true',
+      prezzoVenditaMin: 0,
+      prezzoVenditaMax: Number.MAX_SAFE_INTEGER,
+      prezzoAffittoMin: 0,
+      prezzoAffittoMax: Number.MAX_SAFE_INTEGER,
+      categoria: ''
+    }
   }
 }
 
@@ -55,7 +64,20 @@ export default new Vuex.Store({
     },
     resetResult(state) {
       state.category='',
-      state.keyword=''
+      state.keyword='',
+      state.noNavBar=false
+      },
+      resettaFiltri(state) {
+        state.filtri = {
+          affitto:'true',
+          vendita:'true',
+          prezzoVenditaMin: 0,
+          prezzoVenditaMax: Number.MAX_SAFE_INTEGER,
+          prezzoAffittoMin: 0,
+          prezzoAffittoMax: Number.MAX_SAFE_INTEGER,
+          categoria: ''
+      }
+
     }
 
   },

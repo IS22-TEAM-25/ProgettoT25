@@ -14,13 +14,15 @@
       <v-spacer></v-spacer>
       <v-text-field
       v-model="keyword"
-      class="d-inline-flex pa-2"
+      
       placeholder="bicicletta, drone, consolle..."
+      color="accent acccent-3"
       filled
       dense
       rounded
       append-icon="mdi-magnify"
       @keyup.enter="ricercakw"
+      @click:append="ricercakw"
       ></v-text-field> 
       <v-spacer></v-spacer>
     </v-row>
@@ -32,7 +34,6 @@
 
 <script>
 import categoryGrid from '@/components/categoryGrid'
-
 
   export default {
     components : { categoryGrid },
@@ -49,9 +50,11 @@ import categoryGrid from '@/components/categoryGrid'
         this.$router.push("/searchresults") 
       }
     },
-    created()  {
+    mounted()  {
       this.$store.commit('isResultView', false);
       this.$store.commit('resetResult');
+      this.$store.commit('resettaFiltri');
+
     }
   }
 </script>

@@ -42,6 +42,7 @@
       return {
         descrizione:'',
         rating: '',
+        valid: false,
         required: [
           v => !!v || 'Campo obbligatorio!'
         ]

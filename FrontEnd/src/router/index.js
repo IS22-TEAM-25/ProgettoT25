@@ -42,7 +42,7 @@ const routes = [
     component: UserReview
   },
   {
-    path: 'userprofile',
+    path: '/userprofile',
     name: 'userprofile',
     component: UserProfile
   }

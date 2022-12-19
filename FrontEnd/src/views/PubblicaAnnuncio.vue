@@ -40,19 +40,50 @@
     rounded 
     auto-grow></v-textarea>
     
-    <v-text-field 
-    v-model="indirizzo" 
-    id="indirizzo" 
-    label="Indirizzo di ritiro" 
-    name="indirizzo" 
-    type="text" 
-    color="accent accent-3"
-    :rules="required.concat(titoloRule)"
-    filled 
-    dense 
-    rounded />
-
-    
+    <v-row>
+      <v-col>
+        <v-text-field 
+        v-model="via" 
+        id="via" 
+        label="Via/Piazza"
+        placeholder="via Sommarive 9" 
+        name="via" 
+        type="text" 
+        color="accent accent-3"
+        :rules="required"
+        filled 
+        dense 
+        rounded />
+      </v-col>
+      <v-col>
+        <v-text-field 
+        v-model="città" 
+        id="città" 
+        label="Città"
+        placeholder="Povo" 
+        name="città" 
+        type="text" 
+        color="accent accent-3"
+        :rules="required"
+        filled 
+        dense 
+        rounded />
+      </v-col>
+      <v-col>
+        <v-text-field 
+        v-model="provincia" 
+        id="provincia" 
+        label="Provincia"
+        placeholder="Trento" 
+        name="provincia" 
+        type="text" 
+        color="accent accent-3"
+        :rules="required"
+        filled 
+        dense 
+        rounded />
+      </v-col>
+    </v-row>
     <v-checkbox 
       v-model= "affitto" 
       :disable="vendita"
@@ -87,7 +118,7 @@
         name="costoH"
         type="text"
         color="accent accent-3"
-        :rules= "requiredAff"
+        :rules= "required"
         filled
         dense
         rounded      
@@ -102,7 +133,7 @@
         name="costoG"
         type="text"
         color="accent accent-3"
-        :rules= "requiredAff"
+        :rules= "required"
         filled
         dense
         rounded      
@@ -117,51 +148,14 @@
         name="costoS"
         type="text"
         color="accent accent-3"
-        :rules= "requiredAff"     
+        :rules= "required"     
         filled
         dense
         rounded      
         />
       </v-col>
-
     </v-row>
-    <!-- <v-row>
-      <v-col>
-      <v-btn  rounded align="center" justify="center">
-        Aggiungi Date Non Diponibili
-      </v-btn>
-    </v-col>
-      <v-col :col="2">
-        <v-text-field
-        v-model="range.start"
-        id="startdate"
-        label="startDate"
-        name="startDate"
-        type="date"
-        color="accent accent-3"
-        
-        filled
-        dense
-        rounded      
-        />
-      </v-col>
-      <v-col :col="2">
-        <v-text-field
-        v-model="range.end"
-        id="startdate"
-        label="startDate"
-        name="startDate"
-        type="date"
-        color="accent accent-3"
-       
-        filled
-        dense
-        rounded      
-        />
-      </v-col>
-      </v-row> -->
     </v-container>
-
 
     <v-container
     v-if="!affitto && vendita" 
@@ -175,6 +169,7 @@
           name="costoVen"
           type="text"
           color="accent accent-3"
+          :rules="required"
           filled
           dense
           rounded      
@@ -182,25 +177,16 @@
         </v-col>
       </v-row>
     </v-container>
-    <!-- <v-container>
-
-      <v-row>
-        <v-col :col="1" ma="auto">
-          <v-file-input 
-          label="Image input"
-          filled
-          prepend-icon="mdi-camera"
-          >
-        </v-file-input>
-  
-        </v-col>
-      </v-row>
-    </v-container> -->
     <v-spacer></v-spacer>
     <v-container>
-      
-      <v-btn class="submit" rounded color="accent accent-3" dark @click="salvaAnnuncio" :disabled="!valid">Pubblica Annuncio</v-btn>
-      
+      <v-btn 
+      class="submit" 
+      rounded color="accent accent-3" 
+      dark 
+      @click="salvaAnnuncio" 
+      :disabled="!valid"
+      >Pubblica Annuncio
+    </v-btn>
     </v-container>
   </v-form>
   <v-container>
@@ -233,16 +219,12 @@ export default {
       periodoNonDisponibile: [],
       titolo: '',
       descrizione: '',
-      indirizzo: '',
+      via: '',
+      città: '',
+      provincia: '',
       annuncioSalvato: false,
       erroreAnnuncio: false,
       message: '',
-      requiredAff: [
-        v => !!v && this.affitto || 'Campo obbligatorio'
-      ],
-      requiredVen: [
-        v => !!v && this.vendita || 'Campo obbligatorio'
-      ],
       required: [
         v => !!v || 'Campo obbligatorio'
       ],
@@ -269,7 +251,9 @@ export default {
               dataPubblicazione: this.today(),
               modalitaTransazione: this.vendita ? "Vendita" : "Affitto", 
               categoria: this.selectCat,
-              indirizzo: this.indirizzo, 
+              via: this.via,
+              citta: this.città,
+              provincia: this.provincia, 
               pagamentoOnline: this.pagamentoOnline,
               contoPaypall: this.contoPayPal,
               prezzo: this.costoVen,
