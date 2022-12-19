@@ -55,7 +55,9 @@ export default new Vuex.Store({
     },
     resetResult(state) {
       state.category='',
-      state.keyword=''
+      state.keyword='',
+      state.noNavBar=false
+
     }
 
   },

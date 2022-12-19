@@ -173,7 +173,7 @@ export default {
             pagamentoEffettuato: true,
             metodoTransazione: "Online",
             tipologiaTransazione: this.$store.state.annuncioSelezionato.modalitaTransazione,
-            costo: this.$store.annuncioSelezionato.prezzo
+            costo: this.$store.annuncioSelezionato.prezzo,
           })
 
         }).then((resp) => resp.json())

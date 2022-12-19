@@ -49,9 +49,11 @@ import categoryGrid from '@/components/categoryGrid'
         this.$router.push("/searchresults") 
       }
     },
-    created()  {
+    mounted()  {
       this.$store.commit('isResultView', false);
       this.$store.commit('resetResult');
+      console.log(this.$store.state.category);
+      console.log(this.$store.state.keyword);
     }
   }
 </script>
