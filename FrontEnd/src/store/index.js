@@ -5,7 +5,6 @@ Vue.use(Vuex)
 
 const getDefaultState = () => {
   return {
-    category: '',
     annunci: [],
     search: false,
     keyword: '',
@@ -24,6 +23,13 @@ const getDefaultState = () => {
       prezzoAffittoMin: 0,
       prezzoAffittoMax: Number.MAX_SAFE_INTEGER,
       categoria: ''
+    },
+    controlliFiltri: {
+      filterMaxVendita: 0.0,
+      filterMinVendita: 0.0,
+      filterMaxAffitto: 0.0,
+      filterMinAffitto: 0.0,
+
     }
   }
 }
@@ -66,8 +72,8 @@ export default new Vuex.Store({
       state.category='',
       state.keyword='',
       state.noNavBar=false
-      },
-      resettaFiltri(state) {
+    },
+    resettaFiltri(state) {
         state.filtri = {
           affitto:'true',
           vendita:'true',

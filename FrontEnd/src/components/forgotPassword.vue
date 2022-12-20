@@ -28,6 +28,7 @@
                     <v-container>
                         <v-text-field
                         label="username"
+                        v-model="username"
                         required
                         color="accent"
                         :rules="[v=>!!v||'Username necessario!']"
@@ -48,7 +49,7 @@
                 color="indigo lighten-1"
                 text
                 :disabled="!valid"
-                @click="dialog = false, ripristinaPassword"
+                @click="ripristinaPassword"
                 > Send me an Email!
                 <v-icon>mdi-email</v-icon>
                 </v-btn>
@@ -66,22 +67,61 @@ export default {
         dialog: false,
         username: '',
         email: '',
-        message: ''
+        message: '',
+        mailToSend: '',
     }),
     methods: {
-        async findMail() {
+        async ripristinaPassword() {
             try {
-                fetch(this.url + "api/u/getu/" + this.username, {
+                fetch(this.$url + "api/u/getu/" + this.username, {
                     method: 'GET',
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) => resp.json())
                     .then(data => {
-                        if (data[0] === undefined) {
-                            this.message = data.message;
-                            return;
+                        if(data.success !== undefined) {
+                             this.$emit('ripristinaPassword', data.message);
+                             this.dialog=false;
+                             return;
                         }
                         this.email = data.email;
+                        this.getNewPass();
+                    })
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async getNewPass() {
+            try {
+                fetch(this.$url + "api/l/ripristino", {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        username: this.username,
+                    })
+                }).then((resp) => resp.json())
+                    .then(data => {
+                        this.mailToSend = data.message
+                        this.sendeMail();
+                    })
+                } catch (error) {
+                    console.error(error);
+                }
+        },
+        async sendeMail() {
+            try {
+                fetch(this.$url + "api/m/sendEmail", {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        toAddress: this.email,
+                        subj: "Richiesta ripristino password",
+                        message: this.mailToSend
+                    })
+                }).then(data => {
                         console.log(data);
+                        this.message = "Controlla la tua casella di posta.";
+                        this.$emit('ripristinaPassword', this.message)
+                        this.dialog=false;
                     })
             } catch (error) {
                 console.error(error);

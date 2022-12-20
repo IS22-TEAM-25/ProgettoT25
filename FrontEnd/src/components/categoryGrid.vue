@@ -36,7 +36,7 @@ export default {
     }),
     methods: {
         selectCat(cat) {
-            this.$store.commit('selectCat', cat)
+            this.$store.state.filtri.categoria = cat
             this.$router.push({path:'/searchresults'})
         }
     }

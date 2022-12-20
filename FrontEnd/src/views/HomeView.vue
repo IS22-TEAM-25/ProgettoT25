@@ -46,7 +46,7 @@ import categoryGrid from '@/components/categoryGrid'
     methods: {
       ricercakw() {
         this.$store.state.keyword = this.keyword;
-        this.$store.state.category = '';
+        this.$store.state.filtri.categoria = '';
         this.$router.push("/searchresults") 
       }
     },

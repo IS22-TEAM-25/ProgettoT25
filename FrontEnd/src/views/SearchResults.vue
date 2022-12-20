@@ -194,22 +194,36 @@ export default {
         },
         filtraggio(x) {
           var ok = true;
-          if (!this.$store.state.filtri.affitto && x.modalitaTransazione === 'Affitto') ok = false
-          if (!this.$store.state.filtri.vendita && x.modalitaTransazione === 'Vendita') ok = false
+          if (!this.$store.state.filtri.affitto && x.modalitaTransazione === 'Affitto')  {
+            ok = false;
+        }
+          if (!this.$store.state.filtri.vendita && x.modalitaTransazione === 'Vendita') {
+            ok = false;
+          }
           if (x.modalitaTransazione === "Vendita") {
-            if (x.prezzo < this.$store.state.filtri.prezzoVenditaMin) ok = false;
-            if (x.prezzo > this.$store.state.filtri.prezzoVenditaMax) ok = false;
+            if (x.prezzo < this.$store.state.filtri.prezzoVenditaMin) {
+                ok = false;
+            }
+            if (x.prezzo > this.$store.state.filtri.prezzoVenditaMax) {
+                ok = false;
+            }
           }
           if (x.modalitaTransazione === "Affitto") {
-            if (x.prezzoAffittoAlGiorno < this.$store.state.filtri.prezzoAffittoMin) ok = false;
-            if (x.prezzoAffittoAlGiorno > this.$store.state.filtri.prezzoAffittoMax) ok = false;
+            if (x.prezzoAffittoAlGiorno < this.$store.state.filtri.prezzoAffittoMin) {
+                ok = false;
+            }
+            if (x.prezzoAffittoAlGiorno > this.$store.state.filtri.prezzoAffittoMax) {
+                ok = false;
+            }
           }
-          if (this.$store.state.category !== '' && x.categoria !== this.$store.state.category) ok = false
+          if (this.$store.state.filtri.categoria !== '' && x.categoria !== this.$store.state.filtri.categoria) {
+            ok = false;
+        }
           return ok;
         },
     },
     async created() {
-        this.cat = this.$store.state.category;
+        this.cat = this.$store.state.filtri.categoria;
         if(this.$store.state.keyword !== '') {
             this.endpoint = this.API_URL + "getkt/" + this.$store.state.keyword;
             await this.getAll();
@@ -221,7 +235,6 @@ export default {
             this.endpoint = this.API_URL+'getaf';
             await this.getfa();
         } 
-        // datirecensione un array con due elementi il primo è la valutazione e la seconda è il numero di recensioni
         this.$store.commit('isResultView', true);
         this.$store.state.annunci.forEach(annuncio => this.getRating(annuncio));
         this.$store.state.annunci.forEach(annuncio => this.getNumRecensioni(annuncio));

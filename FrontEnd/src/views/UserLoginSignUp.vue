@@ -24,11 +24,7 @@
                           <v-text-field id="password" label="Password" name="password" prepend-icon="lock"
                             type="password" color="accent" v-model="password" :rules="required"/>
                             <!-- FORGOT PASSWORD -->
-                            <!-- <h3 
-                            class="text-center mt-4"
-                            @click="forgotPassword"
-                            >Forgot your password?</h3> -->
-                            <forgotPassword/>
+                            <forgotPassword @ripristinaPassword="esitoRipristino"/>
                             <div class="text-center mt-3">
                               <v-btn class="submit" rounded color="accent accent-3" dark :disabled="!valid" @click="login" >SIGN IN</v-btn>
                             </div>
@@ -36,15 +32,16 @@
                         </v-card-text>
 
                       <v-container>
-                        <v-alert v-if="accountCreato" type="success" justify="center">
+                        <v-alert v-if="accountCreato" type="success" justify="center" dismissible>
                           Registrazione avvenuta con successo!
                         </v-alert>
-                        <v-alert v-if="acquistoUtenteNonAutenticato" type="error" justify="center">
+                        <v-alert v-if="acquistoUtenteNonAutenticato" type="error" justify="center" dismissible>
                           Effettuare il login prima di poter procedere alla transazione!
                         </v-alert>
-                        <v-alert v-if="error" type="error" justify="center">
+                        <v-alert v-if="error" type="error" justify="center" dismissible>
                           {{ message }}
                         </v-alert>
+                        <v-alert> {{ messaggioRipristino }} </v-alert>
                       </v-container>
                     </v-col>
                     <v-col cols="12" md="4" class="accent accent-3">
@@ -123,7 +120,7 @@
                       </v-card-text>
                       <v-spacer></v-spacer>
                       <v-container>
-                        <v-alert v-if="erroreRegistrazione" type="error" justify="center">
+                        <v-alert v-if="erroreRegistrazione" type="error" justify="center" dismissible>
                           {{ messaggioErrore }}
                         </v-alert>
                       </v-container>
@@ -165,6 +162,7 @@ export default {
     mailPayPal:'',
     message:'',
     url:'http://localhost:8080/',
+    messaggioRipristino: '',
     required: [
       v => !!v || 'Campo obbligatorio'
     ],
@@ -270,7 +268,6 @@ export default {
     },
     async getUser() {
       try {
-        console.log(this.url + "api/u/getu/" + this.username);
         fetch(this.url + "api/u/getu/" + this.username, {
           method: 'GET',
           headers: { "Content-Type": "application/json" }
@@ -282,7 +279,10 @@ export default {
       } catch(error) {
         console.error(error); 
       }
-    }
+    },
+    esitoRipristino(esito) {
+      this.messaggioRipristino = esito;
+    },
 
   },
   computed: {

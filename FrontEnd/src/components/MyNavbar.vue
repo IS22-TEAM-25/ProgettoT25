@@ -90,75 +90,46 @@
           <h4>Prezzo vendita: </h4>
         </v-list-item>
         <v-list-item>
-          <v-spacer></v-spacer>
-        </v-list-item>
-        <v-list-item>
-          <v-slider
-          label="min"
-          v-model="filterMinVendita"
-          min = "0"
-          :max=priceMaxVendita
-          color="indigo"
-          thumb-label="always"
-          thumb-size="40"
-          >
-          <template v-slot:thumb-label="{ value }">
-            {{ euro.format(value) }}
-          </template>
-        </v-slider>
-        </v-list-item>
-
-        <v-list-item>
-          <v-slider
-            label="max"
-            v-model="filterMaxVendita"
-            min = "0"
-            :max=priceMaxVendita
-            color="indigo"
-            thumb-label="always"
-            thumb-size="40"
-          >
-          <template v-slot:thumb-label="{ value }">
-            {{ euro.format(value) }}
-          </template>
-          </v-slider>
-        </v-list-item>
+          <v-row>
+            <v-col>
+              <v-text-field
+              v-model="filterMinVendita"
+              label="min">
+              </v-text-field>
+            </v-col>
+            <v-col>
+              <v-text-field
+              v-model="filterMaxVendita"
+              label="max"
+              >
+              </v-text-field>
+          </v-col>
+          </v-row>
+      </v-list-item>
         <v-list-item>
            <!-- FILTRO PREZZO AFFITTO   -->
           <h4>Prezzo affitto giornaliero: </h4>
         </v-list-item>
+       
         <v-list-item>
-          <v-spacer></v-spacer>
-        </v-list-item>
-        <v-list-item>
-          <v-slider
-          label="min"
-          v-model="filterMinAffitto"
-          min = "0"
-          :max=priceMaxAffitto
-          color="indigo"
-          thumb-label="always"
-          thumb-size="40"
-          >
-          <template v-slot:thumb-label="{ value }">
-            {{ euro.format(value) }}
-          </template>
-        </v-slider>
-        </v-list-item>
-        <v-list-item>
-          <v-slider
-          label="max"
+          <v-row>
+            <v-col>
+              <v-text-field
+              v-model="filterMinAffitto"
+              label="min">
+            </v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
           v-model="filterMaxAffitto"
-          min = "0"
-          :max=priceMaxAffitto
-          color="indigo"
-          thumb-label="always"
-          thumb-size="40"
+          label="max"
           >
-          <template v-slot:thumb-label="{ value }">
-            {{ euro.format(value) }}
-          </template>
-        </v-slider>
+          </v-text-field>
+          </v-col>
+        </v-row>
+        </v-list-item>
+        <v-list-item>
+         
         </v-list-item>
         <v-divider></v-divider>
         <!-- CATEGORIA SELEZIONE -->
@@ -172,7 +143,7 @@
       dense 
       rounded 
       :items="categories" 
-      :value="categoriaSelezionata" 
+      :value="cate" 
       @on-change="this.$store.commit('selectCat', this.localCat)"
       label="Categoria" 
       required 
@@ -227,7 +198,7 @@ export default {
     data() {
         return {
             categories:[],
-            selectCat: this.$store.state.category,
+            selectCat: '',
             filtri: false,
             ordinaData: false,
             ordinaPrezzo: false,
@@ -236,12 +207,10 @@ export default {
             vendita: false,
             categoriaSelezionata: '',
             keyword: '',
-            priceMaxVendita: 0,
-            priceMaxAffitto: 0,
-            filterMinVendita: 0,
-            filterMaxVendita: 0,
-            filterMinAffitto: 0,
-            filterMaxAffitto: 0,
+            filterMaxVendita: '',
+            filterMinVendita: '',
+            filterMaxAffitto: '',
+            filterMinAffitto: '',
             euro:  
                  new Intl.NumberFormat('en-DE', {
                      style: 'currency',
@@ -251,22 +220,6 @@ export default {
     },    
     components: { logoLinkHome, MenuProfilo },  
     methods: {
-        findMaxPriceVendita() {
-            return Math.max.apply(Math, this.annunci.map(function(o) { 
-              if (o.prezzo === undefined) {
-                return 0;
-              }
-              return o.prezzo; 
-            }))
-        },
-        findMaxPriceAffitto() {
-            return Math.max.apply(Math, this.annunci.map(function(o) { 
-              if (o.prezzoAffittoAlGiorno === undefined) {
-                return 0;
-              }
-              return o.prezzoAffittoAlGiorno; 
-            }))
-        },
         applicaOrdinamento() {
           if (this.ordinaData && this.discendente) {
             this.$store.state.annunci.sort((a,b) => {
@@ -309,45 +262,33 @@ export default {
           this.$store.state.filtri.prezzoVenditaMax = this.filterMaxVendita;
           this.$store.state.filtri.prezzoAffittoMin = this.filterMinAffitto;
           this.$store.state.filtri.prezzoAffittoMax = this.filterMaxAffitto;
-          this.$store.state.category = this.categoriaSelezionata
+          this.$store.state.filtri.categoria = this.categoriaSelezionata
         },
         resettaFiltri() {
           this.$store.commit('resettaFiltri');
-          this.filterMaxVendita = this.priceMaxVendita;
-          this.filterMinVendita = this.priceMinVendita;
-          this.filterMinAffitto = this.priceMinAffitto;
-          this.filterMaxAffitto = this.priceMaxAffitto;
           this.$store.state.category='';
-          this.categoriaSelezionata=null;
-        }
+          this.categoriaSelezionata='';
+        },
     },
-    computed:  mapState({
-       search: state => state.search,
-       username: state => state.username,
-       utenteLoggato: state => state.dataAuth.success,
-       cate: state => state.category,
-       annunci: state => state.annunci,
-       
-    }),
+    computed:  {
+
+      ...mapState({
+        search: state => state.search,
+        username: state => state.username,
+        utenteLoggato: state => state.dataAuth.success,
+        cate: state => state.filtri.categoria,
+        annunci: state => state.annunci,
+
+        // filterMinVendita: state => state.controlliFiltri.filterMinVendita,
+        // filterMaxVendita: state => state.controlliFiltri.filterMaxVendita,
+        // filterMinAffitto: state => state.controlliFiltri.filterMinAffitto,
+        // filterMaxAffitto: state => state.controlliFiltri.filterMaxAffitto,
+      }),
+    },
     created() {
     this.$categories.forEach(v => this.categories.push(v.title));
-    this.categoriaSelezionata = this.$store.state.category;
-    this.priceMaxVendita = this.findMaxPriceVendita()+1;
-    this.filterMaxVendita = this.priceMaxVendita;
-    this.filterMinVendita = this.priceMinVendita;
-    this.priceMaxAffitto = this.findMaxPriceAffitto()+1;
-    this.filterMinAffitto = this.priceMinAffitto;
-    this.filterMaxAffitto = this.priceMaxAffitto;
   },
   updated() {
-    this.priceMaxVendita = this.findMaxPriceVendita()+1;
-    this.priceMaxAffitto = this.findMaxPriceAffitto()+1;
-    if(this.filterMinAffitto > this.filterMaxAffitto) {
-        this.filterMaxAffitto = this.filterMinAffitto;
-    }
-    if(this.filterMinVendita > this.filterMaxVendita) {
-        this.filterMaxVendita = this.filterMinVendita;
-    }
   }
 }
 </script>
