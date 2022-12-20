@@ -263,6 +263,7 @@ export default {
           this.$store.state.filtri.prezzoAffittoMin = this.filterMinAffitto;
           this.$store.state.filtri.prezzoAffittoMax = this.filterMaxAffitto;
           this.$store.state.filtri.categoria = this.categoriaSelezionata
+          
         },
         resettaFiltri() {
           this.$store.commit('resettaFiltri');
