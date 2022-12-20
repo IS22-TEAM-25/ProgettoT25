@@ -6,6 +6,7 @@ import vuetify from './plugins/vuetify'
 import store from './store'
 
 Vue.config.productionTip = false
+
 Vue.prototype.$categories = [
   { title: 'tecnologia', src: 'Elettronica.png', flex: 3, route: '/searchresult' },
   { title: 'animali', src: 'Animali.png', flex: 3, route: '/searchresult' },
@@ -16,9 +17,30 @@ Vue.prototype.$categories = [
   { title: 'per la casa', src: 'Per la casa.png', flex: 3 },
   { title: 'trasporti', src: 'Trasporti.png', flex: 3 }
 ]
-
 Vue.prototype.$url = "http://localhost:8080/"
 
+Vue.mixin({
+  methods: {
+    
+    /** computa il numero di annunci online 
+     * (dopo vendita modifica e pubblica)
+     * @param {*} nomeUtente a cui va aggiornato il numero di annunci online 
+     */
+    async contaAnnunciOnline(nomeUtente) {
+      try {
+        fetch(this.$url + "api/p/updateao", {
+          method: 'PATCH',
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ 
+            id: nomeUtente,
+          })
+        }).then(console.log("Numero annunci aggiornati per ", nomeUtente, "!"))
+      } catch (error) {
+        console.error(error); // If there is any error you will catch them here
+      }
+    }
+  },  
+})
 
 new Vue({
   router,

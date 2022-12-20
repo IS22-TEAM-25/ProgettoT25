@@ -160,6 +160,16 @@ export default {
   },
   methods: {
     async creaTransazione() {
+      let costoEffettivo = this.$store.state.annuncioSelezionato.prezzo;
+      if (this.$store.state.annuncioSelezionato.modalitaTransazione === "Affitto") {
+        var differenceInTime = new Date(this.endDate) - new Date(this.startDate);
+        var totalDays = differenceInTime / (1000 * 3600 * 24);
+        costoEffettivo = this.$store.state.annuncioSelezionato.prezzoAffittoAlGiorno * (totalDays);
+        console.log("il numero tot di giorni è: ", totalDays)
+      }
+      let inserzionista = this.$store.state.annuncioSelezionato.inserzionista;
+      let cliente = this.$store.state.datiUtente.username;
+      console.log("Il costo calcolato per la transazione è di: ", costoEffettivo)
       try {
         fetch(this.$url + "api/t/savet", {
           method: 'POST',
@@ -167,24 +177,53 @@ export default {
             "Content-Type": "application/json",
             "x-access-token": this.$store.getters.token},
           body: JSON.stringify({
-            venditore: this.$store.state.annuncioSelezionato.inserzionista,
-            acquirente: this.$store.state.datiUtente.username,
+            venditore: inserzionista,
+            acquirente: cliente,
             prodotto : this.$store.state.annuncioSelezionato.titolo,
             pagamentoEffettuato: true,
             metodoTransazione: "Online",
             tipologiaTransazione: this.$store.state.annuncioSelezionato.modalitaTransazione,
-            costo: this.$store.annuncioSelezionato.prezzo,
+            prezzo: costoEffettivo
           })
 
         }).then((resp) => resp.json())
         .then(data => {
           console.log(data);
-          this.$store.state.transazione = data
+          this.$store.state.transazione = data;
+          this.contaAnnunciOnline(inserzionista);
+          this.aggiornaStatVendita(inserzionista);
+          this.aggiornaStatAcquisti(cliente);
         })
         } catch (err) {
           console.error(err);
         }
     },
+    async aggiornaStatVendita(nomeUtente) {
+      try {
+        fetch(this.$url + "api/p/updatesv", {
+          method: 'PATCH',
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ 
+            id: nomeUtente,
+          })
+        }).then(console.log("Statistiche vendite aggiornate per ", nomeUtente, "!"))
+      } catch (error) {
+        console.error(error); // If there is any error you will catch them here
+      }
+    },
+    async aggiornaStatAcquisti(nomeUtente) {
+    try {
+      fetch(this.$url + "api/p/updatesa", {
+        method: 'PATCH',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ 
+          id: nomeUtente,
+        })
+      }).then(console.log("Statistiche acquisti aggiornate per ", nomeUtente, "!"))
+    } catch (error) {
+      console.error(error); // If there is any error you will catch them here
+    }
+  },
     async nascondiAnnuncio() {
       try {
           fetch(this.$url + "api/a/updatea", {
@@ -196,13 +235,10 @@ export default {
               titolo: this.$store.state.annuncioSelezionato.titolo, 
               visibile: false
             })
-        }).then((resp) => resp.json())
-          .then(data => {
-            console.log(data);
-          })
-      } catch (error) {
-        console.error(error); // If there is any error you will catch them here
-      }
+          }).then(console.log("annuncio nascosto!"))
+        } catch (error) {
+          console.error(error); // If there is any error you will catch them here
+        }
     },
     disablePastDates(val) {
        return val >= new Date().toISOString().substr(0, 10)
@@ -217,7 +253,6 @@ export default {
         return;
       }
       console.log("Affittato dal ", this.startDate, " al ", this.endDate);
-      console.log()
       this.nascondiAnnuncio();
       this.creaTransazione();
       this.$router.push('/userreview')

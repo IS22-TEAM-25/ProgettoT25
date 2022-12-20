@@ -119,7 +119,7 @@ export default {
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) => resp.json())
                 .then(data => {
-                    //console.log(data.rating)
+                    console.log("Il rating per", annuncio.inserzionista, " è di ", data.rating)
                     annuncio.rating = data.rating;
                 })
             } catch (error) {
@@ -133,6 +133,7 @@ export default {
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) => resp.json())
                 .then(data => {
+                console.log("il numero di recensioni ricevute da ", annuncio.inserzionista, " sono:", data.recensioniRicevute)
                 annuncio.nRecensioni = data.recensioniRicevute;
                 })
             } catch (error) {
@@ -221,6 +222,18 @@ export default {
         }
           return ok;
         },
+        async deleteAnnuncio(id) {
+            try {
+                fetch(this.$url + "api/a/deletea/" + id, {
+                    method: 'DELETE',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id: this.id }),
+                }).then(console.log("Annuncio con titolo", id, " è stato eliminato!"))
+                } catch(error) {
+                    console.error(error); // If there is any error you will catch them here
+                }
+        }
+
     },
     async created() {
         this.cat = this.$store.state.filtri.categoria;

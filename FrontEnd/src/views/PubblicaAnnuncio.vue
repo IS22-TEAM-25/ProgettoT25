@@ -13,7 +13,7 @@
     name="titolo"
     type="text" 
     color="accent accent-3" 
-    :counter="40" 
+    :counter="30" 
     :rules="required.concat(titoloRule)" />
   
     <v-select 
@@ -33,7 +33,7 @@
     label="Descrizione"
     color="accent accent-3" 
     :rules="required.concat(descrizioneRule)" 
-    :counter="350" 
+    :counter="250" 
     no-resize 
     filled 
     dense 
@@ -116,7 +116,7 @@
         id="costoH"
         label="Costo all'ora?"
         name="costoH"
-        type="text"
+        type="number"
         color="accent accent-3"
         :rules= "required"
         filled
@@ -131,7 +131,7 @@
         id="costoG"
         label="Costo al giorno?"
         name="costoG"
-        type="text"
+        type="number"
         color="accent accent-3"
         :rules= "required"
         filled
@@ -146,7 +146,7 @@
         id="costoS"
         label="Costo alla settimana?"
         name="costoS"
-        type="text"
+        type="number"
         color="accent accent-3"
         :rules= "required"     
         filled
@@ -167,7 +167,7 @@
           id="costoVen"
           label="Prezzo di Vendita?"
           name="costoVen"
-          type="text"
+          type="number"
           color="accent accent-3"
           :rules="required"
           filled
@@ -190,9 +190,13 @@
     </v-container>
   </v-form>
   <v-container>
-    <v-alert v-if="annuncioSalvato" type="success" justify="center">
-      Annuncio salvato correttamente!
-    </v-alert>
+    <v-snackbar 
+    v-model="annuncioSalvato" absolute
+    bottom
+    color="green"
+    >
+    Annuncio salvato correttamente!
+    </v-snackbar>
     <v-alert v-if="erroreAnnuncio" type="error" justify="center">
       {{ message }}
     </v-alert>
@@ -229,11 +233,11 @@ export default {
         v => !!v || 'Campo obbligatorio'
       ],
       titoloRule: [
-        v => v.length <= 40 || 'Il titolo non può superare i 40 caratteri!'
+        v => v.length <= 30 || 'Il titolo non può superare i 40 caratteri!'
       ],
       descrizioneRule: [
-        v => v.length <= 350 || 'Il titolo non può superare i 40 caratteri!'
-      ]
+        v => v.length <= 250 || 'Il titolo non può superare i 40 caratteri!'
+      ],
     }),
     methods: {
       async salvaAnnuncio() {
@@ -270,7 +274,7 @@ export default {
                 return;
               }
               this.annuncioSalvato = true;
-              //this.$refs.form.reset();
+              this.contaAnnunciOnline(this.$store.state.datiUtente.username)
             })
         } catch (error) {
           console.error(error);
@@ -290,7 +294,7 @@ export default {
       this.$router.push("/userloginsignup")
     }
   
-},  
+},
 created() {
     this.$categories.forEach(v => this.categories.push(v.title));
   },

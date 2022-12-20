@@ -11,7 +11,7 @@
       :counter="200" 
       no-resize 
       v-model="descrizione" 
-      :rules="required" />
+      :rules="required.concat(duecento)" />
 
         <v-rating
       v-model="rating"
@@ -41,15 +41,20 @@
     data()  {
       return {
         descrizione:'',
-        rating: '',
+        rating: 0,
         valid: false,
         required: [
           v => !!v || 'Campo obbligatorio!'
+        ],
+        duecento: [
+          v => v.lenght < 200 || 'La recensione non può superare i 200 caratteri.'
         ]
       }
     },
     methods: {
       async creaRecensione() {
+        let inserzionista = this.$store.state.annuncioSelezionato.inserzionista;
+        let cliente = this.$store.state.datiUtente.username;
       try {
         fetch(this.$url + "api/r/saver", {
           method: 'POST',
@@ -57,8 +62,8 @@
             "Content-Type": "application/json",
             "x-access-token": this.$store.getters.token},
           body: JSON.stringify({
-            utenteRecensito: this.$store.state.annuncioSelezionato.inserzionista,
-            utenteRecensore: this.$store.state.datiUtente.username,
+            utenteRecensito: inserzionista,
+            utenteRecensore: cliente,
             transazioneRecensita : this.$store.state.transazione._id,
             stelle: this.rating,
             descrizione: this.descrizione,
@@ -68,14 +73,28 @@
         }).then((resp) => resp.json())
         .then(data => {
           console.log(data);
+          this.contaRecensioni(inserzionista);
+          this.contaRecensioni(cliente);
         })
         } catch (err) {
           console.error(err);
         }
-        this.$store.state.noNavBar = false;
-        this.$router.push('/')
-
+      this.$store.state.noNavBar = false;
+      this.$router.push('/')
+    },
+    async contaRecensioni(nomeUtente) {
+    try {
+      fetch(this.$url + "api/p/updaterat", {
+        method: 'PATCH',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ 
+          id: nomeUtente,
+        })
+      }).then(console.log("Recensioni aggiornate per ", nomeUtente, "!"))
+    } catch (error) {
+      console.error(error); // If there is any error you will catch them here
     }
+  },
     },
     mounted() {
       this.$store.state.noNavBar = true;
