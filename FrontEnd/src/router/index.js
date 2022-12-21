@@ -7,6 +7,7 @@ import SearchResults from '../views/SearchResults.vue'
 import PubblicaAnnuncio from '../views/PubblicaAnnuncio.vue'
 import UserProfile from '../views/UserProfile.vue'
 import UserReview from '../views/UserReview.vue'
+import modificaDatiPersonali from '../views/modificaDatiPersonali.vue'
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,11 @@ const routes = [
     path: '/userprofile',
     name: 'userprofile',
     component: UserProfile
+  },
+  {
+    path: '/modificaDatiPersonali',
+    name: 'modificaDatiPersonali',
+    component: modificaDatiPersonali
   }
 ]
 

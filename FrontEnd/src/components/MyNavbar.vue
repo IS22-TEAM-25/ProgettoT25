@@ -13,7 +13,14 @@
             <v-toolbar-title mx-auto>
                 <logoLinkHome/>
             </v-toolbar-title>
-
+            <v-container>
+              <v-snackbar 
+              v-model="annuncioSalvato" absolute
+              color="green"
+              >
+              Annuncio salvato correttamente!
+              </v-snackbar>
+            </v-container>
             <v-spacer></v-spacer>
             <router-link v-if="this.$store.state.dataAuth.success === false" to="/userloginsignup">
                 <v-btn 
@@ -272,21 +279,26 @@ export default {
         },
     },
     computed:  {
-
+      annuncioSalvato() {
+        return this.$store.state.pubblicazioneAnnuncioSsuccess;
+      },
       ...mapState({
         search: state => state.search,
         username: state => state.username,
         utenteLoggato: state => state.dataAuth.success,
         cate: state => state.filtri.categoria,
         annunci: state => state.annunci,
-
         // filterMinVendita: state => state.controlliFiltri.filterMinVendita,
         // filterMaxVendita: state => state.controlliFiltri.filterMaxVendita,
         // filterMinAffitto: state => state.controlliFiltri.filterMinAffitto,
         // filterMaxAffitto: state => state.controlliFiltri.filterMaxAffitto,
       }),
+
     },
     created() {
+      if(this.$store.state.pubblicazioneAnnuncio === undefined) {
+        this.$store.commit('setPubblicazioneAnnuncio');
+      }
     this.$categories.forEach(v => this.categories.push(v.title));
   },
   updated() {

@@ -12,9 +12,11 @@ const getDefaultState = () => {
     //dataAuth: {success: true, message: 'Benvenuto man', token:'', user_id:'', nome:'Federico', cognome:'Menegoz', username:'FirstUser'},
     dataAuth: {success: false, message: '', token:'', user_id:'', },
     datiUtente: {},
+    profiloUtente: {},
     annuncioSelezionato: {},
     prodottoInBallo: false,
     transazione:{},
+    pubblicazioneAnnuncioSsuccess: false,
     filtri: {
       affitto:'true',
       vendita:'true',
@@ -29,7 +31,6 @@ const getDefaultState = () => {
       filterMinVendita: 0.0,
       filterMaxAffitto: 0.0,
       filterMinAffitto: 0.0,
-
     }
   }
 }
@@ -64,6 +65,9 @@ export default new Vuex.Store({
     prendiDatiUtente(state, datiUtente) {
       state.datiUtente = datiUtente;
     },
+    prendiProfiloUtente(state, profiloUtente) {
+      state.profiloUtente = profiloUtente;
+    },
     resetState(state) {
       Object.assign(state, getDefaultState())
       console.log("resettato")
@@ -83,7 +87,13 @@ export default new Vuex.Store({
           prezzoAffittoMax: Number.MAX_SAFE_INTEGER,
           categoria: ''
       }
-
+    },
+    setPubblicazioneAnnuncio(state) {
+      state.pubblicazioneAnnuncio = {
+        success: false,
+        error: false,
+        message: ''
+      }
     }
 
   },

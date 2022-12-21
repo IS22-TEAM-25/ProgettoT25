@@ -11,7 +11,7 @@
       :counter="200" 
       no-resize 
       v-model="descrizione" 
-      :rules="required.concat(duecento)" />
+      :rules="required" />
 
         <v-rating
       v-model="rating"
@@ -44,11 +44,9 @@
         rating: 0,
         valid: false,
         required: [
-          v => !!v || 'Campo obbligatorio!'
+          v => !!v || 'Campo obbligatorio!',
+          v => v.length <= 200 || 'La recensione non può superare i 200 caratteri.'
         ],
-        duecento: [
-          v => v.lenght < 200 || 'La recensione non può superare i 200 caratteri.'
-        ]
       }
     },
     methods: {

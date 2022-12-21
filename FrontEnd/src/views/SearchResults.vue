@@ -179,7 +179,9 @@ export default {
                         this.message = this.$store.state.annunci.message;
                         return;
                     }
+                    console.log()
                     this.$store.state.annunci = this.$store.state.annunci.filter(a => a.visibile === true)
+                    this.$store.state.annunci = this.$store.state.annunci.filter(a => a.inserzionista !== this.$store.state.datiUtente.username);
                     })
                 } catch(error) {
                     console.error(error); // If there is any error you will catch them here

@@ -86,7 +86,7 @@
                           <v-text-field v-model="email" id="email" label="Email" name="Email" prepend-icon="email"
                             type="email" color="accent accent-3" required :rules="emailRules" />
                           <v-text-field v-model="password" id="password"
-                            label='Password (Almeno 8 caratteri, un numero ed un carattere speciale " £ \ $ % & ? € = ^)'
+                            label="Password (Almeno 8 caratteri, un numero ed un carattere speciale ! £ % ? € = ^ "
                             name="Password"
                             prepend-icon="lock" type="password" color="accent accent-3"
                             :rules="required.concat(passwordCrit)" />
@@ -101,7 +101,7 @@
                             class="shrink mr-2 mt-0"
                           ></v-checkbox>
                           <v-text-field
-                            :disabled="!metodiPagamento"
+                            v-if="metodiPagamento"
                             v-model="mailPayPal"
                             id="paypal"
                             name="paypal"
@@ -109,7 +109,7 @@
                             label="Metodo di Pagamento"
                             placeholder="PayPal"
                             color="accent accent-3"
-                            :rules="emailRules"
+                            :rules="metodiPagRules"
                           ></v-text-field>
                           <v-spacer></v-spacer>
                           <v-btn class="submit" rounded color="accent accent-3" dark :disabled="!valid"
@@ -161,7 +161,6 @@ export default {
     indirizzo: '',
     mailPayPal:'',
     message:'',
-    url:'http://localhost:8080/',
     messaggioRipristino: '',
     required: [
       v => !!v || 'Campo obbligatorio'
@@ -169,8 +168,11 @@ export default {
     emailRules: [
       v => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail non valida.',
     ],
+    metodiPagRules: [
+      v => !v || /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail non valida.',
+    ],
     passwordCrit: [
-      v => (v.match(/^(?=.*[0-9])(?=.*[!"£$%&?€=^])[a-zA-Z0-9!@#$%^&*]{8,15}/))!== null || 'Password non valida!'
+      v => (v.match(/^(?=.*[0-9])(?=.*[!£%&?€=^])[a-zA-Z0-9!£%&?€=^*]{8,15}/))!== null || 'Password non valida!'
     ] 
   }),
   props: {
@@ -186,7 +188,7 @@ export default {
     },
     async handleSubmit() {
       try {
-        fetch(this.url + "api/u/signUp", {
+        fetch(this.$url + "api/u/signUp", {
           method: 'POST',
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
@@ -240,7 +242,7 @@ export default {
     async login() {
       //console.log(this.username, " ", this.password)
       try {
-        fetch(this.url + "api/l/signIn", {
+        fetch(this.$url + "api/l/signIn", {
           method: 'POST',
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: this.username, password: this.password }),
@@ -261,14 +263,29 @@ export default {
             }
             this.message = data.message;
             console.log(data.message);
-          }).then(this.getUser())
+          }).then(this.getUser(), this.getProfile())
       } catch (error) {
         console.error(error); // If there is any error you will catch them here
       }
     },
+    async getProfile() {
+      console.log("dentro get profile")
+      try {
+        fetch(this.$url + "api/p/getp/" + this.username, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" }
+        }).then((resp) => resp.json())
+        .then(data => {
+          this.$store.commit('prendiProfiloUtente', data);
+          console.log(data);
+        })
+      } catch(error) {
+        console.error(error); 
+      }
+    }, 
     async getUser() {
       try {
-        fetch(this.url + "api/u/getu/" + this.username, {
+        fetch(this.$url + "api/u/getu/" + this.username, {
           method: 'GET',
           headers: { "Content-Type": "application/json" }
         }).then((resp) => resp.json())

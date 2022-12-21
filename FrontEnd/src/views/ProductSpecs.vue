@@ -5,7 +5,7 @@
 
         <h1>{{ annuncio.titolo }}</h1>
       </v-col>
-      <v-col cols="2" >
+      <v-col >
         <v-btn block color="orange" rounded flat v-if="utenteLoggato" >+ wish list</v-btn>
       </v-col>
     </v-row>
@@ -23,7 +23,7 @@
         </v-card>
       </v-col>
       <v-col cols="7">
-        <v-card color="blue lighten-5">
+        <v-card color="grey lighten-5">
           <v-container>
 
             <h4 >DESCRIZIONE:</h4>
@@ -31,6 +31,7 @@
               {{ annuncio.descrizione }}
             </p>
           </v-container>
+          <v-divider></v-divider>
         <v-container v-if="annuncio.modalitaTransazione==='Affitto'">
           <v-row>
             <v-col>
@@ -66,6 +67,8 @@
               </span>
             </v-col>
           </v-row>
+          
+          <v-container v-if="pagamentoOnlineAbilitato">
           <v-row>
             <v-col>
               <h3>
@@ -115,21 +118,90 @@
             </v-row>
             <v-row>
 
-              <v-btn block class="submit white--text" color="indigo"  :disabled="!valid"
+              <v-btn 
+              block 
+              class="submit white--text" 
+              color="indigo"  
+              :disabled="!valid"
               @click="acquistaAffitta">Affitta</v-btn>
             </v-row>
           </v-form>
         </v-container>
+
+        </v-container>
         <v-container v-else>
-          <p>vendita </p>
           <v-row>
             <v-col>
-              <v-btn @click="acquistaAffitta">
+
+              <h3>PREZZO DI VENDITA: </h3>
+            </v-col>
+            <v-col>
+              <h3>
+                {{euro.format(annuncio.prezzo)}}
+              </h3>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-divider></v-divider>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-btn v-if="pagamentoOnlineAbilitato"
+              block 
+              color="indigo"
+              class="white--text"
+              rounded
+              @click="acquistaAffitta">
                 compralo subito
               </v-btn>
             </v-col>
           </v-row>
-          </v-container>
+          <v-form class="submit" v-model="validMessaggio">
+
+          <v-row v-if="!pagamentoOnlineAbilitato">
+            <v-col>
+              <v-textarea
+                    label="Messaggio"
+                    v-model="mesaggioAllInserzionista"
+                    :counter="250" 
+                    :rules="required"
+                    no-resize
+                ></v-textarea>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-btn v-if="!pagamentoOnlineAbilitato"
+              block 
+              color="green"
+              class="white--text"
+              rounded
+              :disabled="!validMessaggio"
+              @click="contatta">
+                Contatta {{ annuncio.inserzionista }} !!
+              </v-btn>
+            </v-col>
+            
+          </v-row>
+        </v-form>
+        <v-row>
+            <v-col>
+              <span>
+                Previsto il ritiro in {{ annuncio.indirizzoRitiro }} a
+                {{ annuncio.indirizzoRitiro.citta }} in provincia di 
+                {{ annuncio.indirizzoRitiro.provincia }}
+              </span>
+            </v-col>
+          </v-row>  
+        <v-snackbar 
+              v-model="messaggioInviato"
+              color="green"
+              >
+              Messaggio inviato correttamente!
+              </v-snackbar>
+        </v-container>
       </v-card>
       </v-col>
     </v-row>
@@ -145,9 +217,14 @@ export default {
   data () {
     return {
       valid: false,
+      validMessaggio: false,
       dates: [],
       startDate: null,
       endDate: null,
+      mioAnnuncio: false,
+      mesaggioAllInserzionista: '',
+      emailInserzionista: '',
+      messaggioInviato: false,
       euro:
         new Intl.NumberFormat('en-DE', {
           style: 'currency',
@@ -247,7 +324,7 @@ export default {
        return val >= new Date(this.startDate).toISOString().substr(0, 10)
     },
     acquistaAffitta() {
-      if(!this.$store.state.dataAuth.success) {
+      if (!this.$store.state.dataAuth.success) {
         this.$store.state.prodottoInBallo = true;
         this.$router.push('/userloginsignup');
         return;
@@ -260,17 +337,67 @@ export default {
     formattedDate(date) {
     return format(new Date(date), 'dd/M/YYY');
   },
+  async contatta() {
+    if(!this.$store.state.dataAuth.success) {
+        this.$store.state.prodottoInBallo = true;
+        this.$router.push('/userloginsignup');
+        return;
+      }
+            try {
+                fetch(this.$url + "api/u/getu/" + this.$store.state.annuncioSelezionato.inserzionista, {
+                    method: 'GET',
+                    headers: { "Content-Type": "application/json" }
+                }).then((resp) => resp.json())
+                    .then(data => {
+                        if(data.success !== undefined) {
+                             this.erroreMail = true;
+                             return;
+                        }
+                        this.emailInserzionista = data.email;
+                        this.sendeMail()
+                    })
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async sendeMail() {
+            try {
+                fetch(this.$url + "api/m/sendEmail", {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        toAddress: this.emailInserzionista,
+                        subj: "Richiesta Informazioni da " + this.$store.state.datiUtente.username,
+                        message: this.mesaggioAllInserzionista
+                    })
+                }).then(data => {
+                        console.log(data);
+
+                        console.log("Messaggio Inviato Correttamente");
+                        this.messaggioInviato = true;
+                    })
+            } catch (error) {
+                console.error(error);
+            }
+        }
   },  
   computed: {
+    pagamentoOnlineAbilitato() {
+      return this.$store.state.annuncioSelezionato.pagamentoOnline;
+    },
 
-  ...mapState({
-    annuncio: 'annuncioSelezionato',
-    utenteLoggato: 'dataAuth.success'
-  }),
+    utenteLoggato() {
+      return this.$store.state.dataAuth.success;
+    },
+    ...mapState({
+      annuncio: 'annuncioSelezionato',
+    }),
   },
 
   created() {
+    this.$store.state.noNavBar = false
     this.$store.state.search = false
   }
+
 }
 </script>

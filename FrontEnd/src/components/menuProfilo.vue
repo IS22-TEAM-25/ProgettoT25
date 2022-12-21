@@ -34,7 +34,7 @@
 
                     <v-list>
                         <v-list-item-group>
-                            <v-list-item to="/userprofile">
+                            <v-list-item to="/modificaDatiPersonali">
                                 <v-list-item-icon>
                                     <v-icon>mdi-border-color</v-icon>
                                 </v-list-item-icon>
@@ -84,6 +84,7 @@
 
 <script>
 import { mapState } from 'vuex';
+
 export default {
 
     data: () => ({
@@ -112,8 +113,9 @@ export default {
                 })
                 } catch(error) {
                     console.error(error); // If there is any error you will catch them here
-                }
-        }
+            }
+        },
+
     },
     computed: mapState({
         datiUtente: state => state.datiUtente,
