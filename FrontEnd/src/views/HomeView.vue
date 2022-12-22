@@ -11,23 +11,33 @@
     
     <v-row class="mt-2 mx-3" dense>
 
-      <v-spacer></v-spacer>
-      <v-text-field
-      v-model="keyword"
-      
-      placeholder="bicicletta, drone, consolle..."
-      color="accent acccent-3"
-      filled
-      dense
-      rounded
-      append-icon="mdi-magnify"
-      @keyup.enter="ricercakw"
-      @click:append="ricercakw"
-      ></v-text-field> 
-      <v-spacer></v-spacer>
+      <v-col cols="3" >
+
+        <v-spacer></v-spacer>
+      </v-col>
+    <v-col cols="5">
+        <v-text-field
+        v-model="keyword"
+        
+        placeholder="bicicletta, drone, consolle..."
+        color="accent acccent-3"
+        filled
+        dense
+        rounded
+        append-icon="mdi-magnify"
+        @keyup.enter="ricercakw"
+        @click:append="ricercakw"
+        ></v-text-field> 
+        <v-spacer></v-spacer>
+      </v-col>
+      <v-col >
+        <v-btn 
+        rounded 
+        color="green"
+       to="/classificaUtenti">Top Users!</v-btn>
+      </v-col>
     </v-row>
     <categoryGrid/>
-
   </div>
 
 </template>
@@ -51,6 +61,7 @@ import categoryGrid from '@/components/categoryGrid'
       }
     },
     mounted()  {
+      
       this.$store.commit('isResultView', false);
       this.$store.commit('resetResult');
       this.$store.commit('resettaFiltri');

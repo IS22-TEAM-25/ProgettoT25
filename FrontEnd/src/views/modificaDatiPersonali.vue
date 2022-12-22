@@ -84,10 +84,9 @@
                         <v-divider></v-divider>
                     </v-row>
                     <v-row>
-                        <span class="font-weight-light"> {{ profilo.descrizioneProfilo }}: </span>
+                        <span class="font-weight-light"> {{ profilo.descrizioneProfilo }} </span>
                     </v-row>
                     <v-row>
-
                         <v-divider></v-divider>
                     </v-row>
                     <v-row>
@@ -138,6 +137,22 @@
                             <span class="font-weight-light"> {{ profilo.annunciOnlineAffitto + profilo.annunciOnlineVendita}}</span>
                         </v-col>
                     </v-row>
+                    <v-row>
+                        <v-col>
+                            <span class="font-weight-regular">Transazioni completate: </span>
+                        </v-col>
+                        <v-col>
+                            <span class="font-weight-light"> {{ profilo.transazioniCompletate }}</span>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <span class="font-weight-regular">Soldi spesi: </span>
+                        </v-col>
+                        <v-col>
+                            <span class="font-weight-light"> {{ euro.format(profilo.soldiSpesi) }}</span>
+                        </v-col>
+                    </v-row>
                 </v-col>
             </v-row>
             <v-row>
@@ -176,6 +191,21 @@ export default {
     methods: {
         formattedDate(date) {
             return format(new Date(date), 'dd/M/YYY');
+        },
+        async getProfile() {
+            console.log("dentro get profile")
+            try {
+                fetch(this.$url + "api/p/getp/" + this.username, {
+                    method: 'GET',
+                    headers: { "Content-Type": "application/json" }
+                }).then((resp) => resp.json())
+                    .then(data => {
+                        this.$store.commit('prendiProfiloUtente', data);
+                        console.log(data);
+                    })
+            } catch (error) {
+                console.error(error);
+            }
         }
     },  
     computed: {

@@ -50,7 +50,7 @@
                                     <v-list-item-title>Pubblica Annuncio</v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>
-                            <v-list-item>
+                            <v-list-item  to="/modificaAnnunci">
                                 <v-list-item-icon>
                                     <v-icon>mdi-border-color</v-icon>
                                 </v-list-item-icon>
@@ -58,7 +58,7 @@
                                 <v-list-item-title>Modifica Annunci</v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item> 
-                            <v-list-item>
+                            <v-list-item to="/recensioniUtente">
                                 <v-list-item-icon>
                                     <v-icon>mdi-border-color</v-icon>
                                 </v-list-item-icon>
@@ -66,12 +66,20 @@
                                 <v-list-item-title>Visualizza Recensioni</v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>
-                            <v-list-item>
+                            <v-list-item @click="stampaWL">
                                 <v-list-item-icon>
                                     <v-icon>mdi-border-color</v-icon>
                                 </v-list-item-icon>
                                 <v-list-item-content>
                                 <v-list-item-title>Whishlist</v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item to="/transazioniUtente">
+                                <v-list-item-icon>
+                                    <v-icon>mdi-border-color</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                <v-list-item-title>Transazioni</v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>
                         </v-list-item-group>
@@ -110,11 +118,36 @@ export default {
                   this.$store.commit('resetState', this.$store.state);
                   // DEBUG
                   //console.log(this.$store.state)
+                  this.$router.push('/');
                 })
                 } catch(error) {
                     console.error(error); // If there is any error you will catch them here
             }
         },
+        async stampaWL () {
+            try {
+                fetch(this.$url + "api/a/getAll", {
+                    method: 'GET',
+                    headers: { "Content-Type": "application/json" }
+                }).then((resp) =>resp.json())
+                .then(data => {
+                    this.$store.state.annunci = data;
+                    if (this.$store.state.annunci[0] === undefined) {
+                        this.isEmpty=true; 
+                        this.message = this.$store.state.annunci.message;
+                        return;
+                    }
+                    console.log("ciao")
+                    this.$store.state.dallaWL = true;
+                    this.$store.state.annunci = this.$store.state.annunci.filter(a => a.visibile === true)
+                    this.$store.state.annunci = this.$store.state.annunci.filter(a => a.inserzionista !== this.$store.state.datiUtente.username);
+                    this.$store.state.annunci = this.$store.state.annunci.filter(a => this.$store.state.profiloUtente.whishList.includes(a._id));
+                    this.$router.push('/searchResults')    
+                })
+                } catch(error) {
+                    console.error(error); // If there is any error you will catch them here
+                }
+        }
 
     },
     computed: mapState({

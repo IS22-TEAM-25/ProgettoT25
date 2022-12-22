@@ -5,8 +5,9 @@
 
         <h1>{{ annuncio.titolo }}</h1>
       </v-col>
-      <v-col >
-        <v-btn block color="orange" rounded flat v-if="utenteLoggato" >+ wish list</v-btn>
+      <v-col v-if="utenteLoggato">
+        <v-btn block color="orange" rounded v-if="!inWL" @click="aggiungiWL">aggiungi alla wish list</v-btn>
+        <v-btn block color="red" rounded v-else @click="aggiungiWL">rimuovi dalla wish list</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -126,6 +127,15 @@
               @click="acquistaAffitta">Affitta</v-btn>
             </v-row>
           </v-form>
+          <v-row>
+            <v-col>
+              <span>
+                Previsto il ritiro in {{ JSON.parse(annuncio.indirizzoRitiro).via }} a
+                {{ JSON.parse(annuncio.indirizzoRitiro).citta }} in provincia di 
+                {{ JSON.parse(annuncio.indirizzoRitiro).provincia }}
+              </span>
+            </v-col>
+          </v-row>  
         </v-container>
 
         </v-container>
@@ -189,9 +199,9 @@
         <v-row>
             <v-col>
               <span>
-                Previsto il ritiro in {{ annuncio.indirizzoRitiro }} a
-                {{ annuncio.indirizzoRitiro.citta }} in provincia di 
-                {{ annuncio.indirizzoRitiro.provincia }}
+                Previsto il ritiro in {{ JSON.parse(annuncio.indirizzoRitiro).via }} a
+                {{ JSON.parse(annuncio.indirizzoRitiro).citta }} in provincia di 
+                {{ JSON.parse(annuncio.indirizzoRitiro).provincia }}
               </span>
             </v-col>
           </v-row>  
@@ -217,6 +227,7 @@ export default {
   data () {
     return {
       valid: false,
+      inWL: false,
       validMessaggio: false,
       dates: [],
       startDate: null,
@@ -379,12 +390,63 @@ export default {
             } catch (error) {
                 console.error(error);
             }
-        }
+        },
+        async aggiungiWL() {
+          let endPoint;
+          console.log("In WL è:", this.inWL)
+          if(this.inWL) {
+            endPoint = 'rimuoviwl'
+          } else {
+            endPoint = 'addwl'
+          }
+          try {
+                fetch(this.$url + "api/p/" + endPoint, {
+                    method: 'PATCH',
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "x-access-token": this.$store.state.dataAuth.token
+                    },
+                    body: JSON.stringify({
+                        id: this.$store.state.datiUtente.username,
+                        annuncio : this.$store.state.annuncioSelezionato.titolo
+                    })
+                }).then( data => {
+
+                  console.log(data,"Annuncio ", this.$store.state.annuncioSelezionato.titolo, "!");
+                  this.inWL = !this.inWL;
+                  this.getProfile();
+                })
+                  
+            } catch (error) {
+                console.error(error); // If there is any error you will catch them here
+            }
+        },
+        controllaSeInWl () {
+          this.inWL = this.$store.state.profiloUtente.whishList.includes(this.$store.state.annuncioSelezionato.titolo);
+        },
+        async getProfile() {
+      console.log("dentro get profile")
+      try {
+        fetch(this.$url + "api/p/getp/" + this.$store.state.profiloUtente._id, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" }
+        }).then((resp) => resp.json())
+        .then(data => {
+          this.$store.commit('prendiProfiloUtente', data);
+          console.log(data);
+        })
+      } catch(error) {
+        console.error(error); 
+      }
+    }, 
   },  
   computed: {
     pagamentoOnlineAbilitato() {
       return this.$store.state.annuncioSelezionato.pagamentoOnline;
     },
+    // inWL() {
+    //   return this.$store.state.profiloUtente.whishList.includes(this.$store.state.annuncioSelezionato.titolo)
+    // },
 
     utenteLoggato() {
       return this.$store.state.dataAuth.success;
@@ -393,8 +455,13 @@ export default {
       annuncio: 'annuncioSelezionato',
     }),
   },
-
-  created() {
+  async updated() {
+    
+    console.log("sono in mounted", this.inWL)
+  },
+  async created() {
+    await this.getProfile();
+    this.controllaSeInWl()
     this.$store.state.noNavBar = false
     this.$store.state.search = false
   }

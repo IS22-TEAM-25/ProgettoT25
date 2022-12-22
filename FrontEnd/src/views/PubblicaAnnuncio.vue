@@ -86,6 +86,7 @@
     </v-row>
     <v-checkbox 
       v-model= "affitto" 
+      :value="affitto"
       :disable="vendita"
       label="affitto"
       color="indigo"
@@ -94,11 +95,11 @@
       @click="vendita = false"
     ></v-checkbox>
     <v-checkbox 
-      v-model= "vendita" 
+      v-model= "vendita"
+      :value="vendita"
       :disable="affitto"
       label="vendita"
       color="indigo"
-      value="indigo"
       hide-details
       large
       @click="affitto = false"
@@ -118,7 +119,7 @@
         name="costoH"
         type="number"
         color="accent accent-3"
-        :rules= "required"
+        :rules= "required.concat(noNegative)"
         filled
         dense
         rounded      
@@ -133,7 +134,7 @@
         name="costoG"
         type="number"
         color="accent accent-3"
-        :rules= "required"
+        :rules= "required.concat(noNegative)"
         filled
         dense
         rounded      
@@ -148,7 +149,7 @@
         name="costoS"
         type="number"
         color="accent accent-3"
-        :rules= "required"     
+        :rules= "required.concat(noNegative)"     
         filled
         dense
         rounded      
@@ -169,7 +170,7 @@
           name="costoVen"
           type="number"
           color="accent accent-3"
-          :rules="required"
+          :rules="required.concat(noNegative)"
           filled
           dense
           rounded      
@@ -233,7 +234,7 @@ export default {
     data: () => ({
         metodiPagamento: '',
         abilitaPagamentoOnline: false,
-        vendita: false,
+        vendita: true,
         affitto: false,
         valid: false,
         selectCat: null,
@@ -262,11 +263,15 @@ export default {
             v => v.length <= 30 || "Il titolo non può superare i 40 caratteri!"
         ],
         descrizioneRule: [
-            v => v.length <= 250 || "Il titolo non può superare i 40 caratteri!"
+            v => v.length <= 250 || "La descrizione non può superare i 250 caratteri!"
         ],
         emailRules: [
           v => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail non valida.',
         ],
+        noNegative: [
+          v => v >= 0 || "No negativi"
+        ]
+
     }),
     methods: {
         async salvaAnnuncio() {

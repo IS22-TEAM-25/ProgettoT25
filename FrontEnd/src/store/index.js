@@ -16,7 +16,9 @@ const getDefaultState = () => {
     annuncioSelezionato: {},
     prodottoInBallo: false,
     transazione:{},
+    dallaWL: false,
     pubblicazioneAnnuncioSsuccess: false,
+    annunciUtente: [],
     filtri: {
       affitto:'true',
       vendita:'true',
@@ -24,7 +26,8 @@ const getDefaultState = () => {
       prezzoVenditaMax: Number.MAX_SAFE_INTEGER,
       prezzoAffittoMin: 0,
       prezzoAffittoMax: Number.MAX_SAFE_INTEGER,
-      categoria: ''
+      categoria: '',
+      pagamentoOnline: false
     },
     controlliFiltri: {
       filterMaxVendita: 0.0,
@@ -81,6 +84,7 @@ export default new Vuex.Store({
         state.filtri = {
           affitto:'true',
           vendita:'true',
+          pagamentoOnline: false,
           prezzoVenditaMin: 0,
           prezzoVenditaMax: Number.MAX_SAFE_INTEGER,
           prezzoAffittoMin: 0,

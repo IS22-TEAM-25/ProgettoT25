@@ -26,7 +26,7 @@
                             <!-- FORGOT PASSWORD -->
                             <forgotPassword @ripristinaPassword="esitoRipristino"/>
                             <div class="text-center mt-3">
-                              <v-btn class="submit" rounded color="accent accent-3" dark :disabled="!valid" @click="login" >SIGN IN</v-btn>
+                              <v-btn class="submit" rounded color="accent accent-3"  :disabled=!valid @click="login" >SIGN IN</v-btn>
                             </div>
                           </v-form>
                         </v-card-text>
@@ -38,8 +38,8 @@
                         <v-alert v-if="acquistoUtenteNonAutenticato" type="error" justify="center" dismissible>
                           Effettuare il login prima di poter procedere alla transazione!
                         </v-alert>
-                        <v-alert v-if="error" type="error" justify="center" dismissible>
-                          {{ message }}
+                        <v-alert v-if="erroreLogin" type="error" justify="center" dismissible>
+                          {{ messageErroreLogin }}
                         </v-alert>
                         <v-alert> {{ messaggioRipristino }} </v-alert>
                       </v-container>
@@ -74,25 +74,27 @@
 
                         <v-form v-model="valid" class="submit">
                           <v-text-field v-model="username" id="username" label="Nome utente" name="Username"
-                            prepend-icon="person" type="text" color="accent accent-3" :rules="required" />
-                          <v-text-field v-model="nome" id="nome" label="Nome" name="Nome" prepend-icon="person"
+                            prepend-icon="person" type="text" required color="accent accent-3" :rules="required" />
+                          <v-text-field v-model="nome" id="nome" label="Nome" name="Nome" prepend-icon="person" required
                             type="text" color="accent accent-3" :rules="required" />
-                          <v-text-field v-model="cognome" id="cognome" label="Cognome" name="Cognome"
+                          <v-text-field v-model="cognome" id="cognome" label="Cognome" name="Cognome" required
                             prepend-icon="person" type="text" color="accent accent-3" :rules="required" />
-                          <v-text-field v-model="dob" id="dob" label="Data di nascita" name="DOB"
+                          <v-text-field v-model="dob" id="dob" label="Data di nascita" name="DOB" required
                             prepend-icon="mdi-calendar-blank" type="date" color="accent accent-3" :rules="required" />
-                          <v-text-field v-model="indirizzo" id="indirizzo" label="Indirizzo" placeholder="via Sommarive 9, Povo, Trento" name="Indirizzo"
+                          <v-text-field v-model="indirizzo" id="indirizzo" label="Indirizzo" placeholder="via Sommarive 9, Povo, Trento" name="Indirizzo" required
                             prepend-icon="map" type="text" color="accent accent-3" :rules="required" />
                           <v-text-field v-model="email" id="email" label="Email" name="Email" prepend-icon="email"
                             type="email" color="accent accent-3" required :rules="emailRules" />
                           <v-text-field v-model="password" id="password"
                             label="Password (Almeno 8 caratteri, un numero ed un carattere speciale ! £ % ? € = ^ "
                             name="Password"
+                            required
                             prepend-icon="lock" type="password" color="accent accent-3"
                             :rules="required.concat(passwordCrit)" />
                           <v-text-field v-model="password1" id="confirmPassword" label="Confirm Password"
                             name="cPassword" prepend-icon="lock" type="password" color="accent accent-3"
-                            :rules="required.concat(passwordMatching)" />
+                            :rules="required.concat(passwordMatching)" 
+                            required/>
                           <v-checkbox
                             color="indigo"
                             label="Aggiungi Metodo di Pagamento?"
@@ -112,7 +114,7 @@
                             :rules="metodiPagRules"
                           ></v-text-field>
                           <v-spacer></v-spacer>
-                          <v-btn class="submit" rounded color="accent accent-3" dark :disabled="!valid"
+                          <v-btn class="submit" rounded color="accent accent-3"  :disabled=!valid
                             @click="handleSubmit">Crea un Account</v-btn>
                           <div class="text-center mt-n5">
                           </div>
@@ -150,7 +152,7 @@ export default {
     erroreRegistrazione: false,
     accountCreato: false,
     datiAuth: {},
-    error: false,
+    erroreLogin: false,
     username: '',
     password: '',
     password1: '',
@@ -160,7 +162,8 @@ export default {
     dob: '',
     indirizzo: '',
     mailPayPal:'',
-    message:'',
+    messaggioErroreRegistrazione: '',
+    messageErroreLogin:'',
     messaggioRipristino: '',
     required: [
       v => !!v || 'Campo obbligatorio'
@@ -205,7 +208,9 @@ export default {
           .then(data => {
             console.log(data);
             if (data.success === false) {
-              this.message = data.message;
+              console.log("erroreeeee")
+              this.messaggioErroreRegistrazione = data.message;
+              console.log(data.message, " === ", this.messaggioErroreRegistrazione )
               this.erroreRegistrazione = true;
               return;
             }
@@ -258,12 +263,14 @@ export default {
                 router.push("/");
               }
               this.$store.state.noNavBar = false;
+              this.getUser();
+              this.getProfile();
             } else {
-              this.error = true
+              this.erroreLogin = true
             }
-            this.message = data.message;
-            console.log(data.message);
-          }).then(this.getUser(), this.getProfile())
+            this.messageErroreLogin = data.message;
+            console.log(data.messamessageErroreLoginge);
+          })
       } catch (error) {
         console.error(error); // If there is any error you will catch them here
       }
@@ -302,17 +309,26 @@ export default {
     },
 
   },
+  watch: {
+    erroreRegistrazione() {
+      setTimeout(() => {this.erroreRegistrazione = false}, 3000);
+    },
+    erroreLogin() {
+      setTimeout(() => {this.erroreLogin = false}, 3000);
+    }
+  },
   computed: {
     acquistoUtenteNonAutenticato() {
       return this.$store.state.prodottoInBallo;
     },
     messaggioErrore() {
-      return this.message;
-    }
+      return this.messageErroreRegistrazione;
+    },
+
   },
   mounted() {
     this.$store.state.noNavBar = true;
     this.$store.state.search = false; 
-  },
+  }
 };
 </script>

@@ -40,7 +40,7 @@
                             </v-card>
                             <!-- capire perchè le recensioni  -->
                                 <v-card >
-                                    
+                                    <span> {{ annuncio.rating }} asdf</span>
                                     <v-rating
                                     :value="annuncio.rating"
                                     color="amber"
@@ -104,6 +104,9 @@ export default {
         }),
         annunci() {
             return this.$store.state.annunci.filter(this.filtraggio)
+        },
+        annuncioRating() {
+            return this.$store.state.annunci.rating;
         }
     },
 
@@ -119,8 +122,8 @@ export default {
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) => resp.json())
                 .then(data => {
-                    console.log("Il rating per", annuncio.inserzionista, " è di ", data.rating)
                     annuncio.rating = data.rating;
+                    console.log("Il rating per", annuncio.inserzionista, " è di ", annuncio.rating)
                 })
             } catch (error) {
                 console.error(error);
@@ -155,6 +158,7 @@ export default {
                         return;
                     }
                     this.$store.state.annunci=data.filter(a => a.visibile === true);
+                    this.$store.state.annunci = this.$store.state.annunci.filter(a => a.inserzionista !== this.$store.state.datiUtente.username);
                     if (this.$store.state.annunci[0] === undefined) {
                         this.isEmpty=true; 
                         this.message = "Non è presente alcun articolo disponibile per questa categoria.";
@@ -195,7 +199,7 @@ export default {
             this.cat = this.$refs.input.value
             this.$store.commit('selectCat', this.localCat)
         },
-        filtraggio(x) {
+        filtraggio(x) {  
           var ok = true;
           if (!this.$store.state.filtri.affitto && x.modalitaTransazione === 'Affitto')  {
             ok = false;
@@ -221,38 +225,42 @@ export default {
           }
           if (this.$store.state.filtri.categoria !== '' && x.categoria !== this.$store.state.filtri.categoria) {
             ok = false;
-        }
+            }
+            if(this.$store.state.filtri.pagamentoOnline && this.$store.state.filtri.pagamentoOnline === true) {
+                if(this.$store.state.filtri.pagamentoOnline !== x.pagamentoOnline) {
+                    ok = false;
+                } 
+            } 
           return ok;
-        },
-        async deleteAnnuncio(id) {
-            try {
-                fetch(this.$url + "api/a/deletea/" + id, {
-                    method: 'DELETE',
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ id: this.id }),
-                }).then(console.log("Annuncio con titolo", id, " è stato eliminato!"))
-                } catch(error) {
-                    console.error(error); // If there is any error you will catch them here
-                }
         }
 
     },
     async created() {
-        this.cat = this.$store.state.filtri.categoria;
-        if(this.$store.state.keyword !== '') {
-            this.endpoint = this.API_URL + "getkt/" + this.$store.state.keyword;
-            await this.getAll();
+        console.log(this.$store.state.dallaWL)
+        if(!this.$store.state.dallaWL) {
+            console.log("ciaoooo")
+            this.cat = this.$store.state.filtri.categoria;
+            if(this.$store.state.keyword !== '') {
+                this.endpoint = this.API_URL + "getkt/" + this.$store.state.keyword;
+                await this.getAll();
+            }
+            else if (this.cat === '') {
+                this.endpoint = this.API_URL+'getAll';
+                await this.getAll();
+            } else {
+                this.endpoint = this.API_URL+'getaf';
+                await this.getfa();
+            } 
         }
-        else if (this.cat === '') {
-            this.endpoint = this.API_URL+'getAll';
-            await this.getAll();
-        } else {
-            this.endpoint = this.API_URL+'getaf';
-            await this.getfa();
-        } 
         this.$store.commit('isResultView', true);
-        this.$store.state.annunci.forEach(annuncio => this.getRating(annuncio));
-        this.$store.state.annunci.forEach(annuncio => this.getNumRecensioni(annuncio));
+        for (let i = 0; i < this.$store.state.annunci.length; i++) {
+            this.getRating(this.$store.state.annunci[i]);
+            console.log(i);
+            console.log(this.$store.state.annunci[i].rating)
+        }
+        // this.$store.state.annunci.forEach(annuncio => this.getRating(annuncio));
+        // this.$store.state.annunci.forEach(annuncio => this.getNumRecensioni(annuncio));
+        this.$store.state.dallaWL = false;
     },
     updated() {
         if(this.$store.state.annunci[0] === undefined) this.isEmpty = true;

@@ -17,6 +17,7 @@
           </v-btn>
         </template>
         <v-card>
+            <v-form class="submit" v-model="valid">
           <v-card-title>
             <span class="text-h5">Modifica descrizione:</span>
           </v-card-title>
@@ -27,6 +28,7 @@
                   cols="12"
                 >
                   <v-textarea
+                    class="submit"
                     label="Descrizione"
                     v-model="descrizione"
                     :counter="250" 
@@ -40,10 +42,11 @@
           </v-card-text>
           <v-card-actions>
             <v-btn
+            
             color="indigo"
             class="white--text"
             rounded
-
+            :disabled:="!valid"
             @click="aggiornaDescrizione"
             >
             Aggiorna Descrizione
@@ -55,7 +58,9 @@
         @click="dialog=false">
         Chiudi
     </v-btn>
+
     </v-card-actions>
+    </v-form>
     </v-card>
       </v-dialog>
     </v-row>
@@ -67,6 +72,7 @@ export default {
     data() {
         return {
             dialog: false,
+            valid: false,
             descrizione:'',
             descrizioneRules: [
                 v => v.length <= 250 || "Descrizione troppo lunga!" 

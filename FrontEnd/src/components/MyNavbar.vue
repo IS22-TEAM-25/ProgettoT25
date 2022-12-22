@@ -101,13 +101,21 @@
             <v-col>
               <v-text-field
               v-model="filterMinVendita"
-              label="min">
+              label="min"
+              type="number"
+              :rules="noNegative"
+
+              >
+
               </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
               v-model="filterMaxVendita"
               label="max"
+              type="number"
+              :rules="noNegative"
+
               >
               </v-text-field>
           </v-col>
@@ -123,13 +131,18 @@
             <v-col>
               <v-text-field
               v-model="filterMinAffitto"
-              label="min">
+              label="min"
+              type="number"
+              :rules="noNegative"
+              >
             </v-text-field>
           </v-col>
           <v-col>
             <v-text-field
           v-model="filterMaxAffitto"
           label="max"
+          type="number"
+          :rules="noNegative"
           >
           </v-text-field>
           </v-col>
@@ -172,6 +185,13 @@
         color="indigo">
      </v-checkbox>
   </v-list-item>
+  <v-list-item>
+      <v-checkbox
+        v-model="pagamentoOnline"
+        label="Pagamento Online"
+        color="indigo">
+      </v-checkbox>
+    </v-list-item>
 <!-- APPLICA FILTRI E RESET -->
 <v-list-item>
       <v-btn 
@@ -210,8 +230,9 @@ export default {
             ordinaData: false,
             ordinaPrezzo: false,
             discendente: false,
-            affitto: false,
-            vendita: false,
+            affitto: true,
+            vendita: true,
+            pagamentoOnline: false,
             categoriaSelezionata: '',
             keyword: '',
             filterMaxVendita: '',
@@ -222,7 +243,10 @@ export default {
                  new Intl.NumberFormat('en-DE', {
                      style: 'currency',
                      currency: 'EUR',
-                 })
+                 }),
+            noNegative: [
+                 v => v >= 0 || 'Non negativi.'
+            ]
         }
     },    
     components: { logoLinkHome, MenuProfilo },  
@@ -266,11 +290,20 @@ export default {
           this.$store.state.filtri.affitto = this.affitto;
           this.$store.state.filtri.vendita = this.vendita;
           this.$store.state.filtri.prezzoVenditaMin = this.filterMinVendita;
-          this.$store.state.filtri.prezzoVenditaMax = this.filterMaxVendita;
+          if(this.filterMaxVendita === '') {
+            this.$store.state.filtri.prezzoVenditaMax = Number.MAX_SAFE_INTEGER;
+          } else {
+            this.$store.state.filtri.prezzoVenditaMax = this.filterMaxVendita;
+          }
           this.$store.state.filtri.prezzoAffittoMin = this.filterMinAffitto;
-          this.$store.state.filtri.prezzoAffittoMax = this.filterMaxAffitto;
-          this.$store.state.filtri.categoria = this.categoriaSelezionata
-          
+          if(this.filterMaxAffitto === '') {
+            this.$store.state.filtri.prezzoAffittoMax = Number.MAX_SAFE_INTEGER;
+          } else {
+            this.$store.state.filtri.prezzoAffittoMax = this.filterMaxVendita;
+          }
+          this.$store.state.filtri.categoria = this.categoriaSelezionata;
+          this.$store.state.filtri.pagamentoOnline = this.pagamentoOnline;
+          console.log("pagamento online: ", this.pagamentoOnline)
         },
         resettaFiltri() {
           this.$store.commit('resettaFiltri');

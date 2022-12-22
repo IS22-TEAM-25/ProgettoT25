@@ -42,7 +42,7 @@
                   <v-text-field
                     label="Cognome"
                     v-model="cognomeU"
-                    hint="example of helper text only on focus"
+                    required
                   ></v-text-field>
                 </v-col>
                 <v-col
@@ -158,6 +158,8 @@
   </template>
 
 <script>
+import format from 'date-fns/format';
+
 
 export default {
     data() {
@@ -226,12 +228,33 @@ export default {
                     body: JSON.stringify({
                         username: this.$store.state.datiUtente.username,
                         nome: this.nomeU,
-                        cognome: this.congomeU,
+                        cognome: this.cognomeU,
                         datadinascita: this.dobU,
                         indirizzo: this.indirizzoU,
                         metodiPagamento: this.metodiPagamentoU,
                     })
-                }).then(console.log("Dati utente aggiornati per ", this.$store.state.datiUtente.nome, "!"), this.dialog = false)
+                }).then(() => {
+                    console.log("Dati utente aggiornati per ", this.$store.state.datiUtente.nome, "!");
+                    this.dialog = false
+                })
+            } catch (error) {
+                console.error(error); // If there is any error you will catch them here
+            }
+            try {
+                fetch(this.$url + "api/u/updatee", {
+                    method: 'PATCH',
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "x-access-token": this.$store.state.dataAuth.token
+                    },
+                    body: JSON.stringify({
+                        username: this.$store.state.datiUtente.username,
+                        email: this.emailU
+                    })
+                }).then(() => {
+                    console.log("Email aggiornata per ", this.$store.state.datiUtente.nome, "!");
+                    this.dialog = false
+                })
             } catch (error) {
                 console.error(error); // If there is any error you will catch them here
             }
@@ -239,7 +262,8 @@ export default {
         setForm() {
             this.nomeU = this.$store.state.datiUtente.nome;
             this.cognomeU = this.$store.state.datiUtente.cognome;
-            this.dobU = this.$store.state.datiUtente.dataDiNascita;
+            this.dobU = format(new Date(this.$store.state.datiUtente.datadinascita), "yyyy-MM-dd");
+            console.log(format(new Date(this.dobU), "yyyy-MM-dd"))
             this.emailU = this.$store.state.datiUtente.email;
             this.indirizzoU = this.$store.state.datiUtente.indirizzo;
             this.metodiPagamentoU = this.$store.state.datiUtente.metodiPagamento;
@@ -275,8 +299,10 @@ export default {
                 return "Le password non combaciano!"
             }
         },
-    },      
+        
+    },
     mounted() {
+        this.getProfile();
         this.setForm();
     }, 
     beforeUnmount() {

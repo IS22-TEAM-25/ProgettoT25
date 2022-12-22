@@ -38,8 +38,23 @@ Vue.mixin({
       } catch (error) {
         console.error(error); // If there is any error you will catch them here
       }
-    }
-  },  
+    },
+    async getProfile() {
+      console.log("dentro get profile")
+      try {
+        fetch(this.$url + "api/p/getp/" + this.$store.state.datiUtente.username, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" }
+        }).then((resp) => resp.json())
+        .then(data => {
+          this.$store.commit('prendiProfiloUtente', data);
+          console.log(data);
+        })
+      } catch(error) {
+        console.error(error); 
+      }
+    },
+  }, 
 })
 
 new Vue({

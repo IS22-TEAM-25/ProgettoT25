@@ -8,6 +8,11 @@ import PubblicaAnnuncio from '../views/PubblicaAnnuncio.vue'
 import UserProfile from '../views/UserProfile.vue'
 import UserReview from '../views/UserReview.vue'
 import modificaDatiPersonali from '../views/modificaDatiPersonali.vue'
+import classificaUtenti from '../views/classificaUtenti.vue'
+import modificaAnnunci from '../views/modificaAnnunci.vue'
+import recensioniUtente from '../views/recensioniUtente.vue'
+import transazioniUtente from '../views/transazioniUtente.vue'
+
 
 Vue.use(VueRouter)
 
@@ -51,6 +56,27 @@ const routes = [
     path: '/modificaDatiPersonali',
     name: 'modificaDatiPersonali',
     component: modificaDatiPersonali
+  },
+  {
+    path: '/classificaUtenti',
+    name: 'classificaUtenti',
+    component: classificaUtenti
+  },
+  {
+    path: '/modificaAnnunci',
+    name: 'modificaAnnunci',
+    component: modificaAnnunci
+
+  },
+  {
+    path: '/recensioniUtente',
+    name: 'recensioniUtente',
+    component: recensioniUtente
+  },
+  {
+    path: '/transazioniUtente',
+    name: 'transazioniUtente',
+    component: transazioniUtente
   }
 ]
 
