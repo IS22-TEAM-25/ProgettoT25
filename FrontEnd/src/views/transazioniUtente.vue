@@ -2,6 +2,15 @@
     <v-card>
         <v-row>
             <v-col>
+                <v-row>
+                <v-spacer></v-spacer>
+
+                    <v-col>
+                        <h3> TRANSAZIONI IN ENTRATA</h3>
+                    </v-col>
+                    <v-spacer></v-spacer>
+                </v-row>
+                <v-divider></v-divider>
             <v-list>
                 <v-list-item>
                     <v-list-item-content>
@@ -31,7 +40,7 @@
                             {{ transazione.venditore }}
                         </v-col>
                         <v-col>
-                            {{ transazione.dataTransazione }}
+                            {{ formattedDate(transazione.dataTransazione) }}
                         </v-col>
                         <v-col>
                             {{ transazione.costo }}€
@@ -41,7 +50,17 @@
             </v-list-item>
         </v-list>
         </v-col>
+        <v-divider vertical="true" width="2" color="black"></v-divider>
         <v-col>
+            <v-row>
+                <v-spacer></v-spacer>
+
+                    <v-col>
+                        <h3> TRANSAZIONI IN USCITA</h3>
+                    </v-col>
+                    <v-spacer></v-spacer>
+                </v-row>
+                <v-divider></v-divider>
             <v-list>
                 <v-list-item>
                     <v-list-item-content>
@@ -71,7 +90,7 @@
                             {{ transazione.acquirente }}
                         </v-col>
                         <v-col>
-                            {{ transazione.dataTransazione }}
+                            {{ formattedDate(transazione.dataTransazione) }}
                         </v-col>
                         <v-col>
                             {{ transazione.costo }}€
@@ -86,7 +105,7 @@
 </template>
 
 <script>
-
+import format from 'date-fns/format';
 export default {
     data() {
         return {
@@ -128,8 +147,10 @@ export default {
                 console.error(error);
             }
         },
+        formattedDate(date) {
+            return format(new Date(date), 'dd/M/YYY');
+        },
     },
-
     created() {
       this.getTransazioniUtente();  
     },

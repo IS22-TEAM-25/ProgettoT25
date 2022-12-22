@@ -6,7 +6,7 @@
                 <v-spacer></v-spacer>
 
                     <v-col>
-                        <h3> Recensioni Ricevute</h3>
+                        <h3> RECENSIONI RICEVUTE</h3>
                     </v-col>
                     <v-spacer></v-spacer>
                 </v-row>
@@ -53,12 +53,12 @@
             </v-list-item>
         </v-list>
         </v-col>
-        <v-divider vertical="true" width="2"></v-divider>
+        <v-divider vertical="true" width="2" color="black"></v-divider>
         <v-col>
             <v-row>
                 <v-spacer></v-spacer>
                     <v-col>
-                        <h3> Recensioni Effettuate</h3>
+                        <h3> RECENSIONI EFFETTUATE</h3>
                     </v-col>
                 <v-spacer></v-spacer>
 

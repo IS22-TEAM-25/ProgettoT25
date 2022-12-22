@@ -208,7 +208,7 @@
       </v-col>
     </v-row>
     <v-spacer></v-spacer>
-    <v-container>
+    <v-container v-if="affitto || vendita" >
       <v-btn 
       class="submit" 
       rounded color="accent accent-3" 
@@ -260,7 +260,7 @@ export default {
             v => !!v || "Campo obbligatorio"
         ],
         titoloRule: [
-            v => v.length <= 30 || "Il titolo non può superare i 40 caratteri!"
+            v => v.length <= 30 || "Il titolo non può superare i 30 caratteri!"
         ],
         descrizioneRule: [
             v => v.length <= 250 || "La descrizione non può superare i 250 caratteri!"

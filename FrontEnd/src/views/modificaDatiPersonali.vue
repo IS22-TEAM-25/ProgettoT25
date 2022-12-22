@@ -76,15 +76,16 @@
                         </v-col>
                     </v-row>
                 </v-col>
+                <v-divider vertical="true" width="2" color="black"></v-divider>
                 <v-col>
                     <v-row>
-                        <h2>Descrizione Profilo:</h2>
+                        <h2 style="padding:0px 0px 0px 10px">   Descrizione Profilo:</h2>
                     </v-row>
                     <v-row>
                         <v-divider></v-divider>
                     </v-row>
                     <v-row>
-                        <span class="font-weight-light"> {{ profilo.descrizioneProfilo }} </span>
+                        <span class="font-weight-light" style="padding:0px 0px 0px 10px"> {{ profilo.descrizioneProfilo }} </span>
                     </v-row>
                     <v-row>
                         <v-divider></v-divider>
