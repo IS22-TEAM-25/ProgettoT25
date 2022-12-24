@@ -17,8 +17,8 @@
         
         <v-card >
           <h2 > {{ annuncio.inserzionista }}  </h2>
-          <h4>Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</h4>
           <v-rating :value="this.rating" color="amber" dense half-increments readonly size="14"></v-rating>
+          <h4>Categoria: {{ annuncio.categoria }} _________________________________________ Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</h4>
           
 
           <v-list-item v-for="recensione in this.recensioniUscita" :key="recensione._id">
