@@ -41,14 +41,7 @@
                             <!-- capire perchè le recensioni  -->
                                 <v-card >
                                     <span> {{ annuncio.rating }} asdf</span>
-                                    <v-rating
-                                    :value="annuncio.rating"
-                                    color="amber"
-                                    dense
-                                    half-increments
-                                    readonly
-                                    size="14"
-                                    ></v-rating>
+                                    <v-rating :value="annuncio.rating" color="amber" dense half-increments readonly size="14" ></v-rating>
                                     <div class="grey--text"> {{annuncio.inserzionista}} ({{ annuncio.nRecensioni }})</div>
                                     <div>Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</div>
                                 </v-card>

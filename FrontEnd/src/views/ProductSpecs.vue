@@ -12,15 +12,37 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-img rounded :src="require('../assets/vuoto.webp')" class="white--text align-end" max-width="400">
+        <v-img rounded :src="require('../assets/vuoto.webp')" class="white--text align-end" max-width="400" >
         </v-img>
-        <h2>
-          {{ annuncio.inserzionista }}
-        </h2>
-        <v-card>
         
-          <v-rating :value="annuncio.rating" color="amber" dense half-increments readonly size="14"></v-rating>
-          <div>Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</div>
+        <v-card >
+          <h2 > {{ annuncio.inserzionista }}  </h2>
+          <h4>Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</h4>
+          <v-rating :value="this.rating" color="amber" dense half-increments readonly size="14"></v-rating>
+          
+
+          <v-list-item v-for="recensione in this.recensioniUscita" :key="recensione._id">
+                <v-list-item-content>
+                    <v-row>
+
+                        <v-col>
+                            {{ recensione.utenteRecensore }}
+                        </v-col>                    
+                        <v-col>
+                            <v-rating :value="recensione.stelle" color="amber" dense half-increments readonly size="14">
+                        
+                            </v-rating>
+                        </v-col> 
+                        <v-col cols="5">                      
+                            {{ recensione.descrizione }}
+                        </v-col>
+                        <v-col>
+                            {{ formattedDate(recensione.dataRecensione) }}
+                        </v-col>
+                    </v-row>
+                </v-list-item-content>
+            </v-list-item>
+
         </v-card>
       </v-col>
       <v-col cols="7">
@@ -226,10 +248,12 @@ import format from 'date-fns/format';
 export default {
   data () {
     return {
+      recensioniUscita: [],
       valid: false,
       inWL: false,
       validMessaggio: false,
       dates: [],
+      rating: 0,
       startDate: null,
       endDate: null,
       mioAnnuncio: false,
@@ -247,6 +271,21 @@ export default {
     }
   },
   methods: {
+    async getRecensioniInserzionista() {
+          try {
+              fetch(this.$url + "api/r/getrv/" + this.annuncio.inserzionista, {
+                  method: 'GET',
+                  headers: { 
+                      "Content-Type": "application/json", 
+                  }
+              }).then((resp) => resp.json())
+                  .then(data => {
+                      this.recensioniUscita = data;
+                  })
+          } catch (error) {
+              console.error(error);
+          }
+      },
     async creaTransazione() {
       let costoEffettivo = this.$store.state.annuncioSelezionato.prezzo;
       if (this.$store.state.annuncioSelezionato.modalitaTransazione === "Affitto") {
@@ -300,18 +339,18 @@ export default {
       }
     },
     async aggiornaStatAcquisti(nomeUtente) {
-    try {
-      fetch(this.$url + "api/p/updatesa", {
-        method: 'PATCH',
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ 
-          id: nomeUtente,
-        })
-      }).then(console.log("Statistiche acquisti aggiornate per ", nomeUtente, "!"))
-    } catch (error) {
-      console.error(error); // If there is any error you will catch them here
-    }
-  },
+      try {
+        fetch(this.$url + "api/p/updatesa", {
+          method: 'PATCH',
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ 
+            id: nomeUtente,
+          })
+        }).then(console.log("Statistiche acquisti aggiornate per ", nomeUtente, "!"))
+      } catch (error) {
+        console.error(error); // If there is any error you will catch them here
+      }
+    },
     async nascondiAnnuncio() {
       try {
           fetch(this.$url + "api/a/updatea", {
@@ -346,95 +385,94 @@ export default {
       this.$router.push('/userreview')
     },
     formattedDate(date) {
-    return format(new Date(date), 'dd/M/YYY');
-  },
-  async contatta() {
-    if(!this.$store.state.dataAuth.success) {
-        this.$store.state.prodottoInBallo = true;
-        this.$router.push('/userloginsignup');
-        return;
-      }
-            try {
-                fetch(this.$url + "api/u/getu/" + this.$store.state.annuncioSelezionato.inserzionista, {
-                    method: 'GET',
-                    headers: { "Content-Type": "application/json" }
-                }).then((resp) => resp.json())
-                    .then(data => {
-                        if(data.success !== undefined) {
-                             this.erroreMail = true;
-                             return;
-                        }
-                        this.emailInserzionista = data.email;
-                        this.sendeMail()
-                    })
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        async sendeMail() {
-            try {
-                fetch(this.$url + "api/m/sendEmail", {
-                    method: 'POST',
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        toAddress: this.emailInserzionista,
-                        subj: "Richiesta Informazioni da " + this.$store.state.datiUtente.username,
-                        message: this.mesaggioAllInserzionista
-                    })
-                }).then(data => {
-                        console.log(data);
-
-                        console.log("Messaggio Inviato Correttamente");
-                        this.messaggioInviato = true;
-                    })
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        async aggiungiWL() {
-          let endPoint;
-          console.log("In WL è:", this.inWL)
-          if(this.inWL) {
-            endPoint = 'rimuoviwl'
-          } else {
-            endPoint = 'addwl'
-          }
-          try {
-                fetch(this.$url + "api/p/" + endPoint, {
-                    method: 'PATCH',
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "x-access-token": this.$store.state.dataAuth.token
-                    },
-                    body: JSON.stringify({
-                        id: this.$store.state.datiUtente.username,
-                        annuncio : this.$store.state.annuncioSelezionato.titolo
-                    })
-                }).then( data => {
-
-                  console.log(data,"Annuncio ", this.$store.state.annuncioSelezionato.titolo, "!");
-                  this.inWL = !this.inWL;
-                  this.getProfile();
-                })
-                  
-            } catch (error) {
-                console.error(error); // If there is any error you will catch them here
-            }
-        },
-        controllaSeInWl () {
-          this.inWL = this.$store.state.profiloUtente.whishList.includes(this.$store.state.annuncioSelezionato.titolo);
-        },
-        async getProfile() {
-      console.log("dentro get profile")
+      return format(new Date(date), 'dd/M/YYY');
+    },
+    async contatta() {
+      if(!this.$store.state.dataAuth.success) {
+          this.$store.state.prodottoInBallo = true;
+          this.$router.push('/userloginsignup');
+          return;
+        }
       try {
-        fetch(this.$url + "api/p/getp/" + this.$store.state.profiloUtente._id, {
+          fetch(this.$url + "api/u/getu/" + this.$store.state.annuncioSelezionato.inserzionista, {
+              method: 'GET',
+              headers: { "Content-Type": "application/json" }
+          }).then((resp) => resp.json())
+              .then(data => {
+                  if(data.success !== undefined) {
+                        this.erroreMail = true;
+                        return;
+                  }
+                  this.emailInserzionista = data.email;
+                  this.sendeMail()
+              })
+      } catch (error) {
+          console.error(error);
+      }
+    },
+    async sendeMail() {
+        try {
+            fetch(this.$url + "api/m/sendEmail", {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    toAddress: this.emailInserzionista,
+                    subj: "Richiesta Informazioni da " + this.$store.state.datiUtente.username,
+                    message: this.mesaggioAllInserzionista
+                })
+            }).then(data => {
+                    console.log(data);
+
+                    console.log("Messaggio Inviato Correttamente");
+                    this.messaggioInviato = true;
+                })
+        } catch (error) {
+            console.error(error);
+        }
+    },
+    async aggiungiWL() {
+      let endPoint;
+      console.log("In WL è:", this.inWL)
+      if(this.inWL) {
+        endPoint = 'rimuoviwl'
+      } else {
+        endPoint = 'addwl'
+      }
+      try {
+            fetch(this.$url + "api/p/" + endPoint, {
+                method: 'PATCH',
+                headers: { 
+                    "Content-Type": "application/json",
+                    "x-access-token": this.$store.state.dataAuth.token
+                },
+                body: JSON.stringify({
+                    id: this.$store.state.datiUtente.username,
+                    annuncio : this.$store.state.annuncioSelezionato.titolo
+                })
+            }).then( data => {
+
+              console.log(data,"Annuncio ", this.$store.state.annuncioSelezionato.titolo, "!");
+              this.inWL = !this.inWL;
+              this.getProfile();
+            })
+              
+        } catch (error) {
+            console.error(error); // If there is any error you will catch them here
+        }
+    },
+    controllaSeInWl () {
+      this.inWL = this.$store.state.profiloUtente.whishList.includes(this.$store.state.annuncioSelezionato.titolo);
+    },
+    async getRating() {
+      console.log("dentro get rating")
+      try {
+        fetch(this.$url + "api/p/getp/" + this.annuncio.inserzionista, {
           method: 'GET',
           headers: { "Content-Type": "application/json" }
         }).then((resp) => resp.json())
-        .then(data => {
-          this.$store.commit('prendiProfiloUtente', data);
-          console.log(data);
-        })
+          .then(data => {
+                      this.rating = data.rating;
+                  })
       } catch(error) {
         console.error(error); 
       }
@@ -457,10 +495,10 @@ export default {
   },
   async updated() {
     
-    console.log("sono in mounted", this.inWL)
   },
   async created() {
-    await this.getProfile();
+    await this.getRating();
+    this.getRecensioniInserzionista();
     this.controllaSeInWl()
     this.$store.state.noNavBar = false
     this.$store.state.search = false
