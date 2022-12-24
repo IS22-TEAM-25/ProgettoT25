@@ -33,19 +33,19 @@ const logout = function(req, res) {
 }
 
 const ripristinoPassword = function(req, res) {
-    let username = req.body.username;
+    let usernameReq = req.body.username;
 
     let newPass = createRandomString(10);
     newPass += 'A!1';
     
-    User.findById(username, (err, data) => {
+    User.findOne({username: usernameReq}, (err, data) => {
         if(data){
-            User.updateOne({username : username},
+            User.updateOne({username : usernameReq},
                 { $set: {
                     password: newPass,
                 }}, (err, data) => {
                 if(err) return res.status(500).json({Error: err});
-                return res.status(200).json({message: "Hai effettuato la richiesta di ripristino password. Ecco una password per accedere al tuo account:\n" + newPass + "\nTi consigliamo di cambiarla dalle impostazioni del profilo.\nIl team di SpottyThings."
+                return res.status(200).json({success: true, message: "Hai effettuato la richiesta di ripristino password. Ecco una password per accedere al tuo account:\n" + newPass + "\nTi consigliamo di cambiarla dalle impostazioni del profilo.\nIl team di SpottyThings."
             });
             })
         } else {

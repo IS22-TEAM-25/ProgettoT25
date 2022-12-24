@@ -866,7 +866,7 @@
                         "description" : "NO CONTENT. Password modificata correttamente e nessun ritorno dalla API."
                     },
                     "404" : {
-                        "description" : "NOT FOUND. Nessun utente associato allo username/email passato nel body."
+                        "description" : "NOT FOUND. Nessun utente associato allo username passato nel body."
                     },
                     "500" : {
                         "description" : "SERVER ERROR. Di varia natura."
@@ -925,7 +925,7 @@
                     "description" : "Le informazioni sulla nuova transazione da creare",
                     "schema" : {
                         "type" : "object",
-                        "required" : ["venditore", "acquirente", "prodotto", "metodoTransazione", "prezzo"],
+                        "required" : ["venditore", "acquirente", "prodotto", "metodoTransazione", "price"],
                         "properties" : {
                             "venditore" : {
                                 "type" : "string",
@@ -954,7 +954,7 @@
                                 "summary" : "'Online' oppure 'Di persona'",
                                 "example" : "Online"
                             },
-                            "prezzo" : {
+                            "price" : {
                                 "type" : "number",
                                 "summary" : "Importo della transazione",
                                 "example" : "150"
@@ -1159,11 +1159,6 @@
                             "descrizione" : {
                                 "type" : "string",
                                 "example" : "Venditore molto disponbile e prodotto di qualità."
-                            },
-                            "dataRecensione" : {
-                                "type" : "string",
-                                "summary" : "Formato: yyyy-mm-dd! Si mette default la data del giorno di creazione della recensione",
-                                "default" : "Data corrente"
                             }
                         }
                     }
@@ -1415,7 +1410,7 @@
         "/api/p/deletep/{id}" : {
             "delete" : {
                 "tags" : ["Profilo"],
-                "summary" : "Usata per cancellare una precisa risorsa profilo, il cui id viene specificato come parametro.",
+                "summary" : "Usata per cancellare una precisa risorsa profilo, il cui id viene specificato come parametro. Vengono anche rimossi tutti gli annunci online di questo particolare utente!",
                 "responses" : {
                     "204" : {
                         "description" : "NO CONTENT. Profilo eliminato correttamente e nessun ritorno dalla API."
@@ -1641,7 +1636,7 @@
                         "description" : "NO CONTENT. Dati del profilo correttamente modificati e nessun ritorno dalla API."
                     },
                     "404" : {
-                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato oppure nessun annuncio postato dall'utente specificato."
+                        "description" : "NOT FOUND. Nessun profilo nel sistema con l'id specificato."
                     },
                     "500" : {
                         "description" : "SERVER ERROR. Di varia natura."

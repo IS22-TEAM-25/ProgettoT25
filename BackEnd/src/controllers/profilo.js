@@ -1,5 +1,3 @@
-const aux = require("../auxiliaries/helpProfilo")
-
 const User = require("../models/utente");
 const Profilo = require("../models/profilo");
 const Annuncio = require("../models/annuncio");
@@ -227,9 +225,6 @@ const aggiornaAnnunciOnline = (req, res) => {
 
             Annuncio.find({inserzionista: req.body.id}, (err, data) => {
                 if(data){
-                    if(data[0] == undefined){
-                        return res.status(404).json({success: false, message: "Nessun annuncio di " + req.body.id})
-                    }
                     
                     var n = data.length;
                     var totAff = 0;
@@ -253,7 +248,6 @@ const aggiornaAnnunciOnline = (req, res) => {
 
                 } else {
                     if (err) return res.status(500).json({Error: err});
-                    return res.status(404).json({success: false, message: "Nessun annuncio di " + req.body.id})
                 }
             })
         } else {

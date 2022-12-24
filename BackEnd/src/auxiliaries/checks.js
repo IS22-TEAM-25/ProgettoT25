@@ -4,11 +4,10 @@ const checkPw = function(pass){
         return false;
     }
     
-    if(pass.includes("!") || pass.includes("?")
-    || pass.includes(".") || pass.includes(",")
-    || pass.includes(";") || pass.includes(":")
-    || pass.includes("-") || pass.includes("+")
-    || pass.includes("*") || pass.includes("//")){
+    if(pass.includes("!") || pass.includes("£")
+    || pass.includes("%") || pass.includes("?")
+    || pass.includes("=") || pass.includes("^")
+    || pass.include("€")){
         return true;
     } else {
         return false;
@@ -28,12 +27,4 @@ const validateDate = (data) => {
         /\b\d{2}-\d{2}-\d{4}\b/
     );
 }
-
-// const today = new Date();
-// const todayRightFormat = new Date(today.getFullYear() + "-" + (today.getMonth() +1) + "-" + today.getDate());
-
-// console.log(today);
-// console.log(todayRightFormat);
-
-
 module.exports = {checkPw, validateEmail, validateDate};

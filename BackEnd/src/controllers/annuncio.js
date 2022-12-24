@@ -49,7 +49,6 @@ const salvaAnnuncio = (req,res) => {
                         if(req.body.prezzoAffittoAllOra){
                             newAnnuncio.prezzoAffittoAllOra = req.body.prezzoAffittoAllOra;
                         }   
-                        newAnnuncio.periodoNonDisponibilita = req.body.periodoNonDisponibilita;
                     } else {
                         newAnnuncio.prezzo = req.body.prezzo;
                     }
@@ -194,7 +193,6 @@ const ordinaAnnunci = (req, res) => {
 }
 
 // Verifica che una keyword compaia nel titolo
-
 
 const findByKeyword = (req, res) => {
     const word = req.params.word;

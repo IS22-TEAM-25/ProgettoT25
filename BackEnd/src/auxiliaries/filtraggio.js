@@ -1,39 +1,6 @@
 const { rawListeners } = require("../models/annuncio");
 const auxdata = require("../auxiliaries/dateFunction");
 
-// const totFiltri = 7;
-// const filtri = [];
-// for(let i = 0; i < totFiltri; i++){
-//     filtri[i] = {$exists: true}
-// }
-
-// const commuteFilter = function(body){
-//     for(let i = 0; i < totFiltri; i++){
-//         filtri[i] = {$exists: true}
-//     }
-//     if(body.categoria != undefined){
-//         filtri[0] = body.categoria;
-//     }
-//     if(body.modalitaTransazione != undefined){
-//         filtri[1] = body.modalitaTransazione;
-//     }
-//     if(body.pagamentoOnline != undefined){
-//         filtri[2] = body.pagamentoOnline;
-//     }
-//     if(body.startPrice != undefined && body.endPrice != undefined){
-//         filtri[3] = { $gte: body.startPrice, $lte: body.endPrice};
-//     }
-//     const indirizzoRitiro = {via : {$exists: true}, citta: {$exists: true}, provincia: {$exists: true}};
-//     if(body.citta != undefined){
-//         indirizzoRitiro.citta = body.citta;
-//         filtri[4] = indirizzoRitiro;
-//     }
-//     if(body.provincia != undefined){
-//         indirizzoRitiro.provincia = body.provincia;
-//         filtri[4] = indirizzoRitiro;
-//     }
-// }
-
 const filterArray = function(arrayFiltrato, body){
     const cat = body.categoria;
     const trans = body.transazione;
@@ -120,10 +87,6 @@ const filterArray = function(arrayFiltrato, body){
         }
     }
 
-    //CAMBIO DI ROTTA, DATE CORRETTAMENTE SALVATE
-
-    //Date le supponiamo ben formattate!!!
-
     if(sd != undefined){
         if (sd != null){
             arrayFiltrato = arrayFiltrato.filter(function(arrElement){
@@ -143,7 +106,6 @@ const filterArray = function(arrayFiltrato, body){
     }
 
     return arrayFiltrato;
-
 
 }
 
@@ -219,35 +181,3 @@ module.exports = {
     orderAnnunciByDateDESC, orderAnnunciByMoneyDESC,
     filterByTerm, filterByTermDesc
 };
-
-// //Ipotizzo solo annunci in affitto!!
-// const orderAnnunciByPrezzoGiornalieroDESC = function(annunci){
-//     var annunciordinati = annunci.sort(function(a,b){
-//         b.prezzoAffittoAlGiorno - a.prezzoAffittoAlGiorno;
-//     });
-//     return annunciordinati;
-// }
-
-// //Ipotizzo solo annunci in vendita!!
-// const orderAnnunciByPrezzoDESC = function(annunci){
-//     var annunciordinati = annunci.sort(function(a,b){
-//         b.prezzo - a.prezzo;
-//     });
-//     return annunciordinati;
-// }
-
-// //Ipotizzo solo annunci in affitto!!
-// const orderAnnunciByPrezzoGiornaliero = function(annunci){
-//     var annunciordinati = annunci.sort(function(a,b){
-//         a.prezzoAffittoAlGiorno - b.prezzoAffittoAlGiorno;
-//     });
-//     return annunciordinati;
-// }
-
-// //Ipotizzo solo annunci in vendita!!
-// const orderAnnunciByPrezzo = function(annunci){
-//     var annunciordinati = annunci.sort(function(a,b){
-//         a.prezzo - b.prezzo;
-//     });
-//     return annunciordinati;
-// }

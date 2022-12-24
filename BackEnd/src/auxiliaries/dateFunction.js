@@ -12,8 +12,6 @@ const convertDate2 = (data) => {
     return result;
 }
 
-//To Check all > 0, month <13, day <32
-
 //in formato dd-mm-yyyy
 const validateDate = (data) => {
     return String(data).match(

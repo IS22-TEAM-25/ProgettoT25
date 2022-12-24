@@ -41,20 +41,6 @@ const signUp = (req,res) => {
     })
 }
 
-//api di servizio utilizzata per gestire la pulizia del database
-
-const deleteUserbyEmail = async (req, res) => {
-
-    let data = await User.findOne({email : req.params.email}).exec();
-
-    if(!data){
-        return res.status(404).json({success: false, message: "Utente non presente!"})
-    } else {
-        await User.deleteOne({email: req.params.email});
-        return res.status(204).send();
-    }
-
-}
 
 const eliminaAccount = async (req, res) => {
 
@@ -168,7 +154,6 @@ const aggiornaPassword = (req, res) => {
 module.exports = {
     signUp,
     eliminaAccount,
-    deleteUserbyEmail,
     findAllUsers,
     getUserData,
     aggiornaDati,
