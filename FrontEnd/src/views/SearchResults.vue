@@ -6,12 +6,7 @@
                 <v-row dense>
                     <v-col v-for="annuncio in annunci" :key="annuncio._id" :cols="4">
                         <v-card  :id="annuncio.titolo" @click="vaiAlleSpec(annuncio)" on >
-                            <v-img 
-                            rounded 
-                            :src="require('../assets/vuoto.webp')" 
-                            class="white--text align-end" 
-                            contain>
-                            </v-img>
+                            <v-img  rounded :src="require('../assets/vuoto.webp')"  class="white--text align-end"  contain> </v-img>
                             <v-card >
                             <v-card-title color="grey" class="indigo--text">{{ annuncio.titolo }}</v-card-title>
                                 <v-card-text class="black--text" > 
@@ -41,15 +36,10 @@
                             <!-- capire perchè le recensioni  -->
                                 <v-card >
                                     <span> {{ annuncio.rating }} asdf</span>
-                                    <v-rating
-                                    :value="annuncio.rating"
-                                    color="amber"
-                                    dense
-                                    half-increments
-                                    readonly
-                                    size="14"
-                                    ></v-rating>
-                                    <div class="grey--text"> {{annuncio.inserzionista}} ({{ annuncio.nRecensioni }})</div>
+                                    <v-rating :value="annuncio.rating" color="amber" dense half-increments readonly size="14" ></v-rating>
+                                    <div class="grey--text"> {{annuncio.inserzionista}} 
+                                        {{ annuncio.nRecensioni }}
+                                    </div>
                                     <div>Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</div>
                                 </v-card>
                                 </v-card-text>
