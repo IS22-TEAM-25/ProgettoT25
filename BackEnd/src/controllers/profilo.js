@@ -185,32 +185,26 @@ const aggiornaRating = (req, res) => {
         if(data){
             var recFatte = 0, recRicevute = 0;
             Recensione.find({utenteRecensito : req.body.id}, (err, data) => {
-                if(data){
-                    recRicevute = data.length;
-                    let newRate = 0;
-                    if(recRicevute != 0){
-                        let sum=0;
-                        for(let i =0;i<recRicevute;i++){
-                            sum+=data[i].stelle;
-                        }
-                        newRate = sum/recRicevute;    
+                if (err) return res.status(500).json({Error: err});
+                recRicevute = data.length;
+                let newRate = 0;
+                if(recRicevute != 0){
+                    let sum=0;
+                    for(let i =0;i<recRicevute;i++){
+                        sum+=data[i].stelle;
                     }
-                    Recensione.find({utenteRecensore : req.body.id}, (err, data) => {
-                        if(data){
-                            recFatte = data.length;
-                            Profilo.updateOne({_id : req.body.id}, 
-                                {$set : {recensioniFatte : recFatte, recensioniRicevute : recRicevute, rating : newRate}},
-                                (err, data) => {
-                                    if(err) return res.status(500).json({Error: err});
-                                    return res.status(204).send();            
-                                })
-                        } else {
-                            if (err) return res.status(500).json({Error: err});
-                        }
-                    })
-                } else {
-                    if (err) return res.status(500).json({Error: err});
+                    newRate = sum/recRicevute;    
                 }
+                Recensione.find({utenteRecensore : req.body.id}, (err, data) => {
+                    recFatte = data.length;
+                    Profilo.updateOne({_id : req.body.id}, 
+                        {$set : {recensioniFatte : recFatte, recensioniRicevute : recRicevute, rating : newRate}},
+                        (err, data) => {
+                            if(err) return res.status(500).json({Error: err});
+                            return res.status(204).send();            
+                        })
+                    if (err) return res.status(500).json({Error: err});
+                })
             })
         } else {
             if (err) return res.status(500).json({Error: err});
@@ -224,31 +218,26 @@ const aggiornaAnnunciOnline = (req, res) => {
         if(data){
 
             Annuncio.find({inserzionista: req.body.id}, (err, data) => {
-                if(data){
-                    
-                    var n = data.length;
-                    var totAff = 0;
-                    var totVen = 0;
-                    for(let i = 0; i < n; i++){
-                        if(data[i].visibile == true){
-                            if(data[i].modalitaTransazione == "Affitto"){
-                                totAff++;
-                            } else {
-                                totVen++;
-                            }
-                        } 
-                    }
-
-                    Profilo.updateOne({_id : req.body.id},
-                        {$set : {annunciOnlineAffitto : totAff, annunciOnlineVendita : totVen}},
-                        (err, data) => {
-                            if(err) return res.status(500).json({Error: err});
-                            return res.status(204).send();    
-                    })
-
-                } else {
-                    if (err) return res.status(500).json({Error: err});
+                if (err) return res.status(500).json({Error: err});
+                var n = data.length;
+                var totAff = 0;
+                var totVen = 0;
+                for(let i = 0; i < n; i++){
+                    if(data[i].visibile == true){
+                        if(data[i].modalitaTransazione == "Affitto"){
+                            totAff++;
+                        } else {
+                            totVen++;
+                        }
+                    } 
                 }
+
+                Profilo.updateOne({_id : req.body.id},
+                    {$set : {annunciOnlineAffitto : totAff, annunciOnlineVendita : totVen}},
+                    (err, data) => {
+                        if(err) return res.status(500).json({Error: err});
+                        return res.status(204).send();    
+                })
             })
         } else {
             if (err) return res.status(500).json({Error: err});
@@ -262,9 +251,6 @@ const aggiornaStatisticheVendita = (req, res) => {
         if(data){
             Transazione.find({venditore: req.body.id}, (err, data) => {
                 if(data) {
-                    if(data[0] == undefined){
-                        return res.status(404).json({success: false, message: "Nessuna transazione completat da id " + req.body.id})        
-                    }
 
                     var totaleTransazioniCompletate = data.length;
                     var guadagniAff = 0, guadagniVend = 0, venditeCompletate = 0;
@@ -304,11 +290,9 @@ const aggiornaStatisticheVendita = (req, res) => {
 const aggiornaStatisticheAcquisti = (req, res) => {
     Profilo.findById(req.body.id, (err, data) => {
         if(data){
-            if(data.length == 0){
-                return res.status(404).json({success: false, message: "Nessun profilo con id " + req.body.id})
-            }
             var spesi = 0;
             Transazione.find({acquirente : req.body.id}, (err, data) => {
+                if(err) return res.status(500).json({Error: err});
                 if(data){
                     for(let i = 0; i < data.length; i++){
                         spesi+=data[i].costo;

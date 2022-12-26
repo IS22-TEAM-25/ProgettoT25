@@ -1,5 +1,6 @@
 
-const checkPw = function(pass){
+const checkPw = function(password){
+    const pass = '' + password;
     if(pass.length < 8 ){
         return false;
     }
@@ -7,7 +8,7 @@ const checkPw = function(pass){
     if(pass.includes("!") || pass.includes("£")
     || pass.includes("%") || pass.includes("?")
     || pass.includes("=") || pass.includes("^")
-    || pass.include("€")){
+    || pass.includes("€")){
         return true;
     } else {
         return false;

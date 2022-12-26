@@ -14,7 +14,7 @@ const filterArray = function(arrayFiltrato, body){
     const ed = body.endDate;
 
     if(cit != undefined){
-        if(cit != null){
+        if(cit != "null"){
             arrayFiltrato = arrayFiltrato.filter(function(arrElement){
                 if(arrElement.indirizzoRitiro == undefined){
                     return false;
@@ -26,7 +26,7 @@ const filterArray = function(arrayFiltrato, body){
     }
 
     if(prov != undefined){
-        if(prov != null){
+        if(prov != "null"){
             arrayFiltrato = arrayFiltrato.filter(function(arrElement){
                 if(arrElement.indirizzoRitiro == undefined){
                     return false;
@@ -40,7 +40,7 @@ const filterArray = function(arrayFiltrato, body){
     //filtriamo su prezzo e prezzoGiornaliero!
 
     if(sp != undefined){
-        if (sp != null){
+        if (sp != "null"){
             arrayFiltrato = arrayFiltrato.filter(function(arrElement) {
                 if(arrElement.modalitaTransazione == "Affitto"){
                     return arrElement.prezzoAffittoAlGiorno >= sp;
@@ -52,7 +52,7 @@ const filterArray = function(arrayFiltrato, body){
     }
 
     if(ep != undefined){
-        if (ep != null){
+        if (ep != "null"){
             arrayFiltrato = arrayFiltrato.filter(function(arrElement) {
                 if(arrElement.modalitaTransazione == "Affitto"){
                     return arrElement.prezzoAffittoAlGiorno <= ep;
@@ -64,7 +64,7 @@ const filterArray = function(arrayFiltrato, body){
     }
 
     if(cat != undefined){
-        if(cat != null){
+        if(cat != "null"){
             arrayFiltrato = arrayFiltrato.filter(function(arrElement){
                 return arrElement.categoria == cat;
             })
@@ -72,7 +72,7 @@ const filterArray = function(arrayFiltrato, body){
     }
 
     if(trans != undefined){
-        if( trans != null){
+        if( trans != "null"){
             arrayFiltrato = arrayFiltrato.filter(function(arrElement){
                 return arrElement.modalitaTransazione == trans;
             })
@@ -80,7 +80,7 @@ const filterArray = function(arrayFiltrato, body){
     }
 
     if(pon != undefined){
-        if(pon != null){
+        if(pon != "null"){
             arrayFiltrato = arrayFiltrato.filter(function(arrElement){
                 return ('' + arrElement.pagamentoOnline) == pon;
             })
@@ -88,7 +88,7 @@ const filterArray = function(arrayFiltrato, body){
     }
 
     if(sd != undefined){
-        if (sd != null){
+        if (sd != "null"){
             arrayFiltrato = arrayFiltrato.filter(function(arrElement){
                 const d = new Date(sd);
                 return arrElement.dataPubblicazione >= d;
@@ -97,7 +97,7 @@ const filterArray = function(arrayFiltrato, body){
     }
 
     if(ed != undefined){
-        if (ed != null){
+        if (ed != "null"){
             arrayFiltrato = arrayFiltrato.filter(function(arrElement){
                 const d = new Date(ed);
                 return arrElement.dataPubblicazione <= d;
@@ -126,7 +126,7 @@ const orderAnnunciByMoney = function(annunci){
             return a.prezzoAffittoAlGiorno - b.prezzo;
         } else if (a.modalitaTransazione == "Vendita" && b.modalitaTransazione == "Affitto") {
             return a.prezzo - b.prezzoAffittoAlGiorno;
-        } else if (a.modalitaTransazione == "Vendita" && b.modalitaTransazione == "Vendita") {
+        } else /*if (a.modalitaTransazione == "Vendita" && b.modalitaTransazione == "Vendita")*/ {
             return a.prezzo - b.prezzo;
         }
     });
@@ -154,7 +154,7 @@ const orderAnnunciByMoneyDESC = function(annunci){
             return b.prezzoAffittoAlGiorno - a.prezzo;
         } else if (b.modalitaTransazione == "Vendita" && a.modalitaTransazione == "Affitto") {
             return b.prezzo - a.prezzoAffittoAlGiorno;
-        } else if (b.modalitaTransazione == "Vendita" && a.modalitaTransazione == "Vendita") {
+        } else /*if (b.modalitaTransazione == "Vendita" && a.modalitaTransazione == "Vendita")*/ {
             return b.prezzo - a.prezzo;
         }
     });

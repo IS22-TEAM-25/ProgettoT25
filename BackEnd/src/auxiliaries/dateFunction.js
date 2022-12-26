@@ -1,13 +1,13 @@
 //da dd-mm-yyyy a yyyy-mm-dd
 const convertDate = (data) => {
-    const [day, month, year] = date.split('-');
+    const [day, month, year] = data.split('-');
     const result = [year, month, day].join('-');
     return result;
 }
 
 //da yyyy-mm-dd a dd-mm-yyyy
 const convertDate2 = (data) => {
-    const [year, month, day] = date.split('-');
+    const [year, month, day] = data.split('-');
     const result = [day, month, year].join('-');
     return result;
 }
