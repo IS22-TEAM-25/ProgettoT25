@@ -19,7 +19,7 @@
         <v-text-field
         v-model="keyword"
         
-        placeholder="bicicletta, drone, consolle..."
+        placeholder="Cerca con una keyword oppure premi sulla lente e mostra tutto!"
         color="accent acccent-3"
         filled
         dense
