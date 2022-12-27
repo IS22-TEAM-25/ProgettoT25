@@ -1,6 +1,5 @@
 const app = require('./src/server.js');
 const mongoose = require('mongoose');
-
 const port = process.env.PORT || 8080;
 
 mongoose.connect(

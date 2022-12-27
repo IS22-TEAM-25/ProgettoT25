@@ -66,7 +66,7 @@ const salvaAnnuncio = (req,res) => {
     })
 }
 
-const findAllArticles = (req,res) => {
+const findAllArticles = async (req,res) => {
     Annuncio.find({},(err,data)=>{
         if(data){
             if(data[0] == undefined){

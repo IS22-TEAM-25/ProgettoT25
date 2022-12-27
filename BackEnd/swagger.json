@@ -400,7 +400,7 @@
                         "properties" : {
                             "titolo" : {
                                 "type" : "string",
-                                "example" : "Libro 'Promessi Sposi' edizione integrale"
+                                "example" : "Libro 'Promessi Sposi'"
                             },
                             "inserzionista" : {
                                 "type" : "string",
@@ -700,7 +700,7 @@
                         "properties" : {
                             "titolo" : {
                                 "type" : "string",
-                                "example" : "Libro 'Promessi Sposi' edizione integrale"
+                                "example" : "Libro 'Promessi Sposi'"
                             },
                             "descrizione" : {
                                 "type" : "string",
@@ -938,7 +938,7 @@
                             "prodotto" : {
                                 "type" : "string",
                                 "summary" : "Il titolo dell'annuncio.",
-                                "example" : "Libro 'Promessi Sposi' edizione integrale"
+                                "example" : "Libro 'Promessi Sposi'"
                             },
                             "pagamentoEffettuato" : {
                                 "type" : "boolean",
@@ -1533,7 +1533,7 @@
                         "properties" : {
                             "annuncio" : {
                                 "type" : "string",
-                                "example" : "Libro 'Promessi Sposi' edizione integrale"
+                                "example" : "Libro 'Promessi Sposi'"
                             },
                             "id" : {
                                 "type" : "string",
@@ -1584,7 +1584,7 @@
                         "properties" : {
                             "annuncio" : {
                                 "type" : "string",
-                                "example" : "Libro 'Promessi Sposi' edizione integrale"
+                                "example" : "Libro 'Promessi Sposi'"
                             },
                             "id" : {
                                 "type" : "string",
