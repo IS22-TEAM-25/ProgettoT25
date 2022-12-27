@@ -35,11 +35,9 @@
                             </v-card>
                             <!-- capire perchè le recensioni  -->
                                 <v-card >
-                                    <span> {{ annuncio.rating }} asdf</span>
-                                    <v-rating :value="annuncio.rating" color="amber" dense half-increments readonly size="14" ></v-rating>
-                                    <div class="grey--text"> {{annuncio.inserzionista}} 
-                                        {{ annuncio.nRecensioni }}
-                                    </div>
+                                    <span> {{ getRating(annuncio) }} asdf</span>
+                                    <v-rating :value="getRating(annuncio)" color="amber" dense half-increments readonly size="14" ></v-rating>
+                                    <div class="grey--text"> {{annuncio.inserzionista}}  {{ getNumRecensioni(annuncio) }} </div>
                                     <div>Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</div>
                                 </v-card>
                                 </v-card-text>
@@ -105,29 +103,29 @@ export default {
         formattedDate(date) {
             return format(new Date(date), 'dd/M/YYY')
         },
-        async getRating(annuncio) {
+        async getRating(A) {
             try {
-                fetch(this.$url + "api/p/getp/" + annuncio.inserzionista, {
+                fetch(this.$url + "api/p/getp/" + A.inserzionista, {
                     method: 'GET',
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) => resp.json())
                 .then(data => {
-                    annuncio.rating = data.rating;
-                    console.log("Il rating per", annuncio.inserzionista, " è di ", annuncio.rating)
+                    console.log("Il rating per", A.inserzionista, " è di ", data.rating)
+                    return data.rating;
                 })
             } catch (error) {
                 console.error(error);
             }
         },  
-        async getNumRecensioni(annuncio) {
+        async getNumRecensioni(A) {
             try {
-                fetch(this.$url + "api/p/getp/" + annuncio.inserzionista, {
+                fetch(this.$url + "api/p/getp/" + A.inserzionista, {
                     method: 'GET',
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) => resp.json())
                 .then(data => {
-                console.log("il numero di recensioni ricevute da ", annuncio.inserzionista, " sono:", data.recensioniRicevute)
-                annuncio.nRecensioni = data.recensioniRicevute;
+                console.log("il numero di recensioni ricevute da ", A.inserzionista, " sono:", data.recensioniRicevute)
+                return data.recensioniRicevute;
                 })
             } catch (error) {
                 console.error(error);
@@ -243,11 +241,6 @@ export default {
             } 
         }
         this.$store.commit('isResultView', true);
-        for (let i = 0; i < this.$store.state.annunci.length; i++) {
-            this.getRating(this.$store.state.annunci[i]);
-            console.log(i);
-            console.log(this.$store.state.annunci[i].rating)
-        }
         // this.$store.state.annunci.forEach(annuncio => this.getRating(annuncio));
         // this.$store.state.annunci.forEach(annuncio => this.getNumRecensioni(annuncio));
         this.$store.state.dallaWL = false;

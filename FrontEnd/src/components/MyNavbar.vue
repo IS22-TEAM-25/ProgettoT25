@@ -37,11 +37,7 @@
     </v-app-bar>
       <v-navigation-drawer v-if="search" v-model="filtri" app class ="primary" >
         <v-list>
-              <h1 
-              justify="center" 
-              align="center"
-              >FILTRI
-            </h1>
+              <h1 justify="center" align="center">FILTRI</h1>
           <v-divider></v-divider>  
         <v-list-item>
           <!-- ORDINAMENTO -->
