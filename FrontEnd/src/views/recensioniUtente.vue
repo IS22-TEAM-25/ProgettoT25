@@ -34,7 +34,7 @@
                 <v-list-item-content>
                     <v-row>
 
-                        <v-col>
+                        <v-col @click="vaiAlProfilo(recensione.utenteRecensore)">
                             {{ recensione.utenteRecensore }}
                         </v-col>                    
                         <v-col>
@@ -87,7 +87,7 @@
             <v-list-item v-for="recensione in recensioniEntrata" :key="recensione._id">
                 <v-list-item-content>
                     <v-row>
-                        <v-col>
+                        <v-col @click="vaiAlProfilo(recensione.utenteRecensito)">
                             {{ recensione.utenteRecensito }}
                         </v-col>                    
                         <v-col>
@@ -124,6 +124,10 @@ export default {
         
     },
     methods: {
+        vaiAlProfilo(utenteSelezionato) {
+            this.$store.state.utenteSelezionato = utenteSelezionato;
+            this.$router.push("/profiloEsterno");
+        },
         async getRecensioniUtente() {
             try {
                 fetch(this.$url + "api/r/getrv/" + this.$store.state.datiUtente.username, {

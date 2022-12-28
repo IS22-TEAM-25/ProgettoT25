@@ -19,7 +19,7 @@
             <v-list-item v-for="annuncio in annunciUtente" :key="annuncio.titolo">
                 <v-list-item-content>
                     <v-row>
-                        <v-col>
+                        <v-col @click="vaiAlleSpec(annuncio)" >
                             {{ annuncio.titolo }}
                         </v-col>                    
                         <v-col>
@@ -60,6 +60,10 @@ export default {
 
     },
     methods: {
+        vaiAlleSpec(annuncio) {
+            this.$store.state.annuncioSelezionato = annuncio;
+            this.$router.push("/productspecs");
+        }, 
         async getAnnunciUtente() {
             try {
                 fetch(this.$url + "api/a/getau/" + this.$store.state.datiUtente.username, {

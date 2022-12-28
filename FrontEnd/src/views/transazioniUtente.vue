@@ -36,7 +36,7 @@
                         <v-col>
                             {{ transazione.prodotto }}
                         </v-col>                    
-                        <v-col>
+                        <v-col @click="vaiAlProfilo(transazione.venditore)">
                             {{ transazione.venditore }}
                         </v-col>
                         <v-col>
@@ -86,7 +86,7 @@
                         <v-col>
                             {{ transazione.prodotto }}
                         </v-col>                    
-                        <v-col>
+                        <v-col @click="vaiAlProfilo(transazione.acquirente)">
                             {{ transazione.acquirente }}
                         </v-col>
                         <v-col>
@@ -122,6 +122,10 @@ export default {
         
     },
     methods: {
+        vaiAlProfilo(utenteSelezionato) {
+            this.$store.state.utenteSelezionato = utenteSelezionato;
+            this.$router.push("/profiloEsterno");
+        },
         async getTransazioniUtente() {
             try {
                 fetch(this.$url + "api/t/gettv/" + this.$store.state.datiUtente.username, {

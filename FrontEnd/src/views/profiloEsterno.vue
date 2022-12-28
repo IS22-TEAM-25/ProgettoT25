@@ -137,7 +137,7 @@
     <v-card>
         <v-list>
             <v-list-item>
-                <v-list-item-content>
+                <v-list-item-content v-if="this.profiloUtenteEsterno.annunciOnlineAffitto + this.profiloUtenteEsterno.annunciOnlineVendita != 0">
                     <v-row>
                         <v-col>
                             <h3 align="center"> ANNUNCI ONLINE </h3>
@@ -158,6 +158,13 @@
                         <v-divider vertical="true" width="2"></v-divider>  
                         <v-col>
                             PREZZO VENDITA / PREZZO AFFITTO AL GIORNO
+                        </v-col>
+                    </v-row>
+                </v-list-item-content>
+                <v-list-item-content v-else>
+                    <v-row>
+                        <v-col>
+                            <h3 align="center"> NESSUN ANNUNCIO ONLINE </h3>
                         </v-col>
                     </v-row>
                 </v-list-item-content>
@@ -188,7 +195,7 @@
             </v-list-item>
         </v-list>
     </v-card>
-    <v-card>
+    <v-card v-if="recensioniUscita.lenght!=0">
         <v-row>
             <v-col>
                 <v-row>
@@ -226,9 +233,7 @@
                 <v-list-item-content>
                     <v-row>
 
-                        <v-col>
-                            {{ recensione.utenteRecensore }}
-                        </v-col> 
+                        <v-col @click="vaiAlProfilo(recensione.utenteRecensore)"> {{ recensione.utenteRecensore }}  </v-col> 
                         <v-divider vertical="true" width="2"></v-divider>                   
                         <v-col>
                             <v-rating :value="recensione.stelle" color="amber" dense half-increments readonly size="14">
@@ -249,6 +254,11 @@
         </v-list>
         </v-col>
     </v-row>
+    </v-card>
+    <v-card v-else>
+         <v-col>
+                <h3 align="center"> 0 RECENSIONI RICEVUTE</h3>
+        </v-col>
     </v-card>
 </v-container>
 
@@ -273,6 +283,10 @@ export default {
         }
     },
     methods: {
+        vaiAlProfilo(utenteSelezionato) {
+            this.$store.state.utenteSelezionato = utenteSelezionato;
+            this.created()
+        },
         formattedDate(date) {
             return format(new Date(date), 'dd/M/YYY');
         },
@@ -336,7 +350,14 @@ export default {
             } catch (error) {
                 console.error(error);
             }
-        }
+        },
+        async created() {
+        await this.getProfile();
+        await this.getUtente();
+        await this.getRecensioniUtente();
+        await this.getAnnunciUtente()
+        
+    }
     },
     async created() {
         await this.getProfile();

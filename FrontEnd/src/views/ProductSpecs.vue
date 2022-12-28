@@ -18,30 +18,8 @@
         <v-card >
           <h2 @click="vaiAlProfilo(annuncio.inserzionista)"> {{ annuncio.inserzionista }}  </h2>
           <v-rating :value="this.rating" color="amber" dense half-increments readonly size="14"></v-rating>
-          <h4>Categoria: {{ annuncio.categoria }} _________________________________________ Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</h4>
-          
-
-          <v-list-item v-for="recensione in this.recensioniUscita" :key="recensione._id">
-                <v-list-item-content>
-                    <v-row>
-
-                        <v-col>
-                            {{ recensione.utenteRecensore }}
-                        </v-col>                    
-                        <v-col>
-                            <v-rating :value="recensione.stelle" color="amber" dense half-increments readonly size="14">
-                        
-                            </v-rating>
-                        </v-col> 
-                        <v-col cols="5">                      
-                            {{ recensione.descrizione }}
-                        </v-col>
-                        <v-col>
-                            {{ formattedDate(recensione.dataRecensione) }}
-                        </v-col>
-                    </v-row>
-                </v-list-item-content>
-            </v-list-item>
+          <h4>Categoria: {{ annuncio.categoria }} </h4>
+          <h4> Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</h4>
 
         </v-card>
       </v-col>
@@ -248,7 +226,6 @@ import format from 'date-fns/format';
 export default {
   data () {
     return {
-      recensioniUscita: [],
       valid: false,
       inWL: false,
       validMessaggio: false,
@@ -275,21 +252,6 @@ export default {
             this.$store.state.utenteSelezionato = utenteSelezionato;
             this.$router.push("/profiloEsterno");
         },
-    async getRecensioniInserzionista() {
-          try {
-              fetch(this.$url + "api/r/getrv/" + this.annuncio.inserzionista, {
-                  method: 'GET',
-                  headers: { 
-                      "Content-Type": "application/json", 
-                  }
-              }).then((resp) => resp.json())
-                  .then(data => {
-                      this.recensioniUscita = data;
-                  })
-          } catch (error) {
-              console.error(error);
-          }
-      },
     async creaTransazione() {
       let costoEffettivo = this.$store.state.annuncioSelezionato.prezzo;
       if (this.$store.state.annuncioSelezionato.modalitaTransazione === "Affitto") {
