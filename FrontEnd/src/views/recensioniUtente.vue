@@ -155,49 +155,11 @@ export default {
         },
         formattedDate(date) {
             return format(new Date(date), 'dd/M/YYY');
-        },
-        // getTitolo(item) {
-        //     console.log(item)
-        //     try {
-        //         fetch(this.$url + "api/r/getrt/" + item.transazioneRecensita, {
-        //             method: 'GET',
-        //             headers: { 
-        //                 "Content-Type": "application/json", 
-        //             }
-        //         }).then((resp) => resp.json())
-        //             .then(data => {
-        //                 item.titolo = data.prodotto;
-        //                 console.log("titolo: ", item.titolo)
-        //             })
-        //     } catch (error) {
-        //         console.error(error);
-        //     }
-        // }
+        }
     },
 
     async created() {
-        await this.getRecensioniUtente();  
-    //     console.log(" ciao sono crreated")
-    //     this.recensioniEntrata.forEach((item) =>{
-    //         console.log(item)
-    //         try {
-    //             fetch(this.$url + "api/r/getrt/" + item.transazioneRecensita, {
-    //                 method: 'GET',
-    //                 headers: { 
-    //                     "Content-Type": "application/json", 
-    //                 }
-    //             }).then((resp) => resp.json())
-    //                 .then(data => {
-    //                     item.titolo = data.prodotto;
-    //                     console.log("titolo: ", item.titolo)
-    //                 })
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     })
-    //     console.log(" ciao sono crreated1")
-    // //   this.recensioniUscita.forEach(this.getTitolo())
-    //   console.log(" ciao sono crreated2")
+        await this.getRecensioniUtente();
     },
 
 }

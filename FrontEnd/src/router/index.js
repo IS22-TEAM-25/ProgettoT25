@@ -12,6 +12,7 @@ import classificaUtenti from '../views/classificaUtenti.vue'
 import modificaAnnunci from '../views/modificaAnnunci.vue'
 import recensioniUtente from '../views/recensioniUtente.vue'
 import transazioniUtente from '../views/transazioniUtente.vue'
+import profiloEsterno from '../views/profiloEsterno.vue'
 
 
 Vue.use(VueRouter)
@@ -77,6 +78,11 @@ const routes = [
     path: '/transazioniUtente',
     name: 'transazioniUtente',
     component: transazioniUtente
+  },
+  {
+    path: '/profiloEsterno',
+    name: 'profiloEsterno',
+    component: profiloEsterno
   }
 ]
 

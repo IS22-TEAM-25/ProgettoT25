@@ -14,6 +14,7 @@ const getDefaultState = () => {
     datiUtente: {},
     profiloUtente: {},
     annuncioSelezionato: {},
+    utenteSelezionato: {},
     prodottoInBallo: false,
     transazione:{},
     dallaWL: false,

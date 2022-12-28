@@ -16,7 +16,7 @@
         </v-img>
         
         <v-card >
-          <h2 > {{ annuncio.inserzionista }}  </h2>
+          <h2 @click="vaiAlProfilo(annuncio.inserzionista)"> {{ annuncio.inserzionista }}  </h2>
           <v-rating :value="this.rating" color="amber" dense half-increments readonly size="14"></v-rating>
           <h4>Categoria: {{ annuncio.categoria }} _________________________________________ Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</h4>
           
@@ -271,6 +271,10 @@ export default {
     }
   },
   methods: {
+    vaiAlProfilo(utenteSelezionato) {
+            this.$store.state.utenteSelezionato = utenteSelezionato;
+            this.$router.push("/profiloEsterno");
+        },
     async getRecensioniInserzionista() {
           try {
               fetch(this.$url + "api/r/getrv/" + this.annuncio.inserzionista, {
