@@ -21,7 +21,7 @@
             </v-list-item>
             <v-list-item v-for="utente in utenti" :key="utente.username">
                 <v-list-item-content>
-                    <v-row>
+                    <v-row @click="vaiAlProfilo(utente._id)">
                         <v-col>
                             {{ utente._id }}
                         </v-col>                    
@@ -68,6 +68,10 @@ export default {
         }
     },
     methods: {
+        vaiAlProfilo(utenteSelezionato) {
+            this.$store.state.utenteSelezionato = utenteSelezionato;
+            this.$router.push("/profiloEsterno");
+        },
         async getBest() {
             try {
                 fetch(this.$url + "api/p/getbest/", {

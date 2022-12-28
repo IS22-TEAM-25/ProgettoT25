@@ -43,7 +43,7 @@
                             {{ formattedDate(transazione.dataTransazione) }}
                         </v-col>
                         <v-col>
-                            {{ transazione.costo }}€
+                            {{  euro.format(transazione.costo) }}
                         </v-col>
                     </v-row>
                 </v-list-item-content>
@@ -93,7 +93,7 @@
                             {{ formattedDate(transazione.dataTransazione) }}
                         </v-col>
                         <v-col>
-                            {{ transazione.costo }}€
+                            {{  euro.format(transazione.costo)}}
                         </v-col>
                     </v-row>
                 </v-list-item-content>
@@ -110,7 +110,12 @@ export default {
     data() {
         return {
             transazioniUscita: [],
-            transazioniEntrata: []
+            transazioniEntrata: [],
+            euro:
+                new Intl.NumberFormat('en-DE', {
+                    style: 'currency',
+                    currency: 'EUR',
+            })
         }
     },
     computed: {

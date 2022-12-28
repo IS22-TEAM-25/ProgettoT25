@@ -135,6 +135,60 @@
         </v-window>
     </v-card>
     <v-card>
+        <v-list>
+            <v-list-item>
+                <v-list-item-content>
+                    <v-row>
+                        <v-col>
+                            <h3 align="center"> ANNUNCI ONLINE </h3>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            NOME ANNUNCIO
+                        </v-col>
+                        <v-divider vertical="true" width="2"></v-divider>                    
+                        <v-col>
+                            CATEGORIA
+                        </v-col>
+                        <v-divider vertical="true" width="2"></v-divider> 
+                        <v-col>
+                            VENDITA o AFFITTO
+                        </v-col>
+                        <v-divider vertical="true" width="2"></v-divider>  
+                        <v-col>
+                            PREZZO VENDITA / PREZZO AFFITTO AL GIORNO
+                        </v-col>
+                    </v-row>
+                </v-list-item-content>
+            </v-list-item>
+            <v-list-item v-for="annuncio in annunciUtente" :key="annuncio.titolo">
+                <v-list-item-content>
+                    <v-row v-if="annuncio.visibile" @click="vaiAlleSpec(annuncio)">
+                        <v-col>
+                            {{ annuncio.titolo }}
+                        </v-col>                   
+                        <v-divider vertical="true" width="2"></v-divider>    
+                        <v-col>
+                            {{ annuncio.categoria }}
+                        </v-col>
+                        <v-divider vertical="true" width="2"></v-divider>
+                        <v-col>
+                            {{ annuncio.modalitaTransazione }}
+                        </v-col>
+                        <v-divider vertical="true" width="2"></v-divider>   
+                        <v-col v-if="annuncio.modalitaTransazione === 'Vendita'">
+                            {{ euro.format(annuncio.prezzo)}}
+                        </v-col>
+                        <v-col v-else>
+                            {{ euro.format(annuncio.prezzoAffittoAlGiorno)}}
+                        </v-col>
+                    </v-row>
+                </v-list-item-content>
+            </v-list-item>
+        </v-list>
+    </v-card>
+    <v-card>
         <v-row>
             <v-col>
                 <v-row>
@@ -196,49 +250,6 @@
         </v-col>
     </v-row>
     </v-card>
-    <v-card>
-        <v-list>
-            <v-list-item>
-                <v-list-item-content>
-                    <v-row>
-                        <v-col>
-                            <h3 align="center"> ANNUNCI ONLINE </h3>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            NOME ANNUNCIO
-                        </v-col>
-                        <v-divider vertical="true" width="2"></v-divider>                    
-                        <v-col>
-                            CATEGORIA
-                        </v-col>
-                        <v-divider vertical="true" width="2"></v-divider>   
-                        <v-col>
-                            PREZZO
-                        </v-col>
-                    </v-row>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item v-for="annuncio in annunciUtente" :key="annuncio.titolo">
-                <v-list-item-content v-if="annuncio.visibile">
-                    <v-row>
-                        <v-col>
-                            {{ annuncio.titolo }}
-                        </v-col>                   
-                        <v-divider vertical="true" width="2"></v-divider>    
-                        <v-col>
-                            {{ annuncio.categoria }}
-                        </v-col>
-                        <v-divider vertical="true" width="2"></v-divider>   
-                        <v-col>
-                            {{ annuncio.prezzo }}
-                        </v-col>
-                    </v-row>
-                </v-list-item-content>
-            </v-list-item>
-        </v-list>
-    </v-card>
 </v-container>
 
 </template>
@@ -264,6 +275,10 @@ export default {
     methods: {
         formattedDate(date) {
             return format(new Date(date), 'dd/M/YYY');
+        },
+        vaiAlleSpec(annuncio) {
+            this.$store.state.annuncioSelezionato = annuncio;
+            this.$router.push("/productspecs");
         },
         async getProfile() {
             console.log("dentro get profile")
