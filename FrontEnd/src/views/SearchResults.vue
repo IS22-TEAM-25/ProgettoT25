@@ -7,6 +7,8 @@
                     <v-col v-for="annuncio in annunci" :key="annuncio._id" :cols="4">
                         <v-card  :id="annuncio.titolo" @click="vaiAlleSpec(annuncio)" on >
                             <v-img  rounded :src="require('../assets/vuoto.webp')"  class="white--text align-end"  contain> </v-img>
+                            <!-- <v-img  v-if='annuncio.modalitaTransazione = "Affitto"' rounded :src="require('../assets/affitto.png')"  class="white--text align-end"  contain> </v-img>
+                            <v-img  v-else rounded :src="require('../assets/vendita.jpg')"  class="white--text align-end"  contain> </v-img> -->
                             <v-card >
                             <v-card-title color="grey" class="indigo--text">{{ annuncio.titolo }}</v-card-title>
                                 <v-card-text class="black--text" > 
@@ -80,8 +82,8 @@ export default {
             new Intl.NumberFormat('en-DE', {
                 style: 'currency',
                 currency: 'EUR',
-            })
-
+            }),
+            rate : 0
         }
     },
     computed:  {
@@ -103,7 +105,7 @@ export default {
         formattedDate(date) {
             return format(new Date(date), 'dd/M/YYY')
         },
-        async getRating(A) {
+        getRating(A) {
             try {
                 fetch(this.$url + "api/p/getp/" + A.inserzionista, {
                     method: 'GET',

@@ -45,26 +45,10 @@
                     </v-row>
                     <v-row>
                         <v-col cols="4">
-                            <span class="font-weight-regular">Indirizzo:</span>
-                        </v-col>
-                        <v-col>
-                            <span class="font-weight-light"> {{ this.utenteEsterno.indirizzo }} </span> 
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col cols="4">
                             <span class="font-weight-regular">Email:</span>
                         </v-col>
                         <v-col>
                             <span class="font-weight-light"> {{ this.utenteEsterno.email }} </span> 
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col cols="4">
-                            <span class="font-weight-regular">Metodo di Pagamento:</span>
-                        </v-col>
-                        <v-col>
-                            <span class="font-weight-light"> {{ this.utenteEsterno.metodiPagamento }} </span> 
                         </v-col>
                     </v-row>
                     <v-row>
@@ -76,7 +60,7 @@
                         </v-col>
                     </v-row>
                 </v-col>
-                <v-divider vertical="true" width="2" color="black"></v-divider>
+                <v-divider :vertical=true width="2" color="black"></v-divider>
                 <v-col>
                     <v-row>
                         <h2 style="padding:0px 0px 0px 10px">   Descrizione Profilo:</h2>
@@ -137,7 +121,7 @@
     <v-card>
         <v-list>
             <v-list-item>
-                <v-list-item-content v-if="this.profiloUtenteEsterno.annunciOnlineAffitto + this.profiloUtenteEsterno.annunciOnlineVendita != 0">
+                <v-list-item-content v-if="(this.profiloUtenteEsterno.annunciOnlineAffitto + this.profiloUtenteEsterno.annunciOnlineVendita) != 0">
                     <v-row>
                         <v-col>
                             <h3 align="center"> ANNUNCI ONLINE </h3>
@@ -147,15 +131,15 @@
                         <v-col>
                             NOME ANNUNCIO
                         </v-col>
-                        <v-divider vertical="true" width="2"></v-divider>                    
+                        <v-divider :vertical=true width="2"></v-divider>                    
                         <v-col>
                             CATEGORIA
                         </v-col>
-                        <v-divider vertical="true" width="2"></v-divider> 
+                        <v-divider :vertical=true width="2"></v-divider> 
                         <v-col>
                             VENDITA o AFFITTO
                         </v-col>
-                        <v-divider vertical="true" width="2"></v-divider>  
+                        <v-divider :vertical=true width="2"></v-divider>  
                         <v-col>
                             PREZZO VENDITA / PREZZO AFFITTO AL GIORNO
                         </v-col>
@@ -170,20 +154,20 @@
                 </v-list-item-content>
             </v-list-item>
             <v-list-item v-for="annuncio in annunciUtente" :key="annuncio.titolo">
-                <v-list-item-content>
+                <v-list-item-content v-if="annuncio.visibile">
                     <v-row v-if="annuncio.visibile" @click="vaiAlleSpec(annuncio)">
                         <v-col>
                             {{ annuncio.titolo }}
                         </v-col>                   
-                        <v-divider vertical="true" width="2"></v-divider>    
+                        <v-divider :vertical=true width="2"></v-divider>    
                         <v-col>
                             {{ annuncio.categoria }}
                         </v-col>
-                        <v-divider vertical="true" width="2"></v-divider>
+                        <v-divider :vertical=true width="2"></v-divider>
                         <v-col>
                             {{ annuncio.modalitaTransazione }}
                         </v-col>
-                        <v-divider vertical="true" width="2"></v-divider>   
+                        <v-divider :vertical=true width="2"></v-divider>   
                         <v-col v-if="annuncio.modalitaTransazione === 'Vendita'">
                             {{ euro.format(annuncio.prezzo)}}
                         </v-col>
@@ -214,15 +198,15 @@
                         <v-col>
                             UTENTE RECENSORE
                         </v-col>
-                        <v-divider vertical="true" width="2"></v-divider>               
+                        <v-divider :vertical=true width="2"></v-divider>               
                         <v-col>
                             STELLE
                         </v-col>
-                        <v-divider vertical="true" width="2"></v-divider>
+                        <v-divider :vertical=true width="2"></v-divider>
                         <v-col cols="5">
                             DESCRIZIONE
                         </v-col>
-                        <v-divider vertical="true" width="2"></v-divider>
+                        <v-divider :vertical=true width="2"></v-divider>
                         <v-col>
                             DATA
                         </v-col>
@@ -234,17 +218,17 @@
                     <v-row>
 
                         <v-col @click="vaiAlProfilo(recensione.utenteRecensore)"> {{ recensione.utenteRecensore }}  </v-col> 
-                        <v-divider vertical="true" width="2"></v-divider>                   
+                        <v-divider :vertical=true width="2"></v-divider>                   
                         <v-col>
                             <v-rating :value="recensione.stelle" color="amber" dense half-increments readonly size="14">
                         
                             </v-rating>
                         </v-col> 
-                        <v-divider vertical="true" width="2"></v-divider>
+                        <v-divider :vertical=true width="2"></v-divider>
                         <v-col cols="5">                      
                             {{ recensione.descrizione }}
                         </v-col>
-                        <v-divider vertical="true" width="2" ></v-divider>
+                        <v-divider :vertical=true width="2" ></v-divider>
                         <v-col>
                             {{ formattedDate(recensione.dataRecensione) }}
                         </v-col>
@@ -351,19 +335,17 @@ export default {
                 console.error(error);
             }
         },
-        async created() {
-        await this.getProfile();
-        await this.getUtente();
-        await this.getRecensioniUtente();
-        await this.getAnnunciUtente()
-        
-    }
+
     },
     async created() {
         await this.getProfile();
         await this.getUtente();
-        await this.getRecensioniUtente();
-        await this.getAnnunciUtente()
+        if(this.profiloUtenteEsterno.recensioniRicevute != 0){
+            await this.getRecensioniUtente();
+        }
+        if((this.profiloUtenteEsterno.annunciOnlineVendita + this.profiloUtenteEsterno.annunciOnlineAffitto)!= 0){
+            await this.getAnnunciUtente()
+        }
         
     }
 }

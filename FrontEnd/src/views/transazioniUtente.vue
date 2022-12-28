@@ -6,7 +6,7 @@
                 <v-spacer></v-spacer>
 
                     <v-col>
-                        <h3> TRANSAZIONI IN ENTRATA</h3>
+                        <h3> STORICO TRANSAZIONI</h3>
                     </v-col>
                     <v-spacer></v-spacer>
                 </v-row>
@@ -50,7 +50,7 @@
             </v-list-item>
         </v-list>
         </v-col>
-        <v-divider vertical="true" width="2" color="black"></v-divider>
+        <v-divider :vertical=true width="2" color="black"></v-divider>
         <v-col>
             <v-row>
                 <v-spacer></v-spacer>

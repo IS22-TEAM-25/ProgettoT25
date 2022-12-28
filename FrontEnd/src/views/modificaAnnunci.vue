@@ -71,8 +71,14 @@ export default {
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) => resp.json())
                     .then(data => {
-                        this.annunciUtente = data;
-                        console.log(data);
+                        if(data.success == false){
+                            console.log("nessun annuncio")
+                            this.annunciUtente = []
+                        } else {
+                            console.log("qualche annuncio")
+                            this.annunciUtente = data;
+                            console.log(data);
+                        }
                     })
             } catch (error) {
                 console.error(error);

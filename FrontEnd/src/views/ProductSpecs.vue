@@ -2,7 +2,6 @@
   <v-container class="productspecs">
     <v-row flex>
       <v-col>
-
         <h1>{{ annuncio.titolo }}</h1>
       </v-col>
       <v-col v-if="utenteLoggato">
@@ -69,7 +68,7 @@
             </v-col>
           </v-row>
           
-          <v-container v-if="pagamentoOnlineAbilitato">
+        <v-container v-if="pagamentoOnlineAbilitato">
           <v-row>
             <v-col>
               <h3>
@@ -136,6 +135,34 @@
               </span>
             </v-col>
           </v-row>  
+        </v-container>
+
+        <v-container v-else>
+          <v-row v-if="!pagamentoOnlineAbilitato">
+            <v-col>
+              <v-textarea
+                    label="Messaggio"
+                    v-model="mesaggioAllInserzionista"
+                    :counter="250" 
+                    :rules="required"
+                    no-resize
+                ></v-textarea>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-btn v-if="!pagamentoOnlineAbilitato"
+              block 
+              color="green"
+              class="white--text"
+              rounded
+              :disabled="!validMessaggio"
+              @click="contatta">
+                Contatta {{ annuncio.inserzionista }} !!
+              </v-btn>
+            </v-col>
+            
+          </v-row>
         </v-container>
 
         </v-container>
@@ -215,7 +242,7 @@
       </v-card>
       </v-col>
     </v-row>
-    </v-container>
+  </v-container>
 </template>
   
 <script>
@@ -245,6 +272,9 @@ export default {
       required: [
         v => !!v || 'Campo obbligatorio'
       ],
+      maxLength : [
+        v => 'Non si possono eccedere 250 caratteri' || v.length <= 250
+      ]
     }
   },
   methods: {
@@ -256,6 +286,7 @@ export default {
       let costoEffettivo = this.$store.state.annuncioSelezionato.prezzo;
       if (this.$store.state.annuncioSelezionato.modalitaTransazione === "Affitto") {
         var differenceInTime = new Date(this.endDate) - new Date(this.startDate);
+        console.log(this.endDate + "\n" + this.startDate)
         var totalDays = differenceInTime / (1000 * 3600 * 24);
         costoEffettivo = this.$store.state.annuncioSelezionato.prezzoAffittoAlGiorno * (totalDays);
         console.log("il numero tot di giorni è: ", totalDays)
@@ -428,7 +459,23 @@ export default {
     },
     controllaSeInWl () {
       this.inWL = this.$store.state.profiloUtente.whishList.includes(this.$store.state.annuncioSelezionato.titolo);
+      console.log("valore di inWL" + this.inWL)
     },
+    async getProfile() {
+      console.log("dentro get profile")
+      try {
+        fetch(this.$url + "api/p/getp/" + this.$store.state.profiloUtente._id, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" }
+        }).then((resp) => resp.json())
+        .then(data => {
+          this.$store.commit('prendiProfiloUtente', data);
+          console.log(data);
+        })
+      } catch(error) {
+        console.error(error); 
+      }
+    }, 
     async getRating() {
       console.log("dentro get rating")
       try {
@@ -463,11 +510,18 @@ export default {
     
   },
   async created() {
-    await this.getRating();
-    this.getRecensioniInserzionista();
+    await this.getProfile();
+    //this.getRecensioniInserzionista();
     this.controllaSeInWl()
     this.$store.state.noNavBar = false
     this.$store.state.search = false
+    if(this.$store.state.profiloUtente.whishList.includes(this.$store.state.annuncioSelezionato.titolo)){
+      console.log("THEN")
+      this.inWL = true;
+    } else {
+      console.log("ELSE")
+      this.inWL = false;
+    }
   }
 
 }

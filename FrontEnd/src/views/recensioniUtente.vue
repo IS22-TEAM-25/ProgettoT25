@@ -53,7 +53,7 @@
             </v-list-item>
         </v-list>
         </v-col>
-        <v-divider vertical="true" width="2" color="black"></v-divider>
+        <v-divider :vertical=true width="2" color="black"></v-divider>
         <v-col>
             <v-row>
                 <v-spacer></v-spacer>

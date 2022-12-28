@@ -184,7 +184,7 @@
   <v-list-item>
       <v-checkbox
         v-model="pagamentoOnline"
-        label="Pagamento Online"
+        label="Solo con pagamento Online"
         color="indigo">
       </v-checkbox>
     </v-list-item>

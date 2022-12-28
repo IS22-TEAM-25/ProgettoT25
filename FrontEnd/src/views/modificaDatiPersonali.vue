@@ -76,7 +76,7 @@
                         </v-col>
                     </v-row>
                 </v-col>
-                <v-divider vertical="true" width="2" color="black"></v-divider>
+                <v-divider :vertical=true width="2" color="black"></v-divider>
                 <v-col>
                     <v-row>
                         <h2 style="padding:0px 0px 0px 10px">   Descrizione Profilo:</h2>
