@@ -19,3 +19,4 @@ const schema = new mongoose.Schema({
 const Transazione = mongoose.model('Transazione', schema); 
 
 module.exports = Transazione;
+

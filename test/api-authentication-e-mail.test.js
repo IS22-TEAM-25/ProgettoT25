@@ -14,9 +14,23 @@ beforeAll( async () => {
     jest.setTimeout(20000)
     app.locals.db = await mongoose.connect(process.env.DB_URI)
     server = app.listen(process.env.PORT || 8080);
+    //creiamo un utente per simulare l'autenticazione
+    const utente1 = {
+        username : "utentediprova",
+        nome : "Mario",
+        cognome : "Rossi",
+        datadinascita : "2002-02-17",
+        indirizzo : "via Roma 12, Povo, Trento",
+        email : "mailutentediprova@gmail.com",
+        password : "prova123!",
+        metodiPagamento : "utentediprovapagamenti@gmail.com"
+    }
+    await request(process.env.START + "/").post("api/u/signUp").send(utente1);
+
 })
 
-afterAll(() => {
+afterAll(async () => {
+    await request(process.env.START + "/").delete("api/u/deleteu/utentediprova").set('x-access-token',jwt.sign( {username: 'utentediprova', id : 'utentediprova'}, process.env.SUPER_SECRET, {expiresIn: 23200} ))
     mongoose.connection.close(true);
     server.close();
 })
@@ -24,8 +38,8 @@ afterAll(() => {
 describe('Suite testing api endpoint "api/l/signIn"', () => {
 
     const inputBody = {
-        username : "admin",
-        password : "admin"
+        username : "utentediprova",
+        password : "prova123!"
     };
 
     test("Chiamata all'API corretta", async() => {
@@ -45,8 +59,8 @@ describe('Suite testing api endpoint "api/l/signIn"', () => {
     })
 
     test("Chiamata all'API con username esistente, ma password errata", async() => {
-        inputBody.username = "admin"
-        inputBody.password = "passworderrata"
+        inputBody.username = "utentediprova"
+        inputBody.password = "passwordsbagliata123!"
         const response = await request(process.env.START + "/").post("api/l/signIn").send(inputBody);
         expect(response.statusCode).toEqual(400);
         expect(response.body.success).toEqual(false);
@@ -58,7 +72,7 @@ describe('Suite testing api endpoint "api/l/signIn"', () => {
 describe('Suite testing api endpoint "api/l/ripristino"', () => {
 
     const inputBody = {
-        username : "admin"
+        username : "utentediprova"
     };
 
     test("Chiamata all'API corretta", async() => {
@@ -67,12 +81,12 @@ describe('Suite testing api endpoint "api/l/ripristino"', () => {
         expect(response.body.success).toEqual(true);
         expect(response.body.message).toEqual(expect.any(String));
 
-        //ripristino della password per admin
+        //ripristino della password per 'utentediprova'
         const ripristino = {
-            username : "admin",
-            password : "admin"
+            username : "utentediprova",
+            password : "prova123!"
         }
-        var token = jwt.sign( {username: 'admin', id : 'admin'}, process.env.SUPER_SECRET, {expiresIn: 23200} );
+        var token = jwt.sign( {username: 'utentediprova', id : 'utentediprova'}, process.env.SUPER_SECRET, {expiresIn: 23200} );
         const resp = await request(process.env.START + "/").patch("api/u/updatep").set('x-access-token',token).send(ripristino);
     })
 
@@ -88,7 +102,7 @@ describe('Suite testing api endpoint "api/l/ripristino"', () => {
 
 describe('Suite testing api endpoint "api/l/logout"', () => {
 
-    var token = jwt.sign( {username: 'admin', id : 'admin'}, process.env.SUPER_SECRET, {expiresIn: 23200} );
+    var token = jwt.sign( {username: 'utentediprova', id : 'utentediprova'}, process.env.SUPER_SECRET, {expiresIn: 23200} );
 
     test("Chiamata all'API corretta", async() => {
         const response = await request(process.env.START + "/").get("api/l/logout").set('x-access-token', token);
