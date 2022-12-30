@@ -1,8 +1,8 @@
 <template>
-    <v-container >
+    <v-container v-if="esiste">
         <v-card class="elevation-3">
         <v-window class="spacing-playground pa-6">
-            <v-row>
+            <v-row >
                 <v-col>
                     
                     <v-row>
@@ -245,7 +245,9 @@
         </v-col>
     </v-card>
 </v-container>
-
+<v-container v-else>
+    <h1>Account eliminato!</h1>
+</v-container>
 </template>
 
 
@@ -255,6 +257,7 @@ import format from 'date-fns/format';
 export default {
     data(){
         return {
+            esiste : true,
             annunciUtente: [],
             recensioniUscita: [],
             utenteEsterno: {},
@@ -269,9 +272,10 @@ export default {
     methods: {
         vaiAlProfilo(utenteSelezionato) {
             this.$store.state.utenteSelezionato = utenteSelezionato;
-            this.created()
+            // this.created()
         },
         formattedDate(date) {
+            console.log(date)
             return format(new Date(date), 'dd/M/YYY');
         },
         vaiAlleSpec(annuncio) {
@@ -287,8 +291,13 @@ export default {
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) => resp.json())
                     .then(data => {
-                        console.log(data, " data dentro getprofile");
-                        this.profiloUtenteEsterno = data;
+                        if(data.success === false) {
+                            this.esiste = false;
+                        }
+                        else {
+                            console.log(data, " data dentro getprofile");
+                            this.profiloUtenteEsterno = data;
+                        }
                     })
             } catch (error) {
                 console.error(error);

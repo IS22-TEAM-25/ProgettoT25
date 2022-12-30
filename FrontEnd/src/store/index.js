@@ -91,7 +91,8 @@ export default new Vuex.Store({
           prezzoAffittoMin: 0,
           prezzoAffittoMax: Number.MAX_SAFE_INTEGER,
           categoria: ''
-      }
+      },
+      state.keyword = ''
     },
     setPubblicazioneAnnuncio(state) {
       state.pubblicazioneAnnuncio = {

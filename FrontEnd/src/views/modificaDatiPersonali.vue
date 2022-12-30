@@ -160,6 +160,18 @@
                 <v-col>
                     <modificaDatiUtente/>
                 </v-col>
+                <v-col>
+                    <v-row>
+                    <v-btn 
+                    color="red"
+                    class="white--text"
+                    rounded
+                    @click="eliminaAccount"
+                    >
+                    Elimina Account
+                    </v-btn>
+                    </v-row>
+                </v-col>
                 <v-spacer></v-spacer>
                 <v-col>
                    <modificaDescrizione/>
@@ -193,21 +205,58 @@ export default {
         formattedDate(date) {
             return format(new Date(date), 'dd/M/YYY');
         },
-        async getProfile() {
-            console.log("dentro get profile")
+        // async getProfile() {
+        //     console.log("dentro get profile")
+        //     try {
+        //         fetch(this.$url + "api/p/getp/" + this.username, {
+        //             method: 'GET',
+        //             headers: { "Content-Type": "application/json" }
+        //         }).then((resp) => resp.json())
+        //             .then(data => {
+        //                 this.$store.commit('prendiProfiloUtente', data);
+        //                 console.log(data);
+        //             })
+        //     } catch (error) {
+        //         console.error(error);
+        //     }
+        // },
+        async eliminaProfilo() {
             try {
-                fetch(this.$url + "api/p/getp/" + this.username, {
-                    method: 'GET',
-                    headers: { "Content-Type": "application/json" }
-                }).then((resp) => resp.json())
-                    .then(data => {
-                        this.$store.commit('prendiProfiloUtente', data);
-                        console.log(data);
+                fetch(this.$url + "api/p/deletep/" + this.$store.state.datiUtente.username, {
+                    method: 'DELETE',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-access-token": this.$store.getters.token,
+                    },
+                }).then(() => {
+                        console.log("Eliminato il profilo di ", this.$store.state.datiUtente.username);
                     })
             } catch (error) {
                 console.error(error);
             }
+        },
+        async eliminaUtente() {
+            try {
+                fetch(this.$url + "api/u/deleteu/" + this.$store.state.datiUtente.username, {
+                    method: 'DELETE',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-access-token": this.$store.getters.token,
+                    },
+                }).then(() => {
+                        console.log("Eliminato l'utente ", this.$store.state.datiUtente.username);
+                    })
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        eliminaAccount() {
+            this.eliminaProfilo();
+            this.eliminaUtente();
+            this.$store.commit('resetState', this.$store.state);
+            this.$router.push("/");
         }
+        
     },  
     computed: {
         

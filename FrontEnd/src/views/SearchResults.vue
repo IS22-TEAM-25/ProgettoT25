@@ -37,9 +37,9 @@
                             </v-card>
                             <!-- capire perchè le recensioni  -->
                                 <v-card >
-                                    <span> {{ getRating(annuncio) }} asdf</span>
-                                    <v-rating :value="getRating(annuncio)" color="amber" dense half-increments readonly size="14" ></v-rating>
-                                    <div class="grey--text"> {{annuncio.inserzionista}}  {{ getNumRecensioni(annuncio) }} </div>
+                                    <!-- <span> {{ annuncio.rating }} asdf</span> -->
+                                    <!-- <v-rating :value="annuncio.rating" color="amber" dense half-increments readonly size="14" ></v-rating> -->
+                                    <div class="grey--text"> {{annuncio.inserzionista}} </div>
                                     <div>Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</div>
                                 </v-card>
                                 </v-card-text>
@@ -93,6 +93,9 @@ export default {
             //annunci: state => state.annunci
         }),
         annunci() {
+            console.log(this.filtraggio)
+            console.log(this.$store.state.annunci)
+
             return this.$store.state.annunci.filter(this.filtraggio)
         },
         annuncioRating() {
@@ -105,34 +108,34 @@ export default {
         formattedDate(date) {
             return format(new Date(date), 'dd/M/YYY')
         },
-        getRating(A) {
-            try {
-                fetch(this.$url + "api/p/getp/" + A.inserzionista, {
-                    method: 'GET',
-                    headers: { "Content-Type": "application/json" }
-                }).then((resp) => resp.json())
-                .then(data => {
-                    console.log("Il rating per", A.inserzionista, " è di ", data.rating)
-                    return data.rating;
-                })
-            } catch (error) {
-                console.error(error);
-            }
-        },  
-        async getNumRecensioni(A) {
-            try {
-                fetch(this.$url + "api/p/getp/" + A.inserzionista, {
-                    method: 'GET',
-                    headers: { "Content-Type": "application/json" }
-                }).then((resp) => resp.json())
-                .then(data => {
-                console.log("il numero di recensioni ricevute da ", A.inserzionista, " sono:", data.recensioniRicevute)
-                return data.recensioniRicevute;
-                })
-            } catch (error) {
-                console.error(error);
-            }
-        },  
+        // getRating(A) {
+        //     try {
+        //         fetch(this.$url + "api/p/getp/" + A.inserzionista, {
+        //             method: 'GET',
+        //             headers: { "Content-Type": "application/json" }
+        //         }).then((resp) => resp.json())
+        //         .then(data => {
+        //             console.log("Il rating per", A.inserzionista, " è di ", data.rating)
+        //             return data.rating;
+        //         })
+        //     } catch (error) {
+        //         console.error(error);
+        //     }
+        // },  
+        // async getNumRecensioni(A) {
+        //     try {
+        //         fetch(this.$url + "api/p/getp/" + A.inserzionista, {
+        //             method: 'GET',
+        //             headers: { "Content-Type": "application/json" }
+        //         }).then((resp) => resp.json())
+        //         .then(data => {
+        //         console.log("il numero di recensioni ricevute da ", A.inserzionista, " sono:", data.recensioniRicevute)
+        //         return data.recensioniRicevute;
+        //         })
+        //     } catch (error) {
+        //         console.error(error);
+        //     }
+        // },  
         async getfa() {
             try {
                 fetch(this.endpoint, {
@@ -171,11 +174,19 @@ export default {
                     if (this.$store.state.annunci[0] === undefined) {
                         this.isEmpty=true; 
                         this.message = this.$store.state.annunci.message;
+                        this.$store.state.keyword = '';
                         return;
                     }
-                    console.log()
                     this.$store.state.annunci = this.$store.state.annunci.filter(a => a.visibile === true)
-                    this.$store.state.annunci = this.$store.state.annunci.filter(a => a.inserzionista !== this.$store.state.datiUtente.username);
+                    // this.$store.state.annunci = this.$store.state.annunci.filter(a => a.inserzionista !== this.$store.state.datiUtente.username);
+                    console.log(this.$store.state.annunci)
+                    if (this.$store.state.annunci.length == '0') {
+                        this.isEmpty=true; 
+                        this.message = "Nessun annuncio con la keyword ricercata";
+                        this.$store.state.keyword = '';
+                        return;
+                    }
+                    this.$store.state.keyword = '';
                     })
                 } catch(error) {
                     console.error(error); // If there is any error you will catch them here
@@ -228,9 +239,9 @@ export default {
     async created() {
         console.log(this.$store.state.dallaWL)
         if(!this.$store.state.dallaWL) {
-            console.log("ciaoooo")
             this.cat = this.$store.state.filtri.categoria;
             if(this.$store.state.keyword !== '') {
+                console.log(this.$store.state.keyword)
                 this.endpoint = this.API_URL + "getkt/" + this.$store.state.keyword;
                 await this.getAll();
             }
@@ -248,7 +259,7 @@ export default {
         this.$store.state.dallaWL = false;
     },
     updated() {
-        if(this.$store.state.annunci[0] === undefined) this.isEmpty = true;
+        if(this.$store.state.annunci.length == '0') this.isEmpty = true;
     } 
 }
 </script>

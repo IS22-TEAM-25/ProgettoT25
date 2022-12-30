@@ -6,6 +6,9 @@
                     <v-row>
                         <v-col>
                             NOME ANNUNCIO
+                        </v-col>   
+                        <v-col>
+                            <v-spacer></v-spacer>
                         </v-col>                  
                         <v-col>
                             VISIBILE

@@ -1,5 +1,5 @@
 <template>
-    <router-link to="/">
+    <router-link @click="home" to="/">
         <span>
              <v-img 
              :src="require('@/assets/spottyLogo.png')" 
@@ -8,3 +8,15 @@
          </span>
     </router-link> 
 </template>
+
+<script>
+
+export default {
+    methods: {
+       home () {
+        this.$store.commit('resettaFiltri');
+       }
+
+    }
+}
+</script>
