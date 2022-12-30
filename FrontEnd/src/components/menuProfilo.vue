@@ -105,7 +105,7 @@ export default {
         async logout() {
             console.log(this.$store.state.datiUtente.token);
             try {
-                fetch("http://localhost:8080/api/l/logout", {
+                fetch(this.$url + "api/l/logout", {
                     method: 'GET',
                     headers: { 
                       "Content-Type": "application/json",
