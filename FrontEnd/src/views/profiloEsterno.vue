@@ -278,22 +278,24 @@ export default {
             this.$store.state.annuncioSelezionato = annuncio;
             this.$router.push("/productspecs");
         },
-        async getProfile() {
+        getProfile() {
             console.log("dentro get profile")
             try {
+                console.log(this.$store.state.utenteSelezionato)
                 fetch(this.$url + "api/p/getp/" + this.$store.state.utenteSelezionato, {
                     method: 'GET',
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) => resp.json())
                     .then(data => {
+                        console.log(data, " data dentro getprofile");
                         this.profiloUtenteEsterno = data;
                     })
             } catch (error) {
                 console.error(error);
             }
         },
-        async getUtente() {
-            console.log("dentro get profile")
+        getUtente() {
+            console.log("dentro get utente")
             try {
                 fetch(this.$url + "api/u/getu/" + this.$store.state.utenteSelezionato, {
                     method: 'GET',
@@ -315,7 +317,11 @@ export default {
                     }
                 }).then((resp) => resp.json())
                     .then(data => {
-                        this.recensioniUscita = data;
+                        if (data.success === false) {
+                            this.recensioniUscita = [];
+                        } else {
+                            this.recensioniUscita = data;
+                        }
                     })
             } catch (error) {
                 console.error(error);
@@ -328,8 +334,11 @@ export default {
                     headers: { "Content-Type": "application/json" }
                 }).then((resp) => resp.json())
                     .then(data => {
-                        this.annunciUtente = data;
-                        console.log(data);
+                        if (data.success === false) {
+                            this.annunciUtente = [];
+                        } else {
+                            this.annunciUtente = data;
+                        }
                     })
             } catch (error) {
                 console.error(error);
@@ -340,7 +349,9 @@ export default {
     async created() {
         await this.getProfile();
         await this.getUtente();
-        if(this.profiloUtenteEsterno.recensioniRicevute != 0){
+        console.log(this.profiloUtenteEsterno, " recensioni ricevute")
+        console.log(this.$store.state.utenteSelezionato, " recensioni ricevute")
+        if(this.profiloUtenteEsterno.recensioniRicevute !== 0){
             await this.getRecensioniUtente();
         }
         if((this.profiloUtenteEsterno.annunciOnlineVendita + this.profiloUtenteEsterno.annunciOnlineAffitto)!= 0){

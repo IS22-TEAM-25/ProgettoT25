@@ -90,7 +90,7 @@
         
         <v-list-item>
           <!-- FILTRO PREZZO VENDITA -->
-          <h4>Prezzo vendita: </h4>
+          <h4>Prezzo: </h4>
         </v-list-item>
         <v-list-item>
           <v-row>
@@ -114,11 +114,22 @@
 
               >
               </v-text-field>
-          </v-col>
+            </v-col>
           </v-row>
-      </v-list-item>
+        </v-list-item>
         <v-list-item>
-           <!-- FILTRO PREZZO AFFITTO   -->
+          <v-row>
+
+          <v-col>
+          
+            <p class="font-weight-thin">
+          Il prezzo nel caso di affitto è riferito al costo giornaliero.
+          </p>
+          </v-col>
+                  </v-row>
+        </v-list-item>
+        <!-- <v-list-item>
+           FILTRO PREZZO AFFITTO   
           <h4>Prezzo affitto giornaliero: </h4>
         </v-list-item>
        
@@ -146,7 +157,7 @@
         </v-list-item>
         <v-list-item>
          
-        </v-list-item>
+        </v-list-item> -->
         <v-divider></v-divider>
         <!-- CATEGORIA SELEZIONE -->
         <v-list-item>
@@ -328,6 +339,7 @@ export default {
       if(this.$store.state.pubblicazioneAnnuncio === undefined) {
         this.$store.commit('setPubblicazioneAnnuncio');
       }
+    this.categories.push("tutte");
     this.$categories.forEach(v => this.categories.push(v.title));
   },
   updated() {

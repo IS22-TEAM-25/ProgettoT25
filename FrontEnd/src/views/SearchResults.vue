@@ -6,9 +6,9 @@
                 <v-row dense>
                     <v-col v-for="annuncio in annunci" :key="annuncio._id" :cols="4">
                         <v-card  :id="annuncio.titolo" @click="vaiAlleSpec(annuncio)" on >
-                            <v-img  rounded :src="require('../assets/vuoto.webp')"  class="white--text align-end"  contain> </v-img>
-                            <!-- <v-img  v-if='annuncio.modalitaTransazione = "Affitto"' rounded :src="require('../assets/affitto.png')"  class="white--text align-end"  contain> </v-img>
-                            <v-img  v-else rounded :src="require('../assets/vendita.jpg')"  class="white--text align-end"  contain> </v-img> -->
+                            <!-- <v-img  rounded :src="require('../assets/vuoto.webp')"  class="white--text align-end"  contain> </v-img> -->
+                            <v-img  v-if="annuncio.modalitaTransazione === 'Affitto'" rounded :src="require('../assets/affitto.png')"  class="white--text align-end"  contain> </v-img>
+                            <v-img  v-else rounded :src="require('../assets/vendita.jpg')"  class="white--text align-end"  contain> </v-img>
                             <v-card >
                             <v-card-title color="grey" class="indigo--text">{{ annuncio.titolo }}</v-card-title>
                                 <v-card-text class="black--text" > 
@@ -206,14 +206,14 @@ export default {
             }
           }
           if (x.modalitaTransazione === "Affitto") {
-            if (x.prezzoAffittoAlGiorno < this.$store.state.filtri.prezzoAffittoMin) {
+            if (x.prezzoAffittoAlGiorno < this.$store.state.filtri.prezzoVenditaMin) {
                 ok = false;
             }
-            if (x.prezzoAffittoAlGiorno > this.$store.state.filtri.prezzoAffittoMax) {
+            if (x.prezzoAffittoAlGiorno > this.$store.state.filtri.prezzoVenditaMax) {
                 ok = false;
             }
           }
-          if (this.$store.state.filtri.categoria !== '' && x.categoria !== this.$store.state.filtri.categoria) {
+          if (this.$store.state.filtri.categoria !== '' && this.$store.state.filtri.categoria !== 'tutte' && x.categoria !== this.$store.state.filtri.categoria) {
             ok = false;
             }
             if(this.$store.state.filtri.pagamentoOnline && this.$store.state.filtri.pagamentoOnline === true) {

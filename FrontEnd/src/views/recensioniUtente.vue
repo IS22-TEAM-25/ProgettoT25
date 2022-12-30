@@ -137,7 +137,11 @@ export default {
                     }
                 }).then((resp) => resp.json())
                     .then(data => {
-                        this.recensioniUscita = data;
+                        if (data.success === false) {
+                            this.recensioniUscita = [];
+                        } else {
+                            this.recensioniUscita = data;
+                        }
                     })
             } catch (error) {
                 console.error(error);
@@ -151,7 +155,11 @@ export default {
                     }
                 }).then((resp) => resp.json())
                     .then(data => {
-                        this.recensioniEntrata = data;
+                        if (data.success === false) {
+                            this.recensioniEntrata = [];
+                        } else {
+                            this.recensioniEntrata = data;
+                        }
                     })
             } catch (error) {
                 console.error(error);

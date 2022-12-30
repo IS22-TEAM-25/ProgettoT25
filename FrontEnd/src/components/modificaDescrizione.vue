@@ -29,6 +29,7 @@
                 >
                   <v-textarea
                     class="submit"
+                    color="accent acccent-3"
                     label="Descrizione"
                     v-model="descrizione"
                     :counter="250" 
@@ -44,9 +45,9 @@
             <v-btn
             
             color="indigo"
-            class="white--text"
+            class="submit white--text"
             rounded
-            :disabled:="!valid"
+            :disabled="!valid"
             @click="aggiornaDescrizione"
             >
             Aggiorna Descrizione
@@ -75,7 +76,8 @@ export default {
             valid: false,
             descrizione:'',
             descrizioneRules: [
-                v => v.length <= 250 || "Descrizione troppo lunga!" 
+                v => v.length <= 250 || "Descrizione troppo lunga!",
+                v => !!v || "Descrizione obbligatoria"
             ]
         }
     },

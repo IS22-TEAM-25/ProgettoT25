@@ -136,7 +136,11 @@ export default {
                     }
                 }).then((resp) => resp.json())
                     .then(data => {
-                        this.transazioniUscita = data;
+                        if(data.success === false){
+                            this.transazioniUscita = [];
+                        } else {
+                            this.transazioniUscita = data;
+                        }
                     })
             } catch (error) {
                 console.error(error);
@@ -150,7 +154,11 @@ export default {
                     }
                 }).then((resp) => resp.json())
                     .then(data => {
-                        this.transazioniEntrata = data;
+                        if(data.success === false){
+                            this.transazioniEntrata = [];
+                        } else {
+                            this.transazioniEntrata = data;
+                        }
                     })
             } catch (error) {
                 console.error(error);

@@ -81,6 +81,13 @@
                   ></v-text-field>
                 </v-col>
             </v-row>
+            <v-row>
+              <v-col>
+                <v-alert v-if="errorEmail" type="error" justify="center">
+                          {{ message }}
+                        </v-alert>
+              </v-col>
+            </v-row>
             </v-container>
           </v-card-text>
           <v-card-actions>
@@ -165,6 +172,9 @@ export default {
     data() {
         return {   
             valid: false,
+            message: '',
+            emailIniziale: '',
+            errorEmail: false,
             dialog: false,
             nomeU: '',
             cognomeU: '',
@@ -203,14 +213,16 @@ export default {
                 this.$store.state.datiUtente.cognome = this.cognomeU;
             }
             if(this.dobU === '') {
-                this.dobU = this.$store.state.datiUtente.dataDiNascita;
+                this.dobU = this.$store.state.datiUtente.datadinascita;
             } else {
-                this.$store.state.datiUtente.dataDiNascita = this.dobU;
+                this.$store.state.datiUtente.datadinascita = this.dobU;
             }
             if(this.emailU === '') {
                 this.emailU = this.$store.state.datiUtente.email;
             } else {
-                this.$store.state.datiUtente.emailU = this.emailU;
+              this.emailIniziale = this.$store.state.datiUtente.email;
+                this.$store.state.datiUtente.email = this.emailU;
+
             }
             if(this.indirizzoU === '') {
                 this.indirizzoU = this.$store.state.datiUtente.indirizzo;
@@ -235,7 +247,7 @@ export default {
                     })
                 }).then(() => {
                     console.log("Dati utente aggiornati per ", this.$store.state.datiUtente.nome, "!");
-                    this.dialog = false
+                    // this.dialog = false
                 })
             } catch (error) {
                 console.error(error); // If there is any error you will catch them here
@@ -251,9 +263,19 @@ export default {
                         username: this.$store.state.datiUtente.username,
                         email: this.emailU
                     })
-                }).then(() => {
+                }).then((data) => {
+                  if (data.status === 409) {
+
+                    this.message = "Mail già presa.";
+                    this.errorEmail = true;
+                    this.emailU =  this.emailIniziale;
+                    this.$store.state.datiUtente.email = this.emailIniziale;
+                  } else 
+                  {
                     console.log("Email aggiornata per ", this.$store.state.datiUtente.nome, "!");
                     this.dialog = false
+                    this.errorEmail = false
+                  }
                 })
             } catch (error) {
                 console.error(error); // If there is any error you will catch them here

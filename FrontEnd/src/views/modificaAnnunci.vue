@@ -100,6 +100,7 @@ export default {
                     console.log("Visibilià aggiornata per ", annuncio.titolo, "!")
                     this.contaAnnunciOnline(this.$store.state.datiUtente.username);
                     this.getProfile();
+                    this.getAnnunciUtente();
                 })
             } catch (error) {
                 console.error(error); // If there is any error you will catch them here
@@ -115,15 +116,16 @@ export default {
                     console.log("Annuncio con titolo", annuncio.titolo, " è stato eliminato!")
                     this.contaAnnunciOnline(this.$store.state.datiUtente.username);
                     this.getProfile();
+                    this.getAnnunciUtente();
                 })
                 } catch(error) {
                     console.error(error); // If there is any error you will catch them here
                 }
         }
     },
-    updated() {
-        this.getAnnunciUtente();
-    },
+    // updated() {
+    //     this.getAnnunciUtente();
+    // },
     created() {
       this.getAnnunciUtente();  
     },

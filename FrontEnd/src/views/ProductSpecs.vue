@@ -11,12 +11,23 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-img rounded :src="require('../assets/vuoto.webp')" class="white--text align-end" max-width="400" >
-        </v-img>
-        
+        <!-- <v-img rounded :src="require('../assets/vuoto.webp')" class="white--text align-end" max-width="400" >
+        </v-img> -->
+        <v-img  v-if="annuncio.modalitaTransazione === 'Affitto'" rounded :src="require('../assets/affitto.png')"  class="white--text align-end"  contain> </v-img>
+                            <v-img  v-else rounded :src="require('../assets/vendita.jpg')"  class="white--text align-end"  contain> </v-img>
         <v-card >
           <h2 @click="vaiAlProfilo(annuncio.inserzionista)"> {{ annuncio.inserzionista }}  </h2>
-          <v-rating :value="this.rating" color="amber" dense half-increments readonly size="14"></v-rating>
+          <v-row>
+            <v-col cols="3">
+              <v-rating :value="this.rating" color="amber" dense half-increments readonly size="14"></v-rating>
+            </v-col>
+            <v-col>
+              {{ this.rating.toFixed(1) }}
+            </v-col>
+
+
+
+          </v-row>
           <h4>Categoria: {{ annuncio.categoria }} </h4>
           <h4> Pubblicato il: {{ formattedDate(annuncio.dataPubblicazione) }}</h4>
 
@@ -87,6 +98,7 @@
                     :value="startDate" 
                     label="Data Iniziale" 
                     type="date"
+                    readonly
                     v-on="on">
                   </v-text-field>
                   </template>
@@ -104,6 +116,7 @@
                   :value="endDate" 
                   label="Data Finale" 
                   type="date"
+                  readonly
                   v-on="on" 
                   :rules="required">
                 </v-text-field>
@@ -136,15 +149,16 @@
             </v-col>
           </v-row>  
         </v-container>
-
         <v-container v-else>
+          <v-form class="submit" v-model="validMessaggio">
           <v-row v-if="!pagamentoOnlineAbilitato">
             <v-col>
               <v-textarea
                     label="Messaggio"
+                    color="accent acccent-3"
                     v-model="mesaggioAllInserzionista"
                     :counter="250" 
-                    :rules="required"
+                    :rules="required.concat(maxLength)"
                     no-resize
                 ></v-textarea>
             </v-col>
@@ -163,9 +177,11 @@
             </v-col>
             
           </v-row>
+        </v-form>
         </v-container>
-
-        </v-container>
+        
+        
+      </v-container>
         <v-container v-else>
           <v-row>
             <v-col>
@@ -203,8 +219,9 @@
                     label="Messaggio"
                     v-model="mesaggioAllInserzionista"
                     :counter="250" 
-                    :rules="required"
+                    :rules="required.concat(maxLength)"
                     no-resize
+                    color="accent acccent-3"
                 ></v-textarea>
             </v-col>
           </v-row>
@@ -273,7 +290,7 @@ export default {
         v => !!v || 'Campo obbligatorio'
       ],
       maxLength : [
-        v => 'Non si possono eccedere 250 caratteri' || v.length <= 250
+        v => v.length <= 250 || 'Non si possono eccedere 250 caratteri'
       ]
     }
   },
@@ -511,7 +528,7 @@ export default {
   },
   async created() {
     await this.getProfile();
-    //this.getRecensioniInserzionista();
+    await this.getRating();
     this.controllaSeInWl()
     this.$store.state.noNavBar = false
     this.$store.state.search = false
