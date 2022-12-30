@@ -361,7 +361,9 @@ export default {
         }
     },
     created() {
-        this.$categories.forEach(v => this.categories.push(v.title));
+      this.$categories.forEach(v => this.categories.push(v.title));
+      this.$store.commit('isResultView', false);
+
     },
 }
 

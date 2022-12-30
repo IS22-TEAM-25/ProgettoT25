@@ -169,6 +169,7 @@ export default {
         },
     },
     created() {
+      this.$store.commit('isResultView', false);
       this.getTransazioniUtente();  
     },
 }

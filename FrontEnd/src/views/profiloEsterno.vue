@@ -356,10 +356,9 @@ export default {
 
     },
     async created() {
+        this.$store.commit('isResultView', false);
         await this.getProfile();
         await this.getUtente();
-        console.log(this.profiloUtenteEsterno, " recensioni ricevute")
-        console.log(this.$store.state.utenteSelezionato, " recensioni ricevute")
         if(this.profiloUtenteEsterno.recensioniRicevute !== 0){
             await this.getRecensioniUtente();
         }

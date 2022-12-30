@@ -171,6 +171,7 @@ export default {
     },
 
     async created() {
+        this.$store.commit('isResultView', false);
         await this.getRecensioniUtente();
     },
 
