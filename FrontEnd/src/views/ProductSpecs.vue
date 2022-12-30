@@ -435,7 +435,7 @@ export default {
                     subj: "Richiesta Informazioni da " + this.$store.state.datiUtente.username,
                     message: this.mesaggioAllInserzionista
                 })
-            }).then(data => {
+            }).then(() => {
                     this.messaggioInviato = true;
                 })
         } catch (error) {
@@ -460,7 +460,7 @@ export default {
                     id: this.$store.state.datiUtente.username,
                     annuncio : this.$store.state.annuncioSelezionato.titolo
                 })
-            }).then( data => {
+            }).then( () => {
               this.inWL = !this.inWL;
               this.getProfile();
             })

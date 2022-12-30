@@ -69,7 +69,7 @@
           })
 
         }).then((resp) => resp.json())
-        .then(data => {
+        .then(() => {
           this.contaRecensioni(inserzionista);
           this.contaRecensioni(cliente);
         })

@@ -111,7 +111,7 @@ export default {
                       "x-access-token": this.$store.getters.token
                     }
                 }).then((resp) =>resp.json())
-                .then(data => {
+                .then(() => {
                   this.$store.commit('resetState', this.$store.state);
                   this.$router.push('/');
                 })
