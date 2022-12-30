@@ -399,7 +399,6 @@ export default {
         this.$router.push('/userloginsignup');
         return;
       }
-      console.log("Affittato dal ", this.startDate, " al ", this.endDate);
       this.nascondiAnnuncio();
       this.creaTransazione();
       this.$router.push('/userreview')
@@ -407,12 +406,12 @@ export default {
     formattedDate(date) {
       return format(new Date(date), 'dd/M/YYY');
     },
-    async contatta() {
-      if(!this.$store.state.dataAuth.success) {
-          this.$store.state.prodottoInBallo = true;
-          this.$router.push('/userloginsignup');
-          return;
-        }
+    contatta() {
+      if (!this.$store.state.dataAuth.success) {
+        this.$store.state.prodottoInBallo = true;
+        this.$router.push('/userloginsignup');
+        return;
+      }
       try {
           fetch(this.$url + "api/u/getu/" + this.$store.state.annuncioSelezionato.inserzionista, {
               method: 'GET',
