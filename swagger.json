@@ -41,7 +41,7 @@
             "description" : "API per gestire l'invio di email a un indirizzo specificato."
         }
     ],
-    "schemes": ["http"],
+    "schemes": ["http", "https"],
     "consumes": ["application/json"],
     "produces": ["application/json"],
     "paths": {
