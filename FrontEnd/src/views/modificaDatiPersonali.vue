@@ -265,5 +265,8 @@ export default {
             profilo: 'profiloUtente'
         }),
     },
+    created() {
+      this.$store.commit('isResultView', false);
+    }
 }
 </script>

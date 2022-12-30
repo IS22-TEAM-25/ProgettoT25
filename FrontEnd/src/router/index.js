@@ -5,7 +5,6 @@ import UserLoginSignUp from '../views/UserLoginSignUp.vue'
 import ProductSpecs from '../views/ProductSpecs.vue'
 import SearchResults from '../views/SearchResults.vue'
 import PubblicaAnnuncio from '../views/PubblicaAnnuncio.vue'
-import UserProfile from '../views/UserProfile.vue'
 import UserReview from '../views/UserReview.vue'
 import modificaDatiPersonali from '../views/modificaDatiPersonali.vue'
 import classificaUtenti from '../views/classificaUtenti.vue'
@@ -47,11 +46,6 @@ const routes = [
     path: '/userreview',
     name:'userreview',
     component: UserReview
-  },
-  {
-    path: '/userprofile',
-    name: 'userprofile',
-    component: UserProfile
   },
   {
     path: '/modificaDatiPersonali',

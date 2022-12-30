@@ -177,6 +177,12 @@
             </v-col>
             
           </v-row>
+          <v-snackbar 
+              v-model="messaggioInviato"
+              color="green"
+              >
+              Messaggio inviato correttamente!
+              </v-snackbar>
         </v-form>
         </v-container>
         

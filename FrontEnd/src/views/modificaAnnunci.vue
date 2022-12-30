@@ -130,6 +130,7 @@ export default {
     //     this.getAnnunciUtente();
     // },
     created() {
+      this.$store.commit('isResultView', false);
       this.getAnnunciUtente();  
     },
 }

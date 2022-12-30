@@ -196,7 +196,7 @@ export default {
                 v => !!v || 'Campo Obbligatorio per cambiare la password!'
             ],
             passwordCrit: [
-                v => (v.match(/^(?=.*[0-9])(?=.*[!£%&?€=^])[a-zA-Z0-9!£%&?€=^*]{8,15}/))!== null  || 'Password non valida!'
+                v => (v.match(/^(?=.*[0-9])(?=.*[!£%?€^=]).{8,15}/))!== null  || 'Password non valida!'
             ],
         }
     },
