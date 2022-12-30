@@ -309,14 +309,11 @@ export default {
       let costoEffettivo = this.$store.state.annuncioSelezionato.prezzo;
       if (this.$store.state.annuncioSelezionato.modalitaTransazione === "Affitto") {
         var differenceInTime = new Date(this.endDate) - new Date(this.startDate);
-        console.log(this.endDate + "\n" + this.startDate)
         var totalDays = differenceInTime / (1000 * 3600 * 24);
         costoEffettivo = this.$store.state.annuncioSelezionato.prezzoAffittoAlGiorno * (totalDays);
-        console.log("il numero tot di giorni è: ", totalDays)
       }
       let inserzionista = this.$store.state.annuncioSelezionato.inserzionista;
       let cliente = this.$store.state.datiUtente.username;
-      console.log("Il costo calcolato per la transazione è di: ", costoEffettivo)
       try {
         fetch(this.$url + "api/t/savet", {
           method: 'POST',
@@ -335,7 +332,6 @@ export default {
 
         }).then((resp) => resp.json())
         .then(data => {
-          console.log(data);
           this.$store.state.transazione = data;
           this.contaAnnunciOnline(inserzionista);
           this.aggiornaStatVendita(inserzionista);
@@ -353,7 +349,7 @@ export default {
           body: JSON.stringify({ 
             id: nomeUtente,
           })
-        }).then(console.log("Statistiche vendite aggiornate per ", nomeUtente, "!"))
+        })
       } catch (error) {
         console.error(error); // If there is any error you will catch them here
       }
@@ -366,7 +362,7 @@ export default {
           body: JSON.stringify({ 
             id: nomeUtente,
           })
-        }).then(console.log("Statistiche acquisti aggiornate per ", nomeUtente, "!"))
+        })
       } catch (error) {
         console.error(error); // If there is any error you will catch them here
       }
@@ -382,7 +378,7 @@ export default {
               titolo: this.$store.state.annuncioSelezionato.titolo, 
               visibile: false
             })
-          }).then(console.log("annuncio nascosto!"))
+          })
         } catch (error) {
           console.error(error); // If there is any error you will catch them here
         }
@@ -440,9 +436,6 @@ export default {
                     message: this.mesaggioAllInserzionista
                 })
             }).then(data => {
-                    console.log(data);
-
-                    console.log("Messaggio Inviato Correttamente");
                     this.messaggioInviato = true;
                 })
         } catch (error) {
@@ -451,7 +444,6 @@ export default {
     },
     async aggiungiWL() {
       let endPoint;
-      console.log("In WL è:", this.inWL)
       if(this.inWL) {
         endPoint = 'rimuoviwl'
       } else {
@@ -469,8 +461,6 @@ export default {
                     annuncio : this.$store.state.annuncioSelezionato.titolo
                 })
             }).then( data => {
-
-              console.log(data,"Annuncio ", this.$store.state.annuncioSelezionato.titolo, "!");
               this.inWL = !this.inWL;
               this.getProfile();
             })
@@ -481,10 +471,8 @@ export default {
     },
     controllaSeInWl () {
       this.inWL = this.$store.state.profiloUtente.whishList.includes(this.$store.state.annuncioSelezionato.titolo);
-      console.log("valore di inWL" + this.inWL)
     },
     async getProfile() {
-      console.log("dentro get profile")
       try {
         fetch(this.$url + "api/p/getp/" + this.$store.state.profiloUtente._id, {
           method: 'GET',
@@ -492,14 +480,12 @@ export default {
         }).then((resp) => resp.json())
         .then(data => {
           this.$store.commit('prendiProfiloUtente', data);
-          console.log(data);
         })
       } catch(error) {
         console.error(error); 
       }
     }, 
     async getRating() {
-      console.log("dentro get rating")
       try {
         fetch(this.$url + "api/p/getp/" + this.annuncio.inserzionista, {
           method: 'GET',
@@ -538,10 +524,8 @@ export default {
     this.$store.state.noNavBar = false
     this.$store.state.search = false
     if(this.$store.state.profiloUtente.whishList.includes(this.$store.state.annuncioSelezionato.titolo)){
-      console.log("THEN")
       this.inWL = true;
     } else {
-      console.log("ELSE")
       this.inWL = false;
     }
   }

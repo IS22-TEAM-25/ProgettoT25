@@ -70,7 +70,6 @@
 
         }).then((resp) => resp.json())
         .then(data => {
-          console.log(data);
           this.contaRecensioni(inserzionista);
           this.contaRecensioni(cliente);
         })
@@ -88,7 +87,7 @@
         body: JSON.stringify({ 
           id: nomeUtente,
         })
-      }).then(console.log("Recensioni aggiornate per ", nomeUtente, "!"))
+      })
     } catch (error) {
       console.error(error); // If there is any error you will catch them here
     }

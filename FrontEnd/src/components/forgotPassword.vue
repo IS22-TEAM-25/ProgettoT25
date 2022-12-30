@@ -118,7 +118,6 @@ export default {
                         message: this.mailToSend
                     })
                 }).then(data => {
-                        console.log(data);
                         this.message = "Controlla la tua casella di posta " + this.email + ".";
                         this.$emit('ripristinaPassword', this.message)
                         this.dialog=false;

@@ -93,9 +93,6 @@ export default {
             //annunci: state => state.annunci
         }),
         annunci() {
-            console.log(this.filtraggio)
-            console.log(this.$store.state.annunci)
-
             return this.$store.state.annunci.filter(this.filtraggio)
         },
         annuncioRating() {
@@ -108,34 +105,6 @@ export default {
         formattedDate(date) {
             return format(new Date(date), 'dd/M/YYY')
         },
-        // getRating(A) {
-        //     try {
-        //         fetch(this.$url + "api/p/getp/" + A.inserzionista, {
-        //             method: 'GET',
-        //             headers: { "Content-Type": "application/json" }
-        //         }).then((resp) => resp.json())
-        //         .then(data => {
-        //             console.log("Il rating per", A.inserzionista, " è di ", data.rating)
-        //             return data.rating;
-        //         })
-        //     } catch (error) {
-        //         console.error(error);
-        //     }
-        // },  
-        // async getNumRecensioni(A) {
-        //     try {
-        //         fetch(this.$url + "api/p/getp/" + A.inserzionista, {
-        //             method: 'GET',
-        //             headers: { "Content-Type": "application/json" }
-        //         }).then((resp) => resp.json())
-        //         .then(data => {
-        //         console.log("il numero di recensioni ricevute da ", A.inserzionista, " sono:", data.recensioniRicevute)
-        //         return data.recensioniRicevute;
-        //         })
-        //     } catch (error) {
-        //         console.error(error);
-        //     }
-        // },  
         async getfa() {
             try {
                 fetch(this.endpoint, {
@@ -164,7 +133,6 @@ export default {
         },
         async getAll() {
             try {
-                console.log(this.endpoint)
                 fetch(this.endpoint, {
                     method: 'GET',
                     headers: { "Content-Type": "application/json" }
@@ -178,8 +146,7 @@ export default {
                         return;
                     }
                     this.$store.state.annunci = this.$store.state.annunci.filter(a => a.visibile === true)
-                    // this.$store.state.annunci = this.$store.state.annunci.filter(a => a.inserzionista !== this.$store.state.datiUtente.username);
-                    console.log(this.$store.state.annunci)
+                    this.$store.state.annunci = this.$store.state.annunci.filter(a => a.inserzionista !== this.$store.state.datiUtente.username);
                     if (this.$store.state.annunci.length == '0') {
                         this.isEmpty=true; 
                         this.message = "Nessun annuncio con la keyword ricercata";
@@ -237,11 +204,9 @@ export default {
 
     },
     async created() {
-        console.log(this.$store.state.dallaWL)
         if(!this.$store.state.dallaWL) {
             this.cat = this.$store.state.filtri.categoria;
             if(this.$store.state.keyword !== '') {
-                console.log(this.$store.state.keyword)
                 this.endpoint = this.API_URL + "getkt/" + this.$store.state.keyword;
                 await this.getAll();
             }

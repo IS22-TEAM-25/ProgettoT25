@@ -94,7 +94,7 @@ export default {
                         id: this.$store.state.datiUtente.username,
                         descrizioneProfilo: this.descrizione
                     })
-                }).then(console.log("Descrizione aggiornata per ", this.$store.state.datiUtente.nome, "!")).then(this.$store.state.profiloUtente.descrizioneProfilo = this.descrizione).then(this.dialog = false)
+                }).then(this.$store.state.profiloUtente.descrizioneProfilo = this.descrizione).then(this.dialog = false)
             } catch (error) {
                 console.error(error); // If there is any error you will catch them here
             }

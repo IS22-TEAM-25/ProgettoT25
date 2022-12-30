@@ -275,7 +275,6 @@ export default {
             // this.created()
         },
         formattedDate(date) {
-            console.log(date)
             return format(new Date(date), 'dd/M/YYY');
         },
         vaiAlleSpec(annuncio) {
@@ -283,9 +282,7 @@ export default {
             this.$router.push("/productspecs");
         },
         getProfile() {
-            console.log("dentro get profile")
             try {
-                console.log(this.$store.state.utenteSelezionato)
                 fetch(this.$url + "api/p/getp/" + this.$store.state.utenteSelezionato, {
                     method: 'GET',
                     headers: { "Content-Type": "application/json" }
@@ -295,7 +292,6 @@ export default {
                             this.esiste = false;
                         }
                         else {
-                            console.log(data, " data dentro getprofile");
                             this.profiloUtenteEsterno = data;
                         }
                     })
@@ -304,7 +300,6 @@ export default {
             }
         },
         getUtente() {
-            console.log("dentro get utente")
             try {
                 fetch(this.$url + "api/u/getu/" + this.$store.state.utenteSelezionato, {
                     method: 'GET',
