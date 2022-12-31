@@ -518,15 +518,19 @@ export default {
     
   },
   async created() {
-    await this.getProfile();
-    await this.getRating();
-    this.controllaSeInWl()
-    this.$store.state.noNavBar = false
-    this.$store.state.search = false
-    if(this.$store.state.profiloUtente.whishList.includes(this.$store.state.annuncioSelezionato.titolo)){
-      this.inWL = true;
+    if (this.$store.state.annuncioSelezionato.titolo == undefined) {
+      this.$router.push("/");
     } else {
-      this.inWL = false;
+      await this.getProfile();
+      await this.getRating();
+      this.controllaSeInWl()
+      this.$store.state.noNavBar = false
+      this.$store.state.search = false
+      if(this.$store.state.profiloUtente.whishList.includes(this.$store.state.annuncioSelezionato.titolo)){
+        this.inWL = true;
+      } else {
+        this.inWL = false;
+      }
     }
   }
 

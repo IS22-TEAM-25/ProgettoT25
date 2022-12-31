@@ -26,7 +26,6 @@
                             {{ utente._id }}
                         </v-col>                    
                         <v-col>
-        
                             <v-row dense>
                                 <v-col>
                                     {{ utente.rating.toFixed(1) }}

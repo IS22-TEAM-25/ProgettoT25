@@ -127,8 +127,12 @@ export default {
     //     this.getAnnunciUtente();
     // },
     created() {
-      this.$store.commit('isResultView', false);
-      this.getAnnunciUtente();  
+        if (this.$store.state.dataAuth.success === false) {
+            this.$router.push("/");
+        } else {
+            this.$store.commit('isResultView', false);
+            this.getAnnunciUtente();  
+        }
     },
 }
 </script>

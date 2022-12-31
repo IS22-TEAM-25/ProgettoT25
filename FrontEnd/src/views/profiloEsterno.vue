@@ -154,8 +154,8 @@
                 </v-list-item-content>
             </v-list-item>
             <v-list-item v-for="annuncio in annunciUtente" :key="annuncio.titolo">
-                <v-list-item-content v-if="annuncio.visibile">
-                    <v-row v-if="annuncio.visibile" @click="vaiAlleSpec(annuncio)">
+                <v-list-item-content>
+                    <v-row @click="vaiAlleSpec(annuncio)">
                         <v-col>
                             {{ annuncio.titolo }}
                         </v-col>                   
@@ -341,7 +341,7 @@ export default {
                         if (data.success === false) {
                             this.annunciUtente = [];
                         } else {
-                            this.annunciUtente = data;
+                            this.annunciUtente = data.filter(v => v.visibile === true);
                         }
                     })
             } catch (error) {

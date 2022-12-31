@@ -171,8 +171,12 @@ export default {
     },
 
     async created() {
-        this.$store.commit('isResultView', false);
-        await this.getRecensioniUtente();
+        if (this.$store.state.dataAuth.success === false) {
+            this.$router.push("/");
+        } else {
+            this.$store.commit('isResultView', false);
+            await this.getRecensioniUtente();
+        }
     },
 
 }
