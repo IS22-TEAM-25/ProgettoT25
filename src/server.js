@@ -17,12 +17,8 @@ app.get('/', function(req,res) {
 })
 
 app.use((req, res, next) => {
-    if(req.originalUrl.includes("https://progettot25-production.up.railway.app/")){
-        if(!req.originalUrl.includes("api")){
-            res.sendFile(path + "index.html")
-        } else {
-            next()
-        }
+    if(!req.originalUrl.includes("api")){
+        res.sendFile("/FrontEnd/src/views/HomeView.vue", {root : "."})
     } else {
         next()
     }
