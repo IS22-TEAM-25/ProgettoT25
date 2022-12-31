@@ -15,16 +15,15 @@ app.use(express.static(path));
 app.get('/', function(req,res) {
     res.sendFile(path + "index.html")
 })
-const request = require('supertest');
 
-app.use(async (req, res, next) => {
-    if(!req.originalUrl.includes("api")){
-        res.sendFile("src/views/index.html", {root : "."})
-        //res.send({message : "Tornare sulla homepage"})
-    } else {
-        next()
-    }
-})
+// app.use(async (req, res, next) => {
+//     if(!req.originalUrl.includes("api")){
+//         res.sendFile("src/views/index.html", {root : "."})
+//         //res.send({message : "Tornare sulla homepage"})
+//     } else {
+//         next()
+//     }
+// })
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
