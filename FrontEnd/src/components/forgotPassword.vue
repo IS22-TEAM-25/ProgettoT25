@@ -117,8 +117,7 @@ export default {
                         subj: "Richiesta ripristino password",
                         message: this.mailToSend
                     })
-                }).then(data => {
-                        console.log(data);
+                }).then(() => {
                         this.message = "Controlla la tua casella di posta " + this.email + ".";
                         this.$emit('ripristinaPassword', this.message)
                         this.dialog=false;

@@ -103,21 +103,16 @@ export default {
     }),
     methods: {
         async logout() {
-            console.log(this.$store.state.datiUtente.token);
             try {
-                fetch("http://localhost:8080/api/l/logout", {
+                fetch(this.$url + "api/l/logout", {
                     method: 'GET',
                     headers: { 
                       "Content-Type": "application/json",
                       "x-access-token": this.$store.getters.token
                     }
                 }).then((resp) =>resp.json())
-                .then(data => {
-                  console.log(data);
-
+                .then(() => {
                   this.$store.commit('resetState', this.$store.state);
-                  // DEBUG
-                  //console.log(this.$store.state)
                   this.$router.push('/');
                 })
                 } catch(error) {
@@ -137,7 +132,6 @@ export default {
                         this.message = this.$store.state.annunci.message;
                         return;
                     }
-                    console.log("ciao")
                     this.$store.state.dallaWL = true;
                     this.$store.state.annunci = this.$store.state.annunci.filter(a => a.visibile === true)
                     this.$store.state.annunci = this.$store.state.annunci.filter(a => a.inserzionista !== this.$store.state.datiUtente.username);

@@ -206,11 +206,8 @@ export default {
           })
         }).then((resp) => resp.json())
           .then(data => {
-            console.log(data);
             if (data.success === false) {
-              console.log("erroreeeee")
               this.messaggioErroreRegistrazione = data.message;
-              console.log(data.message, " === ", this.messaggioErroreRegistrazione )
               this.erroreRegistrazione = true;
               return;
             }
@@ -237,9 +234,6 @@ export default {
             "idUtente" : this.username,
           })
         }).then((resp) => resp.json())
-        .then(data => {
-          console.log(data);
-        })
       } catch (error) {
         console.error(error);
       }
@@ -256,7 +250,6 @@ export default {
             // Here you get the data to modify as you please
           this.$store.commit('autenticazione', data/*{ dataAuth: data, username: this.username }*/);
             if (data.success) {
-              console.log(data);
               if (this.acquistoUtenteNonAutenticato) {
                 router.push("/productspecs")
               } else {
@@ -269,14 +262,12 @@ export default {
               this.erroreLogin = true
             }
             this.messageErroreLogin = data.message;
-            console.log(data.messamessageErroreLoginge);
           })
       } catch (error) {
         console.error(error); // If there is any error you will catch them here
       }
     },
     async getProfile() {
-      console.log("dentro get profile")
       try {
         fetch(this.$url + "api/p/getp/" + this.username, {
           method: 'GET',
@@ -284,7 +275,6 @@ export default {
         }).then((resp) => resp.json())
         .then(data => {
           this.$store.commit('prendiProfiloUtente', data);
-          console.log(data);
         })
       } catch(error) {
         console.error(error); 
@@ -298,7 +288,6 @@ export default {
         }).then((resp) => resp.json())
         .then(data => {
           this.$store.commit('prendiDatiUtente', data);
-          console.log(data);
         })
       } catch(error) {
         console.error(error); 

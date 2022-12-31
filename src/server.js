@@ -9,6 +9,21 @@ const util = require('util');
 const cors = require('cors')
 app.use(cors())
 
+// front end
+const path = "src/views";
+app.use(express.static(path));
+app.get('/', function(req,res) {
+    res.sendFile(path + "index.html")
+})
+
+app.use((req, res, next) => {
+    if(!req.originalUrl.includes("api")){
+        res.sendFile("/FrontEnd/src/views/HomeView.vue", {root : "."})
+    } else {
+        next()
+    }
+})
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

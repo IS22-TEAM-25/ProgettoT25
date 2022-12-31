@@ -205,21 +205,6 @@ export default {
         formattedDate(date) {
             return format(new Date(date), 'dd/M/YYY');
         },
-        // async getProfile() {
-        //     console.log("dentro get profile")
-        //     try {
-        //         fetch(this.$url + "api/p/getp/" + this.username, {
-        //             method: 'GET',
-        //             headers: { "Content-Type": "application/json" }
-        //         }).then((resp) => resp.json())
-        //             .then(data => {
-        //                 this.$store.commit('prendiProfiloUtente', data);
-        //                 console.log(data);
-        //             })
-        //     } catch (error) {
-        //         console.error(error);
-        //     }
-        // },
         async eliminaProfilo() {
             try {
                 fetch(this.$url + "api/p/deletep/" + this.$store.state.datiUtente.username, {
@@ -228,9 +213,7 @@ export default {
                         "Content-Type": "application/json",
                         "x-access-token": this.$store.getters.token,
                     },
-                }).then(() => {
-                        console.log("Eliminato il profilo di ", this.$store.state.datiUtente.username);
-                    })
+                })
             } catch (error) {
                 console.error(error);
             }
@@ -243,9 +226,7 @@ export default {
                         "Content-Type": "application/json",
                         "x-access-token": this.$store.getters.token,
                     },
-                }).then(() => {
-                        console.log("Eliminato l'utente ", this.$store.state.datiUtente.username);
-                    })
+                })
             } catch (error) {
                 console.error(error);
             }

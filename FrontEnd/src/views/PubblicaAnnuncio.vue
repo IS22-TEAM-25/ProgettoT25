@@ -275,7 +275,6 @@ export default {
     }),
     methods: {
         async salvaAnnuncio() {
-            console.log("Abilita pagamento online è:", this.abilitaPagamentoOnline);
             try {
                 fetch(this.$url + "api/a/savea", {
                     method: "POST",
@@ -302,7 +301,6 @@ export default {
                     })
                 }).then((resp) => resp.json())
                     .then(data => {
-                    console.log(data);
                     if (data.success === false) {
                         this.message = data.message;
                         this.erroreAnnuncio = true;
@@ -323,7 +321,6 @@ export default {
         },
         async salvaMetodoPagamento() {
           try {
-                console.log(this.metodiPagamento);
                 this.$store.state.datiUtente.metodiPagamento = this.metodiPagamento;
                 fetch(this.$url + "api/u/updateu", {
                     method: 'PATCH',
@@ -335,7 +332,7 @@ export default {
                         username: this.$store.state.datiUtente.username,
                         metodiPagamento: this.metodiPagamento,
                     })
-                }).then(console.log("Dati utente aggiornati per ", this.$store.state.datiUtente.nome, "!"))
+                })
             } catch (error) {
                 console.error(error); // If there is any error you will catch them here
             }
@@ -350,8 +347,6 @@ export default {
     },
     computed: {
       pagamentoOnlineControllo () {
-        console.log("Metodi di pagamento è. ", this.$store.state.datiUtente.metodiPagamento)
-        console.log(this.$store.state.datiUtente)
         return (this.$store.state.datiUtente.metodiPagamento === '' || this.$store.state.datiUtente.metodiPagamento === undefined);
       }
     }, 

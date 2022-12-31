@@ -246,7 +246,7 @@ export default {
                         metodiPagamento: this.metodiPagamentoU,
                     })
                 }).then(() => {
-                    console.log("Dati utente aggiornati per ", this.$store.state.datiUtente.nome, "!");
+                    // console.log("Dati utente aggiornati per ", this.$store.state.datiUtente.nome, "!");
                     // this.dialog = false
                 })
             } catch (error) {
@@ -272,7 +272,7 @@ export default {
                     this.$store.state.datiUtente.email = this.emailIniziale;
                   } else 
                   {
-                    console.log("Email aggiornata per ", this.$store.state.datiUtente.nome, "!");
+                    // console.log("Email aggiornata per ", this.$store.state.datiUtente.nome, "!");
                     this.dialog = false
                     this.errorEmail = false
                   }
@@ -285,7 +285,6 @@ export default {
             this.nomeU = this.$store.state.datiUtente.nome;
             this.cognomeU = this.$store.state.datiUtente.cognome;
             this.dobU = format(new Date(this.$store.state.datiUtente.datadinascita), "yyyy-MM-dd");
-            console.log(format(new Date(this.dobU), "yyyy-MM-dd"))
             this.emailU = this.$store.state.datiUtente.email;
             this.indirizzoU = this.$store.state.datiUtente.indirizzo;
             this.metodiPagamentoU = this.$store.state.datiUtente.metodiPagamento;
@@ -303,7 +302,7 @@ export default {
                         username: this.$store.state.datiUtente.username,
                         password: this.newPass
                     })
-                }).then(console.log("Password aggiornata per ", this.$store.state.datiUtente.nome, "!")).then(this.$store.state.datiUtente.password = this.newPass).then(this.chiudi())
+                }).then(this.$store.state.datiUtente.password = this.newPass).then(this.chiudi())
             } catch (error) {
                 console.error(error); // If there is any error you will catch them here
             }

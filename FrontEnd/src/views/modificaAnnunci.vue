@@ -75,12 +75,9 @@ export default {
                 }).then((resp) => resp.json())
                     .then(data => {
                         if(data.success == false){
-                            console.log("nessun annuncio")
                             this.annunciUtente = []
                         } else {
-                            console.log("qualche annuncio")
                             this.annunciUtente = data;
-                            console.log(data);
                         }
                     })
             } catch (error) {
@@ -100,7 +97,7 @@ export default {
                         visibile: visibilePassato
                     })
                 }).then( () => {
-                    console.log("Visibilià aggiornata per ", annuncio.titolo, "!")
+                    // console.log("Visibilià aggiornata per ", annuncio.titolo, "!")
                     this.contaAnnunciOnline(this.$store.state.datiUtente.username);
                     this.getProfile();
                     this.getAnnunciUtente();
@@ -116,7 +113,7 @@ export default {
                     headers: { "Content-Type": "application/json" },
                     // body: JSON.stringify({ id: id }),
                 }).then( () => {
-                    console.log("Annuncio con titolo", annuncio.titolo, " è stato eliminato!")
+                    // console.log("Annuncio con titolo", annuncio.titolo, " è stato eliminato!")
                     this.contaAnnunciOnline(this.$store.state.datiUtente.username);
                     this.getProfile();
                     this.getAnnunciUtente();

@@ -310,7 +310,6 @@ export default {
           }
           this.$store.state.filtri.categoria = this.categoriaSelezionata;
           this.$store.state.filtri.pagamentoOnline = this.pagamentoOnline;
-          console.log("pagamento online: ", this.pagamentoOnline)
         },
         resettaFiltri() {
           this.$store.commit('resettaFiltri');

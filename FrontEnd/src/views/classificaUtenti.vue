@@ -80,7 +80,6 @@ export default {
                 }).then((resp) => resp.json())
                     .then(data => {
                         this.classificaUtenti = data;
-                        console.log(data);
                     })
             } catch (error) {
                 console.error(error);
