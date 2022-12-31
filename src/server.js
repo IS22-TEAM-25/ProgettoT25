@@ -16,6 +16,18 @@ app.get('/', function(req,res) {
     res.sendFile(path + "index.html")
 })
 
+app.use((req, res, next) => {
+    if(req.originalUrl.includes("https://progettot25-production.up.railway.app/")){
+        if(!req.originalUrl.includes("api")){
+            res.sendFile(path + "index.html")
+        } else {
+            next()
+        }
+    } else {
+        next()
+    }
+})
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
