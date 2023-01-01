@@ -1,60 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1672132999847" clover="3.2.0">
-  <project timestamp="1672132999847" name="All files">
-    <metrics statements="825" coveredstatements="782" conditionals="423" coveredconditionals="309" methods="145" coveredmethods="145" elements="1393" coveredelements="1236" complexity="0" loc="825" ncloc="825" packages="5" files="26" classes="26"/>
+<coverage generated="1672586533360" clover="3.2.0">
+  <project timestamp="1672586533361" name="All files">
+    <metrics statements="833" coveredstatements="788" conditionals="425" coveredconditionals="310" methods="147" coveredmethods="146" elements="1405" coveredelements="1244" complexity="0" loc="833" ncloc="833" packages="5" files="26" classes="26"/>
     <package name="src">
-      <metrics statements="44" coveredstatements="44" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="server.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/server.js">
-        <metrics statements="44" coveredstatements="44" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <metrics statements="52" coveredstatements="50" conditionals="2" coveredconditionals="1" methods="2" coveredmethods="1"/>
+      <file name="server.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/server.js">
+        <metrics statements="52" coveredstatements="50" conditionals="2" coveredconditionals="1" methods="2" coveredmethods="1"/>
         <line num="2" count="7" type="stmt"/>
         <line num="4" count="7" type="stmt"/>
         <line num="5" count="7" type="stmt"/>
         <line num="7" count="7" type="stmt"/>
         <line num="9" count="7" type="stmt"/>
         <line num="10" count="7" type="stmt"/>
-        <line num="12" count="7" type="stmt"/>
         <line num="13" count="7" type="stmt"/>
-        <line num="16" count="7" type="stmt"/>
-        <line num="17" count="7" type="stmt"/>
-        <line num="18" count="7" type="stmt"/>
-        <line num="21" count="7" type="stmt"/>
-        <line num="23" count="7" type="stmt"/>
-        <line num="24" count="7" type="stmt"/>
-        <line num="25" count="7" type="stmt"/>
-        <line num="26" count="7" type="stmt"/>
-        <line num="27" count="7" type="stmt"/>
+        <line num="14" count="7" type="stmt"/>
+        <line num="15" count="7" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="19" count="7" type="stmt"/>
+        <line num="20" count="181" type="cond" truecount="1" falsecount="1"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="24" count="181" type="stmt"/>
         <line num="28" count="7" type="stmt"/>
-        <line num="30" count="7" type="stmt"/>
-        <line num="31" count="7" type="stmt"/>
+        <line num="29" count="7" type="stmt"/>
         <line num="32" count="7" type="stmt"/>
+        <line num="33" count="7" type="stmt"/>
         <line num="34" count="7" type="stmt"/>
-        <line num="35" count="7" type="stmt"/>
-        <line num="36" count="7" type="stmt"/>
         <line num="37" count="7" type="stmt"/>
         <line num="39" count="7" type="stmt"/>
         <line num="40" count="7" type="stmt"/>
         <line num="41" count="7" type="stmt"/>
         <line num="42" count="7" type="stmt"/>
         <line num="43" count="7" type="stmt"/>
-        <line num="45" count="7" type="stmt"/>
+        <line num="44" count="7" type="stmt"/>
         <line num="46" count="7" type="stmt"/>
         <line num="47" count="7" type="stmt"/>
         <line num="48" count="7" type="stmt"/>
-        <line num="49" count="7" type="stmt"/>
+        <line num="50" count="7" type="stmt"/>
         <line num="51" count="7" type="stmt"/>
         <line num="52" count="7" type="stmt"/>
         <line num="53" count="7" type="stmt"/>
-        <line num="54" count="7" type="stmt"/>
         <line num="55" count="7" type="stmt"/>
+        <line num="56" count="7" type="stmt"/>
         <line num="57" count="7" type="stmt"/>
+        <line num="58" count="7" type="stmt"/>
         <line num="59" count="7" type="stmt"/>
-        <line num="60" count="7" type="stmt"/>
+        <line num="61" count="7" type="stmt"/>
         <line num="62" count="7" type="stmt"/>
+        <line num="63" count="7" type="stmt"/>
+        <line num="64" count="7" type="stmt"/>
+        <line num="65" count="7" type="stmt"/>
+        <line num="67" count="7" type="stmt"/>
+        <line num="68" count="7" type="stmt"/>
+        <line num="69" count="7" type="stmt"/>
+        <line num="70" count="7" type="stmt"/>
+        <line num="71" count="7" type="stmt"/>
+        <line num="73" count="7" type="stmt"/>
+        <line num="75" count="7" type="stmt"/>
+        <line num="76" count="7" type="stmt"/>
+        <line num="78" count="7" type="stmt"/>
       </file>
     </package>
     <package name="src.auxiliaries">
       <metrics statements="133" coveredstatements="133" conditionals="79" coveredconditionals="79" methods="31" coveredmethods="31"/>
-      <file name="checks.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/auxiliaries/checks.js">
+      <file name="checks.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/auxiliaries/checks.js">
         <metrics statements="12" coveredstatements="12" conditionals="11" coveredconditionals="11" methods="3" coveredmethods="3"/>
         <line num="2" count="7" type="stmt"/>
         <line num="3" count="11" type="stmt"/>
@@ -69,13 +77,13 @@
         <line num="27" count="8" type="stmt"/>
         <line num="31" count="7" type="stmt"/>
       </file>
-      <file name="createId.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/auxiliaries/createId.js">
+      <file name="createId.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/auxiliaries/createId.js">
         <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="2" count="11" type="stmt"/>
         <line num="3" count="11" type="stmt"/>
         <line num="6" count="7" type="stmt"/>
       </file>
-      <file name="dateFunction.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/auxiliaries/dateFunction.js">
+      <file name="dateFunction.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/auxiliaries/dateFunction.js">
         <metrics statements="13" coveredstatements="13" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
         <line num="2" count="7" type="stmt"/>
         <line num="3" count="8" type="stmt"/>
@@ -91,7 +99,7 @@
         <line num="24" count="10" type="stmt"/>
         <line num="29" count="7" type="stmt"/>
       </file>
-      <file name="filtraggio.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/auxiliaries/filtraggio.js">
+      <file name="filtraggio.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/auxiliaries/filtraggio.js">
         <metrics statements="98" coveredstatements="98" conditionals="68" coveredconditionals="68" methods="22" coveredmethods="22"/>
         <line num="1" count="7" type="stmt"/>
         <line num="2" count="7" type="stmt"/>
@@ -108,10 +116,10 @@
         <line num="16" count="18" type="cond" truecount="2" falsecount="0"/>
         <line num="17" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="18" count="3" type="stmt"/>
-        <line num="19" count="11" type="cond" truecount="2" falsecount="0"/>
+        <line num="19" count="38" type="cond" truecount="2" falsecount="0"/>
         <line num="20" count="7" type="stmt"/>
-        <line num="22" count="4" type="stmt"/>
-        <line num="23" count="4" type="stmt"/>
+        <line num="22" count="31" type="stmt"/>
+        <line num="23" count="31" type="stmt"/>
         <line num="28" count="18" type="cond" truecount="2" falsecount="0"/>
         <line num="29" count="3" type="cond" truecount="2" falsecount="0"/>
         <line num="30" count="2" type="stmt"/>
@@ -122,19 +130,19 @@
         <line num="42" count="18" type="cond" truecount="2" falsecount="0"/>
         <line num="43" count="5" type="cond" truecount="2" falsecount="0"/>
         <line num="44" count="4" type="stmt"/>
-        <line num="45" count="13" type="cond" truecount="2" falsecount="0"/>
-        <line num="46" count="5" type="stmt"/>
-        <line num="48" count="8" type="stmt"/>
+        <line num="45" count="94" type="cond" truecount="2" falsecount="0"/>
+        <line num="46" count="23" type="stmt"/>
+        <line num="48" count="71" type="stmt"/>
         <line num="54" count="18" type="cond" truecount="2" falsecount="0"/>
         <line num="55" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="56" count="3" type="stmt"/>
-        <line num="57" count="14" type="cond" truecount="2" falsecount="0"/>
-        <line num="58" count="4" type="stmt"/>
-        <line num="60" count="10" type="stmt"/>
+        <line num="57" count="41" type="cond" truecount="2" falsecount="0"/>
+        <line num="58" count="10" type="stmt"/>
+        <line num="60" count="31" type="stmt"/>
         <line num="66" count="18" type="cond" truecount="2" falsecount="0"/>
         <line num="67" count="7" type="cond" truecount="2" falsecount="0"/>
         <line num="68" count="6" type="stmt"/>
-        <line num="69" count="22" type="stmt"/>
+        <line num="69" count="130" type="stmt"/>
         <line num="74" count="18" type="cond" truecount="2" falsecount="0"/>
         <line num="75" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="76" count="3" type="stmt"/>
@@ -185,14 +193,14 @@
         <line num="164" count="7" type="stmt"/>
         <line num="165" count="6" type="stmt"/>
         <line num="166" count="6" type="stmt"/>
-        <line num="167" count="32" type="stmt"/>
+        <line num="167" count="86" type="stmt"/>
         <line num="171" count="7" type="stmt"/>
         <line num="172" count="4" type="stmt"/>
         <line num="173" count="4" type="stmt"/>
         <line num="174" count="28" type="stmt"/>
         <line num="178" count="7" type="stmt"/>
       </file>
-      <file name="randomString.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/auxiliaries/randomString.js">
+      <file name="randomString.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/auxiliaries/randomString.js">
         <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="2" count="11" type="stmt"/>
         <line num="3" count="11" type="stmt"/>
@@ -205,7 +213,7 @@
     </package>
     <package name="src.controllers">
       <metrics statements="542" coveredstatements="499" conditionals="344" coveredconditionals="230" methods="114" coveredmethods="114"/>
-      <file name="annuncio.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/controllers/annuncio.js">
+      <file name="annuncio.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/controllers/annuncio.js">
         <metrics statements="109" coveredstatements="98" conditionals="81" coveredconditionals="57" methods="19" coveredmethods="19"/>
         <line num="1" count="7" type="stmt"/>
         <line num="2" count="7" type="stmt"/>
@@ -317,7 +325,7 @@
         <line num="212" count="0" type="stmt"/>
         <line num="218" count="7" type="stmt"/>
       </file>
-      <file name="authentication.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/controllers/authentication.js">
+      <file name="authentication.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/controllers/authentication.js">
         <metrics statements="33" coveredstatements="33" conditionals="12" coveredconditionals="10" methods="5" coveredmethods="5"/>
         <line num="1" count="7" type="stmt"/>
         <line num="2" count="7" type="stmt"/>
@@ -353,7 +361,7 @@
         <line num="53" count="1" type="stmt"/>
         <line num="60" count="7" type="stmt"/>
       </file>
-      <file name="mailSender.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/controllers/mailSender.js">
+      <file name="mailSender.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/controllers/mailSender.js">
         <metrics statements="13" coveredstatements="13" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
         <line num="1" count="7" type="stmt"/>
         <line num="2" count="7" type="stmt"/>
@@ -369,7 +377,7 @@
         <line num="31" count="1" type="stmt"/>
         <line num="36" count="7" type="stmt"/>
       </file>
-      <file name="profilo.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/controllers/profilo.js">
+      <file name="profilo.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/controllers/profilo.js">
         <metrics statements="171" coveredstatements="162" conditionals="106" coveredconditionals="69" methods="40" coveredmethods="40"/>
         <line num="1" count="7" type="stmt"/>
         <line num="2" count="7" type="stmt"/>
@@ -465,7 +473,7 @@
         <line num="169" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="170" count="0" type="stmt"/>
         <line num="172" count="1" type="stmt"/>
-        <line num="173" count="7" type="stmt"/>
+        <line num="173" count="32" type="stmt"/>
         <line num="175" count="1" type="stmt"/>
         <line num="177" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="178" count="0" type="stmt"/>
@@ -543,7 +551,7 @@
         <line num="308" count="1" type="stmt"/>
         <line num="313" count="7" type="stmt"/>
       </file>
-      <file name="recensione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/controllers/recensione.js">
+      <file name="recensione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/controllers/recensione.js">
         <metrics statements="69" coveredstatements="60" conditionals="51" coveredconditionals="34" methods="13" coveredmethods="13"/>
         <line num="1" count="7" type="stmt"/>
         <line num="2" count="7" type="stmt"/>
@@ -615,21 +623,21 @@
         <line num="132" count="0" type="stmt"/>
         <line num="137" count="7" type="stmt"/>
       </file>
-      <file name="tokenChecker.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/controllers/tokenChecker.js">
+      <file name="tokenChecker.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/controllers/tokenChecker.js">
         <metrics statements="11" coveredstatements="11" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
-        <line num="7" count="95" type="stmt"/>
-        <line num="11" count="95" type="cond" truecount="2" falsecount="0"/>
+        <line num="7" count="96" type="stmt"/>
+        <line num="11" count="96" type="cond" truecount="2" falsecount="0"/>
         <line num="12" count="16" type="stmt"/>
-        <line num="19" count="79" type="stmt"/>
-        <line num="20" count="79" type="cond" truecount="2" falsecount="0"/>
+        <line num="19" count="80" type="stmt"/>
+        <line num="20" count="80" type="cond" truecount="2" falsecount="0"/>
         <line num="21" count="16" type="stmt"/>
-        <line num="26" count="63" type="stmt"/>
-        <line num="30" count="63" type="stmt"/>
+        <line num="26" count="64" type="stmt"/>
+        <line num="30" count="64" type="stmt"/>
         <line num="36" count="7" type="stmt"/>
       </file>
-      <file name="transazione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/controllers/transazione.js">
+      <file name="transazione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/controllers/transazione.js">
         <metrics statements="69" coveredstatements="58" conditionals="42" coveredconditionals="23" methods="14" coveredmethods="14"/>
         <line num="1" count="7" type="stmt"/>
         <line num="2" count="7" type="stmt"/>
@@ -701,30 +709,30 @@
         <line num="134" count="0" type="stmt"/>
         <line num="139" count="7" type="stmt"/>
       </file>
-      <file name="utente.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/controllers/utente.js">
+      <file name="utente.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/controllers/utente.js">
         <metrics statements="67" coveredstatements="64" conditionals="46" coveredconditionals="31" methods="19" coveredmethods="19"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
         <line num="7" count="7" type="stmt"/>
-        <line num="8" count="7" type="stmt"/>
-        <line num="9" count="7" type="cond" truecount="2" falsecount="0"/>
-        <line num="10" count="6" type="stmt"/>
-        <line num="11" count="6" type="cond" truecount="2" falsecount="0"/>
-        <line num="13" count="5" type="stmt"/>
-        <line num="15" count="5" type="stmt"/>
-        <line num="27" count="5" type="stmt"/>
-        <line num="28" count="5" type="cond" truecount="1" falsecount="1"/>
-        <line num="29" count="5" type="stmt"/>
+        <line num="8" count="8" type="stmt"/>
+        <line num="9" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="7" type="stmt"/>
+        <line num="11" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="13" count="6" type="stmt"/>
+        <line num="15" count="6" type="stmt"/>
+        <line num="27" count="6" type="stmt"/>
+        <line num="28" count="6" type="cond" truecount="1" falsecount="1"/>
+        <line num="29" count="6" type="stmt"/>
         <line num="33" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="34" count="1" type="stmt"/>
         <line num="38" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="39" count="1" type="stmt"/>
         <line num="45" count="7" type="stmt"/>
-        <line num="47" count="6" type="stmt"/>
-        <line num="49" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="47" count="7" type="stmt"/>
+        <line num="49" count="7" type="cond" truecount="2" falsecount="0"/>
         <line num="50" count="1" type="stmt"/>
-        <line num="52" count="5" type="stmt"/>
-        <line num="53" count="5" type="stmt"/>
+        <line num="52" count="6" type="stmt"/>
+        <line num="53" count="6" type="stmt"/>
         <line num="58" count="7" type="stmt"/>
         <line num="59" count="1" type="stmt"/>
         <line num="60" count="1" type="cond" truecount="1" falsecount="1"/>
@@ -774,35 +782,35 @@
     </package>
     <package name="src.models">
       <metrics statements="20" coveredstatements="20" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="annuncio.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/models/annuncio.js">
+      <file name="annuncio.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/models/annuncio.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
         <line num="24" count="7" type="stmt"/>
         <line num="26" count="7" type="stmt"/>
       </file>
-      <file name="profilo.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/models/profilo.js">
+      <file name="profilo.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/models/profilo.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
         <line num="20" count="7" type="stmt"/>
         <line num="22" count="7" type="stmt"/>
       </file>
-      <file name="recensione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/models/recensione.js">
+      <file name="recensione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/models/recensione.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
         <line num="14" count="7" type="stmt"/>
         <line num="16" count="7" type="stmt"/>
       </file>
-      <file name="transazione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/models/transazione.js">
+      <file name="transazione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/models/transazione.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
         <line num="19" count="7" type="stmt"/>
         <line num="21" count="7" type="stmt"/>
       </file>
-      <file name="utente.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/models/utente.js">
+      <file name="utente.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/models/utente.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
@@ -812,7 +820,7 @@
     </package>
     <package name="src.routes">
       <metrics statements="86" coveredstatements="86" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="annuncio.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/routes/annuncio.js">
+      <file name="annuncio.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/routes/annuncio.js">
         <metrics statements="15" coveredstatements="15" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
@@ -830,7 +838,7 @@
         <line num="17" count="7" type="stmt"/>
         <line num="19" count="7" type="stmt"/>
       </file>
-      <file name="authentication.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/routes/authentication.js">
+      <file name="authentication.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/routes/authentication.js">
         <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
@@ -842,7 +850,7 @@
         <line num="11" count="7" type="stmt"/>
         <line num="12" count="7" type="stmt"/>
       </file>
-      <file name="mailSender.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/routes/mailSender.js">
+      <file name="mailSender.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/routes/mailSender.js">
         <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
@@ -852,7 +860,7 @@
         <line num="9" count="7" type="stmt"/>
         <line num="10" count="7" type="stmt"/>
       </file>
-      <file name="profilo.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/routes/profilo.js">
+      <file name="profilo.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/routes/profilo.js">
         <metrics statements="18" coveredstatements="18" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
@@ -873,7 +881,7 @@
         <line num="23" count="7" type="stmt"/>
         <line num="24" count="7" type="stmt"/>
       </file>
-      <file name="recensione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/routes/recensione.js">
+      <file name="recensione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/routes/recensione.js">
         <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
@@ -888,7 +896,7 @@
         <line num="14" count="7" type="stmt"/>
         <line num="16" count="7" type="stmt"/>
       </file>
-      <file name="transazione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/routes/transazione.js">
+      <file name="transazione.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/routes/transazione.js">
         <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
@@ -903,7 +911,7 @@
         <line num="14" count="7" type="stmt"/>
         <line num="16" count="7" type="stmt"/>
       </file>
-      <file name="utente.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25/src/routes/utente.js">
+      <file name="utente.js" path="/home/gabriele/Scrivania/IS22-TEAM-25/ProgettoT25-locale/src/routes/utente.js">
         <metrics statements="13" coveredstatements="13" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>

@@ -16,9 +16,10 @@ app.get('/', function(req,res) {
     res.sendFile(path + "index.html")
 })
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     if(!req.originalUrl.includes("api")){
-        res.sendFile("/FrontEnd/src/views/HomeView.vue", {root : "."})
+        res.sendFile("src/views/index.html", {root : "."})
+        //res.send({message : "Tornare sulla homepage"})
     } else {
         next()
     }

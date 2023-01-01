@@ -248,6 +248,9 @@ export default {
     },
     created() {
       this.$store.commit('isResultView', false);
+      if (this.$store.state.dataAuth.success === false) {
+        this.$router.push("/");
+      }
     }
 }
 </script>
