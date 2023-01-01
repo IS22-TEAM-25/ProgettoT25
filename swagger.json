@@ -9,7 +9,7 @@
             "url": "https://opensource.org/licenses/MIT"
         }
     },
-    "host": "progettot25.up.railway.app",
+    "host": "progettot25-production.up.railway.app",
     "basePath": "/",
     "tags": [
         {
