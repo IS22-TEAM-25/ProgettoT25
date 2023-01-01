@@ -17,7 +17,7 @@ Vue.prototype.$categories = [
   { title: 'per la casa', src: 'Per la casa.png', flex: 3 },
   { title: 'trasporti', src: 'Trasporti.png', flex: 3 }
 ]
-Vue.prototype.$url = "http://localhost:8080/"
+Vue.prototype.$url = "progettot25.up.railway.app/"
 
 Vue.mixin({
   methods: {
