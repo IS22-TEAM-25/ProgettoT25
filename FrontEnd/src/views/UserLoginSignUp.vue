@@ -123,7 +123,7 @@
                       <v-spacer></v-spacer>
                       <v-container>
                         <v-alert v-if="erroreRegistrazione" type="error" justify="center" dismissible>
-                          {{ messaggioErrore }}
+                          {{ messaggioErroreRegistrazione }}
                         </v-alert>
                       </v-container>
                     </v-col>
