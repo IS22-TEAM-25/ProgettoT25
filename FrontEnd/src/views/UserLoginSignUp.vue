@@ -250,14 +250,14 @@ export default {
             // Here you get the data to modify as you please
           this.$store.commit('autenticazione', data/*{ dataAuth: data, username: this.username }*/);
             if (data.success) {
+              this.$store.state.noNavBar = false;
+              this.getUser();
+              this.getProfile();
               if (this.acquistoUtenteNonAutenticato) {
                 router.push("/productspecs")
               } else {
                 router.push("/");
               }
-              this.$store.state.noNavBar = false;
-              this.getUser();
-              this.getProfile();
             } else {
               this.erroreLogin = true
             }
