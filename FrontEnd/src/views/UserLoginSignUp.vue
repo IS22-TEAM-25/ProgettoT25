@@ -253,11 +253,6 @@ export default {
               this.$store.state.noNavBar = false;
               this.getUser();
               this.getProfile();
-              if (this.acquistoUtenteNonAutenticato) {
-                router.push("/productspecs")
-              } else {
-                router.push("/");
-              }
             } else {
               this.erroreLogin = true
             }
@@ -275,6 +270,11 @@ export default {
         }).then((resp) => resp.json())
         .then(data => {
           this.$store.commit('prendiProfiloUtente', data);
+          if (this.acquistoUtenteNonAutenticato) {
+                router.push("/productspecs")
+              } else {
+                router.push("/");
+              }
         })
       } catch(error) {
         console.error(error); 
